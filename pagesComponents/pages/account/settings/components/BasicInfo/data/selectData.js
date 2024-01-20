@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 
 const selectData = {
-  gender: ["Male", "Female"],
+  gender: ["Masculino", "Femenino"],
   birthDate: [
     "January",
     "February",

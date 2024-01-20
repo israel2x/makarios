@@ -114,7 +114,7 @@ function NewUser() {
               initialValues={initialValues}
               validationSchema={currentValidation}
               onSubmit={handleSubmit}
-            >
+            > 
               {({ values, errors, touched, isSubmitting }) => (
                 <Form id={formId} autoComplete="off">
                   <Card sx={{ height: "100%" }}>

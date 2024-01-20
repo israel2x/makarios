@@ -569,7 +569,7 @@ function DefaultNavbar({ routes, brand, transparent, light, action }) {
             : rgba(darkMode ? background.sidenav : white.main, 0.8),
           backdropFilter: transparent ? "none" : `saturate(200%) blur(30px)`,
         })}
-      >
+      > 
         <MDBox
           display="flex"
           justifyContent="space-between"
