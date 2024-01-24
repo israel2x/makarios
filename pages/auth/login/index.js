@@ -17,6 +17,10 @@ import { useState } from "react";
 
 import Link from "next/link";
 
+import { useForm } from "react-hook-form";
+
+import { signIn } from 'next-auth/react';
+
 // @mui material components
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
@@ -42,24 +46,45 @@ import bgImage from "/assets/images/bg-sign-in-cover.jpeg";
 
 // import { handleLoginUser } from "../../../actions";
 
-
+import { useRouter } from "next/router";
 
 function Basic() {
+  const  router  = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const [rememberMe, setRememberMe] = useState(false);
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
 
   const [emailUser, setEmailUser] = useState(false);
   const [passwordlUser, setPasswordUser] = useState(false);
-  const handleSubmit = (event) =>{
-    event.preventDefault();
-    // const dataForm = new FormData(event.target);
-    // handleLoginUser(dataForm);
+
+  const onSubmit = handleSubmit(async(data) => {
+    try {
+      
+      const res = await signIn('credentials',{
+        email:data.email,
+        password:data.password,
+        redirect: false
+      });
+
+      if(res.error){
+        alert("Usuario o contraseña incorrectos");
+      }else{
+
+        console.log("res",res);
+        router.push('/registrarTorneo');
+      }
+  } catch (error) {
     
-    console.log("event");
-    console.log(event);
   }
 
+
+  });
 
   return (
     <BasicLayout image={bgImage}>
@@ -119,10 +144,24 @@ function Basic() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="email" label="Email" fullWidth />
+              <MDInput type="email" 
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "email is required",
+                  },
+                })}
+              label="Email" fullWidth />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" label="Password" fullWidth />
+              <MDInput type="password" 
+                              {...register("password", {
+                                required: {
+                                  value: true,
+                                  message: "password is required",
+                                },
+                              })}
+              label="Password" fullWidth />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -138,7 +177,9 @@ function Basic() {
             </MDBox>
             <MDBox mt={4} mb={1}>
               <MDButton variant="gradient" color="info" fullWidth
-              onClick={handleSubmit}
+                onClick={() => {
+                  onSubmit()
+                 }}
               >
                 sign in
               </MDButton>
@@ -146,7 +187,7 @@ function Basic() {
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
                 Don&apos;t have an account?{" "}
-                <Link href="/authentication/sign-up/cover">
+                <Link href="/auth/register">
                   <MDTypography
                     variant="button"
                     color="dark"
