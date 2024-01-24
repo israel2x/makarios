@@ -51,6 +51,10 @@ const pageRoutes = [
             name: "registrarParticipantes",
             route: "/registrarTorneo",
           },
+          {
+            name: "registrados",
+            route: "/registrados",
+          },
         ],
       },
       {

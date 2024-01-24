@@ -12,9 +12,13 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
+// "use client";
 
 import Link from "next/link";
+import axios from 'axios';
+import { useForm } from "react-hook-form";
 
+import { useRouter } from "next/router";
 // @mui material components
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
@@ -32,12 +36,45 @@ import CoverLayout from "/pagesComponents/authentication/components/CoverLayout"
 import bgImage from "/assets/images/bg-sign-up-cover.jpeg";
 
 function Cover() {
+
+  const  router  = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = handleSubmit(async(data) => {
+    try {
+      
+      const response = await axios.post('/api/auth/register/', data);
+      // console.log(" antes del response");
+      console.log("response login");
+      console.log(response);
+      // const resJSON = await response.json()
+      // console.log(resJSON);
+      console.log(router);
+      if(response.statusText === "OK"){
+        router.push('/auth/login');
+
+      }else {
+       
+      }
+  } catch (error) {
+      console.log("error");
+      console.log(error);
+
+  }
+
+
+  });
+
   return (
     <CoverLayout image={bgImage}>
       <Card>
         <MDBox
           variant="gradient"
-          bgColor="dark"
+          bgColor="info"
           borderRadius="lg"
           coloredShadow="dark"
           mx={2}
@@ -56,12 +93,42 @@ function Cover() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="text" label="Name" variant="standard" fullWidth />
+              <MDInput
+                type="text"
+                label="Nombre"
+                {...register("firstname", {
+                  required: {
+                    value: true,
+                    message: "Firstname is required",
+                  },
+                })}
+                variant="standard"
+                fullWidth
+                
+              />
+     
+            </MDBox>
+            <MDBox mb={2}>
+              <MDInput
+                type="text"
+                label="Apellidos"
+                {...register("lastname", {
+                  required: {
+                    value: true,
+                    message: "Lastname is required",
+                  },
+                })}
+                variant="standard"
+                fullWidth
+                
+              />
+     
             </MDBox>
             <MDBox mb={2}>
               <MDInput
                 type="email"
                 label="Email"
+                {...register("email", { required: true })}
                 variant="standard"
                 fullWidth
               />
@@ -70,6 +137,7 @@ function Cover() {
               <MDInput
                 type="password"
                 label="Password"
+                {...register("password", { required: true })}
                 variant="standard"
                 fullWidth
               />
@@ -89,14 +157,21 @@ function Cover() {
                 href="#"
                 variant="button"
                 fontWeight="bold"
-                color="dark"
+                color="info"
                 textGradient
               >
                 Terms and Conditions
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="dark" fullWidth>
+              <MDButton
+                variant="gradient"
+                onClick={() => {
+                 onSubmit()
+                }}
+                color="info"
+                fullWidth
+              >
                 sign in
               </MDButton>
             </MDBox>
@@ -106,7 +181,7 @@ function Cover() {
                 <Link href="/authentication/sign-in/cover">
                   <MDTypography
                     variant="button"
-                    color="dark"
+                    color="info"
                     fontWeight="medium"
                     textGradient
                   >

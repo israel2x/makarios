@@ -67,7 +67,7 @@ function BaseLayout({ stickyNavbar, children }) {
       <MDBox mt={stickyNavbar ? 3 : 10}>
         <Grid container>
           <Grid item xs={12} sm={8} lg={4}>
-            <AppBar position="static">
+            {/* <AppBar position="static">
               <Tabs
                 orientation={tabsOrientation}
                 value={tabValue}
@@ -78,7 +78,7 @@ function BaseLayout({ stickyNavbar, children }) {
                 <Tab label="Notifications" />
                 <Tab label="Backup" />
               </Tabs>
-            </AppBar>
+            </AppBar> */}
           </Grid>
         </Grid>
         {children}

@@ -79,7 +79,7 @@ function DefaultNavbarDropdown({
   );
 
   return (
-    <>
+    <> 
       <MDBox
         {...rest}
         mx={1}

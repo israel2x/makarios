@@ -74,7 +74,7 @@ function Breadcrumbs({ icon, title, route, light }) {
         >
           {title.replace("-", " ")}
         </MDTypography>
-      </MuiBreadcrumbs>
+      </MuiBreadcrumbs> 
       <MDTypography
         fontWeight="bold"
         textTransform="capitalize"
