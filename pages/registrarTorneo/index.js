@@ -46,7 +46,8 @@ import form from "/pagesComponents/pages/users/new-user/schemas/form";
 import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialValues";
 
 function getSteps() {
-  return ["User Info", "Address", "Social", "Profile"];
+  // return ["User Info", "Address", "Social", "Profile"];
+  return ["Perfil", "Participantes", "Categoria", "Revision", "Pago"];
 }
 
 function getStepContent(stepIndex, formData) {
@@ -58,6 +59,8 @@ function getStepContent(stepIndex, formData) {
     case 2:
       return <Socials formData={formData} />;
     case 3:
+      return <Profile formData={formData} />;
+      case 4:
       return <Profile formData={formData} />;
     default:
       return null;
@@ -102,14 +105,14 @@ function NewUser() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <MDBox py={3} mb={20} height="65vh">
+      <MDBox py={3} mb={20} height="25vh">
         <Grid
           container
           justifyContent="center"
           alignItems="center"
           sx={{ height: "100%", mt: 8 }}
         >
-          <Grid item xs={12} lg={8}>
+          <Grid item xs={12} lg={12}>
             <Formik
               initialValues={initialValues}
               validationSchema={currentValidation}
@@ -118,6 +121,7 @@ function NewUser() {
               {({ values, errors, touched, isSubmitting }) => (
                 <Form id={formId} autoComplete="off">
                   <Card sx={{ height: "100%" }}>
+                  {/* <Card sx={{ height: "500px" }}> */}
                     <MDBox mx={2} mt={-3}>
                       <Stepper activeStep={activeStep} alternativeLabel>
                         {steps.map((label) => (
