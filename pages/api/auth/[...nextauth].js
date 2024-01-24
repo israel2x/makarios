@@ -17,9 +17,13 @@ const authOptions = {
                         email: credentials.email
                     }
                 })
-                const matchPassword = await bcrypt.compare(credentials.password, userFound.password);
-                
-                if(!userFound) throw new Error("No user found");
+                if (!userFound) throw new Error('No user found')
+
+                console.log(userFound)
+        
+                const matchPassword = await bcrypt.compare(credentials.password, userFound.password)
+        
+                if (!matchPassword) throw new Error('Wrong password')
 
                 return {
                     id: userFound.id,
@@ -32,7 +36,10 @@ const authOptions = {
     ],
     pages: {
         signIn: "/auth/login",
-      }
+      },
+      callbacks: {
+    },
+    secret: process.env.NEXTAUTH_SECRET,
   }
 
 export default NextAuth(authOptions);

@@ -71,6 +71,51 @@ function UserInfo({ formData }) {
               success={lastNameV.length > 0 && !errors.lastName}
             />
           </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormField
+              type={lastName.type}
+              label={lastName.label}
+              name={lastName.name}
+              value={lastNameV}
+              placeholder={lastName.placeholder}
+              error={errors.lastName && touched.lastName}
+              success={lastNameV.length > 0 && !errors.lastName}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormField
+              type={lastName.type}
+              label={lastName.label}
+              name={lastName.name}
+              value={lastNameV}
+              placeholder={lastName.placeholder}
+              error={errors.lastName && touched.lastName}
+              success={lastNameV.length > 0 && !errors.lastName}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormField
+              type={lastName.type}
+              label={lastName.label}
+              name={lastName.name}
+              value={lastNameV}
+              placeholder={lastName.placeholder}
+              error={errors.lastName && touched.lastName}
+              success={lastNameV.length > 0 && !errors.lastName}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormField
+              type={lastName.type}
+              label={lastName.label}
+              name={lastName.name}
+              value={lastNameV}
+              placeholder={lastName.placeholder}
+              error={errors.lastName && touched.lastName}
+              success={lastNameV.length > 0 && !errors.lastName}
+            />
+          </Grid>
+          
         </Grid>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
