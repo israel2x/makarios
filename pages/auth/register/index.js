@@ -33,7 +33,7 @@ import MDButton from "/components/MDButton";
 import CoverLayout from "/pagesComponents/authentication/components/CoverLayout";
 
 // Images
-import bgImage from "/assets/images/bg-sign-up-cover.jpeg";
+import bgImage from "/assets/images/fondo_registrar.avif";
 
 function Cover() {
 
@@ -84,10 +84,10 @@ function Cover() {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Join us today
+            Registrar
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            Enter your email and password to register
+            Ingresa tu email and password 
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -150,7 +150,7 @@ function Cover() {
                 color="text"
                 sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
               >
-                &nbsp;&nbsp;I agree the&nbsp;
+                &nbsp;&nbsp;Estoy de acuerdo&nbsp;
               </MDTypography>
               <MDTypography
                 component="a"
@@ -160,7 +160,7 @@ function Cover() {
                 color="info"
                 textGradient
               >
-                Terms and Conditions
+                Termino y Condiciones
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
@@ -172,20 +172,20 @@ function Cover() {
                 color="info"
                 fullWidth
               >
-                sign in
+                Registrar
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                Already have an account?{" "}
-                <Link href="/authentication/sign-in/cover">
+                Ya tienes un usuario?{" "}
+                <Link href="/auth/login">
                   <MDTypography
                     variant="button"
                     color="info"
                     fontWeight="medium"
                     textGradient
                   >
-                    Sign In
+                    Inicia sesión
                   </MDTypography>
                 </Link>
               </MDTypography>

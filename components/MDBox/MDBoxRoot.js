@@ -66,6 +66,7 @@ export default styled(Box)(({ theme, ownerState }) => {
     "info",
     "success",
     "warning",
+    "makarios",
     "error",
     "light",
     "dark",

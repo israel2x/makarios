@@ -63,7 +63,10 @@ const colors = {
     main: "#4CAF50",
     focus: "#67bb6a",
   },
-
+  makarios: {
+    main: "#125688",
+    focus: "#0e456d",
+  },
   warning: {
     main: "#fb8c00",
     focus: "#fc9d26",
@@ -108,8 +111,10 @@ const colors = {
     },
 
     info: {
-      main: "#49a3f1",
-      state: "#1A73E8",
+      // main: "#49a3f1",
+      // state: "#1A73E8",
+      main: "#125688",
+      state: "#0e456d",
     },
 
     success: {
@@ -135,6 +140,11 @@ const colors = {
     dark: {
       main: "#42424a",
       state: "#191919",
+    },
+
+    instagram: {
+      main: "#125688",
+      state: "#0e456d",
     },
   },
 

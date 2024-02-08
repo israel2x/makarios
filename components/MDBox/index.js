@@ -21,6 +21,10 @@ import PropTypes from "prop-types";
 // Custom styles for MDBox
 import MDBoxRoot from "/components/MDBox/MDBoxRoot";
 
+
+
+      
+
 const MDBox = forwardRef(
   (
     {
@@ -56,6 +60,7 @@ MDBox.defaultProps = {
   variant: "contained",
   bgColor: "transparent",
   color: "info",
+  
   opacity: 1,
   borderRadius: "none",
   shadow: "none",

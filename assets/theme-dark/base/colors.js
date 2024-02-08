@@ -50,7 +50,10 @@ const colors = {
     main: "#e91e63",
     focus: "#e91e63",
   },
-
+  makarios: {
+    main: "#125688",
+    focus: "#0e456d",
+  },
   secondary: {
     main: "#7b809a",
     focus: "#8f93a9",
