@@ -17,13 +17,13 @@ const authOptions = {
                         email: credentials.email
                     }
                 })
-                if (!userFound) throw new Error('No user found')
+                if (!userFound) throw new Error('No user found');
 
-                console.log(userFound)
+                console.log(userFound);
         
-                const matchPassword = await bcrypt.compare(credentials.password, userFound.password)
+                const matchPassword = await bcrypt.compare(credentials.password, userFound.password);
         
-                if (!matchPassword) throw new Error('Wrong password')
+                if (!matchPassword) throw new Error('Wrong password');
 
                 return {
                     id: userFound.id,

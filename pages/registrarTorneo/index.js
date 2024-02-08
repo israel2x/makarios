@@ -37,17 +37,17 @@ import Footer from "/examples/Footer";
 // NewUser page components
 import UserInfo from "/pagesComponents/pages/users/new-user/components/UserInfo";
 import Address from "/pagesComponents/pages/users/new-user/components/Address";
-import Socials from "/pagesComponents/pages/users/new-user/components/Socials";
-import Profile from "/pagesComponents/pages/users/new-user/components/Profile";
+import Confirmacion from "/pagesComponents/pages/users/new-user/components/Confirmacion";
+import Pago from "/pagesComponents/pages/users/new-user/components/Pago";
 
 // NewUser layout schemas for form and form feilds
-import validations from "/pagesComponents/pages/users/new-user/schemas/validations";
-import form from "/pagesComponents/pages/users/new-user/schemas/form";
-import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialValues";
+import validations from "/pagesComponents/pages/users/new-user/schemas/validationsMakarios";
+import form from "/pagesComponents/pages/users/new-user/schemas/formMakarios";
+import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialMakariosValues";
 
 function getSteps() {
   // return ["User Info", "Address", "Social", "Profile"];
-  return ["Perfil", "Participantes", "Categoria", "Revision", "Pago"];
+  return ["Perfil", "Actividad", "Confirmación", "Pago"];
 }
 
 function getStepContent(stepIndex, formData) {
@@ -57,11 +57,10 @@ function getStepContent(stepIndex, formData) {
     case 1:
       return <Address formData={formData} />;
     case 2:
-      return <Socials formData={formData} />;
+      return <Confirmacion formData={formData} />;
     case 3:
-      return <Profile formData={formData} />;
-      case 4:
-      return <Profile formData={formData} />;
+      return <Pago formData={formData} />;
+ 
     default:
       return null;
   }

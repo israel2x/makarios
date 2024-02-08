@@ -42,9 +42,14 @@ import MDButton from "/components/MDButton";
 import BasicLayout from "/pagesComponents/authentication/components/BasicLayout";
 
 // Images
-import bgImage from "/assets/images/bg-sign-in-cover.jpeg";
+import bgImage from "/assets/images/tiro-con-arco-2022.jpeg";
 
 // import { handleLoginUser } from "../../../actions";
+import colors from "/assets/theme/base/colors";
+
+import linearGradient from "/assets/theme/functions/linearGradient";
+
+const { transparent, gradients, socialMediaColors,badgeColors } = colors;
 
 import { useRouter } from "next/router";
 
@@ -91,7 +96,7 @@ function Basic() {
       <Card>
         <MDBox
           variant="gradient"
-          bgColor="info"
+          bgColor="info"     
           borderRadius="lg"
           coloredShadow="dark"
           mx={2}
@@ -101,7 +106,7 @@ function Basic() {
           textAlign="center"
         >
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
-            Sign in
+            Iniciar Sesión
           </MDTypography>
           <Grid
             container
@@ -172,7 +177,7 @@ function Basic() {
                 onClick={handleSetRememberMe}
                 sx={{ cursor: "pointer", userSelect: "none", ml: -1 }}
               >
-                &nbsp;&nbsp;Remember me
+                &nbsp;&nbsp;Recuerdame
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
@@ -181,12 +186,13 @@ function Basic() {
                   onSubmit()
                  }}
               >
-                sign in
+                ingresar
               </MDButton>
             </MDBox>
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
-                Don&apos;t have an account?{" "}
+                {/* Don&apos;t have an account?{" "}  */}
+                No tienes una cuenta?
                 <Link href="/auth/register">
                   <MDTypography
                     variant="button"
@@ -194,7 +200,8 @@ function Basic() {
                     fontWeight="medium"
                     textGradient
                   >
-                    Sign up
+                    {/* Sign up */}
+                    Registrar
                   </MDTypography>
                 </Link>
               </MDTypography>

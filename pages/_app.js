@@ -156,7 +156,7 @@ function Main({ Component, pageProps }) {
       <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
         <CssBaseline />
         <Component {...pageProps} />
-        {layout === "dashboard" && (
+        {/* {layout === "dashboard" && (
           <>
             <Sidenav
               color={sidenavColor}
@@ -170,7 +170,7 @@ function Main({ Component, pageProps }) {
             {configsButton}
           </>
         )}
-        {layout === "vr" && <Configurator />}
+        {layout === "vr" && <Configurator />} */}
       </ThemeProvider>
     </CacheProvider>
   ) : (
@@ -179,19 +179,19 @@ function Main({ Component, pageProps }) {
       <Component {...pageProps} />
       {layout === "dashboard" && (
         <>
-          <Sidenav
+          {/* <Sidenav
             color={sidenavColor}
             brand={brandIcon}
             brandName="Material Dashboard PRO"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
-          />
-          <Configurator />
-          {configsButton}
+          /> */}
+          {/* <Configurator />
+          {configsButton} */}
         </>
       )}
-      {layout === "vr" && <Configurator />}
+      {/* {layout === "vr" && <Configurator />} */}
     </ThemeProvider>
   );
 }
