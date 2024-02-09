@@ -17,12 +17,12 @@ Coded by www.creative-tim.com
 import Link from "next/link";
 import axios from 'axios';
 import { useForm } from "react-hook-form";
-
+import MDAlert from "/components/MDAlert";
 import { useRouter } from "next/router";
 // @mui material components
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
-
+import { useState } from "react";
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
@@ -37,6 +37,7 @@ import bgImage from "/assets/images/fondo_registrar.avif";
 
 function Cover() {
 
+  const [errorEmail, setErrorEmail] = useState(false);
   const  router  = useRouter();
   const {
     register,
@@ -57,10 +58,15 @@ function Cover() {
       if(response.statusText === "OK"){
         router.push('/auth/login');
 
-      }else {
-       
+      }else{
+        console.log("ess");
+        setErrorEmail(true);
       }
   } catch (error) {
+    if(error.response.status === 409 ){
+      alert("Usuario o contraseña incorrectos");
+    }
+  
       console.log("error");
       console.log(error);
 
@@ -71,6 +77,11 @@ function Cover() {
 
   return (
     <CoverLayout image={bgImage}>
+       {/* {errorEmail === true && (
+                         <MDAlert color="error" dismissible>This is a dismissible alert!</MDAlert>
+                          ) } */}
+           
+      
       <Card>
         <MDBox
           variant="gradient"

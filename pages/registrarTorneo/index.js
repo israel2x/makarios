@@ -18,6 +18,9 @@ import { useState } from "react";
 // formik components
 import { Formik, Form } from "formik";
 
+import Swal from 'sweetalert2';
+
+
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -50,7 +53,7 @@ function getSteps() {
   return ["Perfil", "Actividad", "Confirmación", "Pago"];
 }
 
-function getStepContent(stepIndex, formData) {
+function getStepContent(stepIndex, formData, dataPagos) {
   switch (stepIndex) {
     case 0:
       return <UserInfo formData={formData} />;
@@ -59,7 +62,7 @@ function getStepContent(stepIndex, formData) {
     case 2:
       return <Confirmacion formData={formData} />;
     case 3:
-      return <Pago formData={formData} />;
+      return <Pago formData={formData} pagos={dataPagos} />;
  
     default:
       return null;
@@ -68,6 +71,8 @@ function getStepContent(stepIndex, formData) {
 
 function NewUser() {
   const [activeStep, setActiveStep] = useState(0);
+  //maneja el valor de la cita
+  
   const steps = getSteps();
   const { formId, formField } = form;
   const currentValidation = validations[activeStep];
@@ -79,6 +84,49 @@ function NewUser() {
     });
   const handleBack = () => setActiveStep(activeStep - 1);
 
+
+  let dataPagos = { 
+    PayboxRemail: "jefefinanciero@funcrisa.org",
+    PayboxSendmail: "",
+    PayboxRename: "FUNDACIÓN CRISTIANA PARA LA SALUD - FUNCRISA ",
+    PayboxSendname: "",
+    PayboxBase0: "2.7",
+    PayboxBase12: "0",
+    PayboxDescription: "Pago de Cita Médica",
+    PayboxProduction: false,
+    PayboxEnvironment: "sandbox",
+    PayboxLanguage: "es",
+    PayboxPagoPlux: true,
+    PayboxDirection: "Bolivar 2-80 y borrero",
+    PayBoxClientPhone: "0989891819",
+    PayBoxClientIdentification: "0104010402",
+    // Solo si es recurrente
+    PayboxRecurrent: false,
+    PayboxIdPlan: "Plan Nombre",
+    PayboxPermitirCalendarizar: true,
+    PayboxPagoInmediato: false,
+    PayboxCobroPrueba: false,
+    onAuthorize: (response) => {
+	
+      if (response.status === "succeeded") {
+		    console.log(response);
+        
+         console.log("dentro de data, despues de success");
+         
+         //onSubmitxy();
+         Swal.fire(
+          'Transacción exitosa!',
+          'Preciona Ok para aceptar tu cita!',
+          'success'
+        ).then(res=>{
+          console.log("estoy aqui con MBA");
+        
+        });
+      } 
+    }
+  }
+
+  const [dataPagoCita, setDataPagoCita] = useState(dataPagos);
   const submitForm = async (values, actions) => {
     await sleep(1000);
 
@@ -93,7 +141,7 @@ function NewUser() {
 
   const handleSubmit = (values, actions) => {
     if (isLastStep) {
-      submitForm(values, actions);
+      // submitForm(values, actions);
     } else {
       setActiveStep(activeStep + 1);
       actions.setTouched({});
@@ -117,7 +165,7 @@ function NewUser() {
               validationSchema={currentValidation}
               onSubmit={handleSubmit}
             > 
-              {({ values, errors, touched, isSubmitting }) => (
+              {({ values, errors, touched, isSubmitting, setFieldValue }) => (
                 <Form id={formId} autoComplete="off">
                   <Card sx={{ height: "100%" }}>
                   {/* <Card sx={{ height: "500px" }}> */}
@@ -137,7 +185,8 @@ function NewUser() {
                           touched,
                           formField,
                           errors,
-                        })}
+                          setFieldValue
+                        }, dataPagos)}
                         <MDBox
                           mt={2}
                           width="100%"
@@ -152,16 +201,16 @@ function NewUser() {
                               color="light"
                               onClick={handleBack}
                             >
-                              back
+                              atrás
                             </MDButton>
                           )}
                           <MDButton
                             disabled={isSubmitting}
                             type="submit"
                             variant="gradient"
-                            color="dark"
+                            color="info"
                           >
-                            {isLastStep ? "send" : "next"}
+                            {isLastStep ? "finalizar" : "siguiente"}
                           </MDButton>
                         </MDBox>
                       </MDBox>

@@ -1,0 +1,6 @@
+
+let dataPagos = { 
+ 
+ 
+}
+export {dataPagos};

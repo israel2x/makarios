@@ -19,7 +19,7 @@ import Link from "next/link";
 
 import { useForm } from "react-hook-form";
 
-import { signIn } from 'next-auth/react';
+import { signIn } from "next-auth/react";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -37,6 +37,7 @@ import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
 import MDInput from "/components/MDInput";
 import MDButton from "/components/MDButton";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // Authentication layout components
 import BasicLayout from "/pagesComponents/authentication/components/BasicLayout";
@@ -49,12 +50,14 @@ import colors from "/assets/theme/base/colors";
 
 import linearGradient from "/assets/theme/functions/linearGradient";
 
-const { transparent, gradients, socialMediaColors,badgeColors } = colors;
+const { transparent, gradients, socialMediaColors, badgeColors } = colors;
 
 import { useRouter } from "next/router";
 
 function Basic() {
-  const  router  = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -68,27 +71,26 @@ function Basic() {
   const [emailUser, setEmailUser] = useState(false);
   const [passwordlUser, setPasswordUser] = useState(false);
 
-  const onSubmit = handleSubmit(async(data) => {
+  const onSubmit = handleSubmit(async (data) => {
     try {
-      
-      const res = await signIn('credentials',{
-        email:data.email,
-        password:data.password,
-        redirect: false
+      await setLoading(true);
+      const res = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
       });
-
-      if(res.error){
-        alert("Usuario o contraseña incorrectos");
-      }else{
-
-        console.log("res",res);
-        router.push('/registrarTorneo');
-      }
-  } catch (error) {
-    
-  }
-
-
+      await setTimeout(() => {
+        setLoading(false);
+        
+        if (res.error) {
+          alert("Usuario o contraseña incorrectos");
+        } else {
+          console.log("res", res);
+          router.push("/registrarTorneo");
+        }
+      }, 2000);
+      
+    } catch (error) {}
   });
 
   return (
@@ -96,7 +98,7 @@ function Basic() {
       <Card>
         <MDBox
           variant="gradient"
-          bgColor="info"     
+          bgColor="info"
           borderRadius="lg"
           coloredShadow="dark"
           mx={2}
@@ -105,6 +107,7 @@ function Basic() {
           mb={1}
           textAlign="center"
         >
+          
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
             Iniciar Sesión
           </MDTypography>
@@ -149,24 +152,30 @@ function Basic() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput type="email" 
+              <MDInput
+                type="email"
                 {...register("email", {
                   required: {
                     value: true,
                     message: "email is required",
                   },
                 })}
-              label="Email" fullWidth />
+                label="Email"
+                fullWidth
+              />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput type="password" 
-                              {...register("password", {
-                                required: {
-                                  value: true,
-                                  message: "password is required",
-                                },
-                              })}
-              label="Password" fullWidth />
+              <MDInput
+                type="password"
+                {...register("password", {
+                  required: {
+                    value: true,
+                    message: "password is required",
+                  },
+                })}
+                label="Password"
+                fullWidth
+              />
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -180,11 +189,19 @@ function Basic() {
                 &nbsp;&nbsp;Recuerdame
               </MDTypography>
             </MDBox>
+            {loading && (
+            <MDBox textAlign="center">
+              <CircularProgress color="info" />
+            </MDBox>
+          )}
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="info" fullWidth
+              <MDButton
+                variant="gradient"
+                color="info"
+                fullWidth
                 onClick={() => {
-                  onSubmit()
-                 }}
+                  onSubmit();
+                }}
               >
                 ingresar
               </MDButton>
