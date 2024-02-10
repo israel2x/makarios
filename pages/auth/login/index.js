@@ -13,8 +13,8 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
 
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 
 import { useForm } from "react-hook-form";
@@ -56,7 +56,7 @@ import { useRouter } from "next/router";
 
 function Basic() {
   const [loading, setLoading] = useState(false);
-
+  // const { dispatch } = useContext(UserCitaContext);
   const router = useRouter();
   const {
     register,
@@ -86,6 +86,7 @@ function Basic() {
           alert("Usuario o contraseña incorrectos");
         } else {
           console.log("res", res);
+          // dispatch({ type: "SET_USER_EMAIL", payload: res.Email });
           router.push("/registrarTorneo");
         }
       }, 2000);

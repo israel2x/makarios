@@ -105,17 +105,7 @@ function UserInfo({ formData }) {
               success={nombresV.length > 0 && !errors.nombres}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormField
-              type={cedula.type}
-              label={cedula.label}
-              name={cedula.name}
-              value={cedulaV}
-              placeholder={cedula.placeholder}
-              error={errors.cedula && touched.cedula}
-              success={cedulaV.length > 0 && !errors.cedula}
-            />
-          </Grid>
+
           <Grid item xs={12} sm={6}>
             <FormField
               type={apellidos.type}
@@ -127,7 +117,17 @@ function UserInfo({ formData }) {
               success={apellidosV.length > 0 && !errors.apellidos}
             />
           </Grid>
-
+          <Grid item xs={12} sm={6}>
+            <FormField
+              type={cedula.type}
+              label={cedula.label}
+              name={cedula.name}
+              value={cedulaV}
+              placeholder={cedula.placeholder}
+              error={errors.cedula && touched.cedula}
+              success={cedulaV.length > 0 && !errors.cedula}
+            />
+          </Grid>
           <Grid item xs={12} sm={3}>
             <Autocomplete
               options={selectData.gender}

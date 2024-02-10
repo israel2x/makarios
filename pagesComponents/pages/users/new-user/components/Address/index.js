@@ -21,11 +21,12 @@ import MDDatePicker from "/components/MDDatePicker";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 
+import axios from 'axios';
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
 import MDInput from "/components/MDInput";
-
+import { useState, useEffect } from "react";
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 
@@ -37,6 +38,34 @@ function Address({ formData }) {
     competencia: competenciaV,
     horario: horarioV,
   } = values;
+
+  
+  const [actividades, setActividades] = useState([]);
+
+  const loadActividad = async(data) => {
+    try {
+      const response = await axios.get('/api/actividad', data);
+      console.log("response actividad");
+      console.log(response);
+      if(response.statusText === "OK"){
+       const dataActividad=response.data.actividadFound.map(item => item.actividad);
+        setActividades(dataActividad);
+      }else{
+      }
+  } catch (error) {
+  
+      console.log("error");
+      console.log(error);
+
+  }
+};
+const flatpickrOptions = {
+  mode: 'range', // Establece el modo en 'range' para habilitar un rango de fecha
+  // Agrega más opciones según sea necesario
+};
+useEffect(() => {
+  loadActividad();
+}, []);
 
   return (
     <MDBox>
@@ -60,14 +89,8 @@ function Address({ formData }) {
               success={actividadV.length > 0 && !errors.actividad}
             /> */}
             <Autocomplete
-              options={[
-                "ENTRENAMIENTO EXPRESS",
-                "TORNEO FLECHA A FLECHA",
-                "VACACIONAL DE TIRO CON ARCO",
-                "TORNEO VACACIONAL",
-                "SHOOT&SMILE",
-              ]}
-              defaultValue="ENTRENAMIENTO EXPRESS"
+              options={actividades}
+              // defaultValue="ENTRENAMIENTO EXPRESS"
               onChange={(e, value) => {
                 setFieldValue("actividad", value);
               }}
@@ -88,7 +111,7 @@ function Address({ formData }) {
           </Grid>
           <Grid item xs={6}>
             <MDDatePicker
-              readOnly
+              options={flatpickrOptions}
               input={{ placeholder: "Selecciones una fecha" }}
             />
           </Grid>
