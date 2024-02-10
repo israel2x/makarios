@@ -15,7 +15,7 @@ Coded by www.creative-tim.com
 
 // prop-type is a library for typechecking of props
 import PropTypes from "prop-types";
-
+import { useState } from "react";
 // @mui material components
 import Grid from "@mui/material/Grid";
 
@@ -26,15 +26,28 @@ import MDTypography from "/components/MDTypography";
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 import Autocomplete from "@mui/material/Autocomplete";
-import selectData from "/pagesComponents/pages/account/settings/components/BasicInfo/data/selectData";
+
+// Data
+import selectData from "/pagesComponents/pages/users/new-user/components/UserInfo/data/selectData";
 function UserInfo({ formData }) {
-  const { formField, values, errors, touched } = formData;
+  const { formField, values, errors, touched, setFieldValue } = formData;
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
-    const { nombres, apellidos, cedula, genero, fechaNacimiento, condicion,
-    celular, fechaCompetencia, actividad, ciudad, direccion, pais
-    } =
-    formField;
+  const {
+    nombres,
+    apellidos,
+    cedula,
+    genero,
+    fechaNacimiento,
+    dia,mes,anio,
+    condicion,
+    celular,
+    fechaCompetencia,
+    actividad,
+    ciudad,
+    direccion,
+    pais,
+  } = formField;
   // const {
   //   firstName: firstNameV,
   //   lastName: lastNameV,
@@ -53,10 +66,23 @@ function UserInfo({ formData }) {
     condicion: condicionV,
     celular: celularV,
     fechaNacimiento: fechaNacimientoV,
-    pais:paisV,
-    ciudad:ciudadV,
-    direccion:direccionV
+    dia: diaV,
+    mes: mesV,
+    anio: anioV,
+    pais: paisV,
+    ciudad: ciudadV,
+    direccion: direccionV,
   } = values;
+
+
+  const handleChangeFechaNacimiento = (tipo, valor) => {
+    setFechaNac((prevState) => ({
+      ...prevState,
+      [tipo]: valor,
+    }));
+  };
+
+  // selectData.gender.map((item) => console.log(`Fecha Nacimiento ${item}`));
 
   return (
     <MDBox>
@@ -79,6 +105,18 @@ function UserInfo({ formData }) {
               success={nombresV.length > 0 && !errors.nombres}
             />
           </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <FormField
+              type={apellidos.type}
+              label={apellidos.label}
+              name={apellidos.name}
+              value={apellidosV}
+              placeholder={apellidos.placeholder}
+              error={errors.apellidos && touched.apellidos}
+              success={apellidosV.length > 0 && !errors.apellidos}
+            />
+          </Grid>
           <Grid item xs={12} sm={6}>
             <FormField
               type={cedula.type}
@@ -90,39 +128,45 @@ function UserInfo({ formData }) {
               success={cedulaV.length > 0 && !errors.cedula}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormField
-              type={apellidos.type}
-              label={apellidos.label}
-              name={apellidos.name}
-              value={apellidosV}
-              placeholder={apellidos.placeholder}
-              error={errors.apellidos && touched.apellidos}
-              success={apellidosV.length > 0 && !errors.apellidos}
-            />
-         </Grid>
-          
-
           <Grid item xs={12} sm={3}>
-            <FormField
-              type={genero.type}
-              label={genero.label}
-              name={genero.name}
-              value={generoV}
-              placeholder={genero.placeholder}
-              error={errors.genero && touched.genero}
-              success={generoV.length > 0 && !errors.genero}
+            <Autocomplete
+              options={selectData.gender}
+              // defaultValue="Masculino"
+              onChange={(e, value) => {
+                setFieldValue("genero", value);
+              }}
+              renderInput={(params) => (
+                <FormField
+                  {...params}
+                  type={genero.type}
+                  label={genero.label}
+                  name={genero.name}
+                  value={generoV}
+                  error={errors.genero && touched.genero}
+                  success={generoV.length > 0 && !errors.genero}
+                />
+              )}
             />
           </Grid>
           <Grid item xs={12} sm={3}>
-            <FormField
-              type={condicion.type}
-              label={condicion.label}
-              name={condicion.name}
-              value={condicionV}
-              placeholder={condicion.placeholder}
-              error={errors.condicion && touched.condicion}
-              success={condicionV.length > 0 && !errors.condicion}
+            <Autocomplete
+              options={selectData.condicion}
+              // defaultValue="Ninguno"
+              onChange={(e, value) => {
+                setFieldValue("condicion", value); 
+              }}
+              renderInput={(params) => (
+                <FormField
+                  {...params}
+                  type={condicion.type}
+                  label={condicion.label}
+                  name={condicion.name}
+                  value={condicionV}
+                  // placeholder={condicion.placeholder}
+                  error={errors.condicion && touched.condicion}
+                  success={(condicionV.length > 0 ) && !errors.condicion}
+                />
+              )}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -136,76 +180,78 @@ function UserInfo({ formData }) {
               success={celularV.length > 0 && !errors.celular}
             />
           </Grid>
-          {/* <Grid item xs={12}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={4}>
-                <Autocomplete
-                  defaultValue="Male"
-                  options={selectData.gender}
-                  renderInput={(params) => (
-                    <FormField
-                      {...params}
-                      label="I'm"
-                      InputLabelProps={{ shrink: true }}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={8}>
-                <Grid container spacing={3}>
-                  <Grid item xs={12} sm={5}>
+
+              <Grid item xs={12} sm={6}>
+                <Grid container spacing={2}>
+
+                  <Grid item xs={12} sm={4}>
                     <Autocomplete
-                      defaultValue="February"
-                      options={selectData.birthDate}
+                      options={selectData.days}
+                      defaultValue="1"
+                      onChange={(e, value) => {
+                        setFieldValue("dia", value); 
+                      }}
                       renderInput={(params) => (
                         <FormField
                           {...params}
-                          label="Fecha nacimiento"
-                          InputLabelProps={{ shrink: true }}
+                          type={dia.type}
+                          label={dia.label}
+                          name={dia.name}
+                          value={diaV}
+                          placeholder={dia.placeholder}
+                          error={errors.dia && touched.dia}
+                          success={diaV.length > 0 && !errors.dia}
+
+                          // InputLabelProps={{ shrink: true }}
                         />
                       )}
                     />
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <Autocomplete
-                      defaultValue="1"
-                      options={selectData.days}
+                      options={selectData.birthDate}
+                      defaultValue="February"
+                      onChange={(e, value) => {
+                        setFieldValue("mes", value); 
+                      }}
                       renderInput={(params) => (
                         <FormField
-                          {...params}
-                          InputLabelProps={{ shrink: true }}
+                        {...params}
+                        type={mes.type}
+                        label={mes.label}
+                        name={mes.name}
+                        value={mesV}
+                        placeholder={mes.placeholder}
+                        error={errors.mes && touched.mes}
+                        success={mesV.length > 0 && !errors.mes}
                         />
                       )}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={3}>
+                  <Grid item xs={12} sm={4}>
                     <Autocomplete
-                      defaultValue="2021"
                       options={selectData.years}
+                      defaultValue="2021"
+                      onChange={(e, value) => {
+                        setFieldValue("anio", value); 
+                      }}
                       renderInput={(params) => (
                         <FormField
                           {...params}
-                          InputLabelProps={{ shrink: true }}
+                          type={anio.type}
+                          label={anio.label}
+                          name={anio.name}
+                          value={anioV}
+                          placeholder={anio.placeholder}
+                          error={errors.anio && touched.anio}
+                          success={anioV.length > 0 && !errors.anio}
                         />
                       )}
                     />
                   </Grid>
                 </Grid>
-              </Grid>
-            </Grid>
-          </Grid> */}
-          <Grid item xs={12} sm={6}>
-            <FormField
-              type={fechaNacimiento.type}
-              label={fechaNacimiento.label}
-              name={fechaNacimiento.name}
-              value={fechaNacimientoV}
-              placeholder={fechaNacimiento.placeholder}
-              error={errors.fechaNacimiento && touched.fechaNacimiento}
-              // success={fechaNacimientoV.length > 0 && !errors.fechaNacimiento}
-            />
+
           </Grid>
-          
           <Grid item xs={12} sm={6}>
             <FormField
               type={pais.type}

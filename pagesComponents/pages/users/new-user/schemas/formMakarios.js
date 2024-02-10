@@ -31,7 +31,7 @@ const form = {
       cedula: {
         name: "cedula",
         label: "CI o DNI",
-        type: "text",
+        type: "number",
         errorMsg: "Identificación es obligatorio.",
       },
       email: {
@@ -58,13 +58,28 @@ const form = {
       celular: {
         name: "celular",
         label: "Celular",
-        type: "text",
+        type: "number",
         errorMsg: "Celular es obligatorio.",
       },
       fechaNacimiento: {
         name: "fechanacimiento",
         label: "Fecha Nacimiento",
         type: "text",
+      },
+      dia: {
+        name: "dia",
+        label: "Dia",
+        type: "number",
+      },
+      mes: {
+        name: "mes",
+        label: "mes",
+        type: "text",
+      },
+      anio: {
+        name: "anio",
+        label: "anio",
+        type: "number",
       },
       pais: {
         name: "pais",

@@ -26,6 +26,7 @@ const {
     condicion,
     celular,
     fechaNacimiento,
+    dia,mes,anio,
     pais,
     ciudad,
     direccion,
@@ -44,6 +45,7 @@ const validations = [
     [pais.name]: Yup.string().required(pais.errorMsg),
     [ciudad.name]: Yup.string().required(ciudad.errorMsg),
     [condicion.name]: Yup.string().required(condicion.errorMsg),
+    [genero.name]: Yup.string().required(genero.errorMsg),
 
   }),
   // Yup.object().shape({

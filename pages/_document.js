@@ -34,6 +34,9 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp&display=swap"
             rel="stylesheet"
           />
+          <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+          <script src="https://sandbox-paybox.pagoplux.com/paybox/index_angular.js"></script>
+          <script src="https://paybox.pagoplux.com/paybox/index_angular.js"></script>
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {this.props.emotionStyleTags}
         </Head>

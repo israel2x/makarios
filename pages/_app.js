@@ -179,14 +179,14 @@ function Main({ Component, pageProps }) {
       <Component {...pageProps} />
       {layout === "dashboard" && (
         <>
-          {/* <Sidenav
+           <Sidenav
             color={sidenavColor}
             brand={brandIcon}
             brandName="Material Dashboard PRO"
             routes={routes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
-          /> */}
+          /> 
           {/* <Configurator />
           {configsButton} */}
         </>

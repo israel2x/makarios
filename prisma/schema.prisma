@@ -17,6 +17,7 @@ model User {
   lastname String
   email String @unique
   password String
+  profile Profile?
   createdAt DateTime @default(now())
   defaultAt DateTime @default(now())
 }
@@ -24,9 +25,54 @@ model User {
 
 model Profile {
   id Int @id @default(autoincrement())
-  email String @unique
-  username String @unique
-  password String
+  nombres String
+  apellidos String
+  cedula String
+  celular String
+  condicion String
+  fechaNacimiento String
+  genero String
+  pais String
+  ciudad String
+  direccion String  
+  user User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+  registro Registro?
+  createdAt DateTime @default(now())
+  defaultAt DateTime @default(now())
+}
+
+
+
+model Actividad{
+  id Int @id @default(autoincrement())
+  actividad String
+  estado String
+  registro Registro?
+  createdAt DateTime @default(now())
+  defaultAt DateTime @default(now())
+}
+
+model Horario{
+  id Int @id @default(autoincrement())
+  horario String
+  estado String
+  registro Registro?
+  createdAt DateTime @default(now())
+  defaultAt DateTime @default(now())
+}
+
+
+model Registro{
+  id Int @id @default(autoincrement())
+  fechatorneo String
+  pagado  Boolean   @default(false)
+  actividad Actividad @relation(fields: [actividadId], references: [id])
+  actividadId Int  @unique
+  profile Profile @relation(fields: [profileId], references: [id])
+  profileId Int  @unique
+  horario Horario @relation(fields: [horarioId], references: [id])
+  horarioId Int  @unique
   createdAt DateTime @default(now())
   defaultAt DateTime @default(now())
 }

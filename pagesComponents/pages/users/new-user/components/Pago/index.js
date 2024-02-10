@@ -28,8 +28,10 @@ import FormField from "/pagesComponents/pages/users/new-user/components/FormFiel
 import Autocomplete from "@mui/material/Autocomplete";
 import selectData from "/pagesComponents/pages/account/settings/components/BasicInfo/data/selectData";
 
+
+import PpxButton from "/pages/pagos-online/PpxButton"; 
 import PagoTarjeta from "/pagesComponents/pages/users/new-user/components/PagoTarjeta";
-function Pago({ formData }) {
+function Pago({ formData, pagos }) {
   const { formField, values, errors, touched } = formData;
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
@@ -105,7 +107,8 @@ function Pago({ formData }) {
            
           >
             <MDTypography variant="h5">Datos de Tarjeta</MDTypography>
-              <PagoTarjeta />
+              {/* <PagoTarjeta /> */}
+              <PpxButton data={pagos} /> 
           </Grid>
           <Grid item xs={12} sm={6}>
             <MDTypography variant="body1">Facturación</MDTypography>

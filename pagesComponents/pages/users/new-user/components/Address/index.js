@@ -21,16 +21,17 @@ import MDDatePicker from "/components/MDDatePicker";
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
 
+import axios from 'axios';
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
 import MDInput from "/components/MDInput";
-
+import { useState, useEffect } from "react";
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 
 function Address({ formData }) {
-  const { formField, values, errors, touched } = formData;
+  const { formField, values, errors, touched, setFieldValue } = formData;
   const { actividad, competencia, horario } = formField;
   const {
     actividad: actividadV,
@@ -38,15 +39,43 @@ function Address({ formData }) {
     horario: horarioV,
   } = values;
 
+  
+  const [actividades, setActividades] = useState([]);
+
+  const loadActividad = async(data) => {
+    try {
+      const response = await axios.get('/api/actividad', data);
+      console.log("response actividad");
+      console.log(response);
+      if(response.statusText === "OK"){
+       const dataActividad=response.data.actividadFound.map(item => item.actividad);
+        setActividades(dataActividad);
+      }else{
+      }
+  } catch (error) {
+  
+      console.log("error");
+      console.log(error);
+
+  }
+};
+const flatpickrOptions = {
+  mode: 'range', // Establece el modo en 'range' para habilitar un rango de fecha
+  // Agrega más opciones según sea necesario
+};
+useEffect(() => {
+  loadActividad();
+}, []);
+
   return (
     <MDBox>
       <MDTypography variant="h5" fontWeight="bold">
         Actividad
       </MDTypography>
       {/* <MDTypography variant="h5">Perfil</MDTypography> */}
-        <MDTypography variant="button" color="text">
-          Elige la actividad en la que deseas participar
-        </MDTypography>
+      <MDTypography variant="button" color="text">
+        Elige la actividad en la que deseas participar
+      </MDTypography>
       <MDBox mt={1.625}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -59,41 +88,50 @@ function Address({ formData }) {
               error={errors.actividad && touched.actividad}
               success={actividadV.length > 0 && !errors.actividad}
             /> */}
-          <Autocomplete
-                options={["ENTRENAMIENTO EXPRESS", "TORNEO FLECHA A FLECHA", "VACACIONAL DE TIRO CON ARCO",
-              "TORNEO VACACIONAL","SHOOT&SMILE"]}
-                  defaultValue="ENTRENAMIENTO EXPRESS"
-                  renderInput={(params) => (
-                    <FormField
-                    {...params}
-                    type={actividad.type}
-                    label={actividad.label}
-                    name={actividad.name}
-                    value={actividadV}
-                    placeholder={actividad.placeholder}
-                    // error={errors.actividad && touched.actividad}
-                    success={actividadV.length > 0 && !errors.actividad}
-                  />
-                  )}
+            <Autocomplete
+              options={actividades}
+              // defaultValue="ENTRENAMIENTO EXPRESS"
+              onChange={(e, value) => {
+                setFieldValue("actividad", value);
+              }}
+              renderInput={(params) => (
+                <FormField
+                  {...params}
+                  type={actividad.type}
+                  label={actividad.label}
+                  name={actividad.name}
+                  value={actividadV}
+                  placeholder={actividad.placeholder}
+                  // error={errors.actividad && touched.actividad}
+                  // success={actividadV.length > 0 && !errors.actividad}
+                  // InputLabelProps={{ shrink: true }}
                 />
+              )}
+            />
           </Grid>
           <Grid item xs={6}>
-          <MDDatePicker 
-   
-          input={{ placeholder: "Selecciones una fecha" }} />
-
+            <MDDatePicker
+              options={flatpickrOptions}
+              input={{ placeholder: "Selecciones una fecha" }}
+            />
           </Grid>
 
           <Grid item xs={6}>
             <Autocomplete
-              options={["State 1", "State 2", "State 3"]}
+              options={["8:00", "9:24", "10:25"]}
+              onChange={(e, value) => {
+                setFieldValue("horario", value);
+              }}
               renderInput={(params) => (
-                <MDInput {...params} variant="standard"       
-                label={horario.label}
-                name={horario.name}
-                value={horarioV} 
-                // error={errors.horario && touched.horario}
-                // success={horarioV.length > 0 && !errors.horario}
+                <MDInput
+                  {...params}
+                  variant="standard"
+                  label={horario.label}
+                  name={horario.name}
+                  value={horarioV}
+                  InputLabelProps={{ shrink: true }}
+                  // error={errors.horario && touched.horario}
+                  // success={horarioV.length > 0 && !errors.horario}
                 />
               )}
             />
