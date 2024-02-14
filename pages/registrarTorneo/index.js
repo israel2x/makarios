@@ -141,7 +141,12 @@ function NewUser() {
   };
 
   const handleSubmit = (values, actions) => {
+   
     if (isLastStep) {
+      // actions.stopPropagation(); 
+      console.log("last step"); 
+      console.log(values);
+      console.log(actions);  
       submitForm(values, actions);
     } else {
       setActiveStep(activeStep + 1);
@@ -207,13 +212,14 @@ function NewUser() {
                             </MDButton>
                           )}
                           <MDButton
-                            disabled={isSubmitting}
+                            // disabled={isSubmitting}
                             type="submit"
                             variant="gradient"
                             color="info"
                           >
                             {isLastStep ? "finalizar" : "siguiente"}
                           </MDButton>
+                          {isLastStep}
                         </MDBox>
                       </MDBox>
                     </MDBox>

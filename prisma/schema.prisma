@@ -10,69 +10,71 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id Int @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   firstname String
-  lastname String
-  email String @unique
-  password String
-  profile Profile?
+  lastname  String
+  email     String   @unique
+  password  String
+  role      String
+  profile   Profile?
   createdAt DateTime @default(now())
   defaultAt DateTime @default(now())
 }
-
 
 model Profile {
-  id Int @id @default(autoincrement())
-  nombres String
-  apellidos String
-  cedula String
-  celular String
-  condicion String
+  id              Int       @id @default(autoincrement())
+  nombres         String
+  apellidos       String
+  cedula          String
+  celular         String
+  condicion       String
   fechaNacimiento String
-  genero String
-  pais String
-  ciudad String
-  direccion String  
-  user User @relation(fields: [userId], references: [id])
-  userId Int  @unique
-  registro Registro?
-  createdAt DateTime @default(now())
-  defaultAt DateTime @default(now())
+  genero          String
+  pais            String
+  ciudad          String
+  direccion       String
+  user            User      @relation(fields: [userId], references: [id])
+  userId          Int       @unique
+  registro        Registro?
+  createdAt       DateTime  @default(now())
+  defaultAt       DateTime  @default(now())
 }
 
-
-
-model Actividad{
-  id Int @id @default(autoincrement())
-  actividad String
-  estado String
-  registro Registro?
-  createdAt DateTime @default(now())
-  defaultAt DateTime @default(now())
+model Actividad {
+  id          Int           @id @default(autoincrement())
+  descripcion String
+  precio      Float
+  estado      String
+  programacion   Programacion?
+  createdAt   DateTime      @default(now())
+  defaultAt   DateTime      @default(now())
 }
 
-model Horario{
-  id Int @id @default(autoincrement())
-  horario String
-  estado String
+model Programacion {
+  id            Int       @id @default(autoincrement())
+  vigenciaDesde DateTime
+  vigenciaHasta DateTime
+  horaDesde     String
+  horaHasta     String
+  detalle       String
+  estado        String
+  cupo          Int
+  actividad     Actividad @relation(fields: [actividadId], references: [id])
+  actividadId   Int       @unique
   registro Registro?
-  createdAt DateTime @default(now())
-  defaultAt DateTime @default(now())
+  createdAt     DateTime  @default(now())
+  defaultAt     DateTime  @default(now())
 }
 
-
-model Registro{
-  id Int @id @default(autoincrement())
+model Registro {
+  id          Int       @id @default(autoincrement())
   fechatorneo String
-  pagado  Boolean   @default(false)
-  actividad Actividad @relation(fields: [actividadId], references: [id])
-  actividadId Int  @unique
-  profile Profile @relation(fields: [profileId], references: [id])
-  profileId Int  @unique
-  horario Horario @relation(fields: [horarioId], references: [id])
-  horarioId Int  @unique
-  createdAt DateTime @default(now())
-  defaultAt DateTime @default(now())
+  pagado      Boolean   @default(false)
+  programacion   Programacion @relation(fields: [programacionId], references: [id])
+  programacionId Int  @unique
+  profile     Profile   @relation(fields: [profileId], references: [id])
+  profileId   Int       @unique
+  createdAt   DateTime  @default(now())
+  defaultAt   DateTime  @default(now())
 }

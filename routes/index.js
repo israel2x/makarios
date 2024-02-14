@@ -36,7 +36,7 @@ Coded by www.creative-tim.com
 
 // NextJS Material Dashboard 2 PRO components
 import MDAvatar from "/components/MDAvatar";
-
+import Link from "next/link";
 // @mui icons
 import Icon from "@mui/material/Icon";
 
@@ -463,9 +463,25 @@ const routes = [
   {
     type: "collapse",
     name: "Registrados",
-    key: "changelog",
-    href: "https://github.com/creativetimofficial/ct-nextjs-material-dashboard-pro/blob/main/CHANGELOG.md",
+    key: "registrados",
+    route: "/registrados",
     icon: <Icon fontSize="medium">receipt_long</Icon>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Actividades",
+    key: "actividad",
+    route: "/actividad",
+    icon: <Icon fontSize="medium">mediation</Icon>,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Programación",
+    key: "programacion",
+    route: "/programacion",
+    icon: <Icon fontSize="medium">event</Icon>,
     noCollapse: true,
   },
   // {
