@@ -15,178 +15,175 @@ Coded by www.creative-tim.com
 
 import { useState } from "react";
 
-// formik components
-import { Formik, Form } from "formik";
-
-import Swal from 'sweetalert2';
-
-import PageLayout from "/examples/LayoutContainers/PageLayout";
-
 // @mui material components
-import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
+import Icon from "@mui/material/Icon";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Divider from "@mui/material/Divider";
+
+//@mui components for modal-dialog
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
+import MDTypography from "/components/MDTypography";
 import MDButton from "/components/MDButton";
+import MDInput from "/components/MDInput";
 
 // NextJS Material Dashboard 2 PRO examples
 import DashboardLayout from "/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
 import Footer from "/examples/Footer";
+import DataTable from "/examples/Tables/DataTable";
 
-// NewUser page components
-import UserInfo from "/pagesComponents/pages/users/new-user/components/UserInfo";
-import Address from "/pagesComponents/pages/users/new-user/components/Address";
-import Confirmacion from "/pagesComponents/pages/users/new-user/components/Confirmacion";
-import Pago from "/pagesComponents/pages/users/new-user/components/Pago";
+// Data
+import dataTableData from "/pagesComponents/ecommerce/orders/order-list/data/dataTableData";
 
-// NewUser layout schemas for form and form feilds
-import validations from "/pagesComponents/pages/users/new-user/schemas/validationsMakarios";
-import form from "/pagesComponents/pages/users/new-user/schemas/formMakarios";
-import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialMakariosValues";
+function OrderList() {
+  const [menu, setMenu] = useState(null);
+  const [open, setOpen] = useState(false); //modal
+  const [loading, setLoading] = useState(false);
 
-function getSteps() {
-  // return ["User Info", "Address", "Social", "Profile"];
-  return ["Perfil", "Actividad", "Confirmación", "Pago"];
-}
+  const openMenu = (event) => setMenu(event.currentTarget);
+  const closeMenu = () => setMenu(null);
 
-function getStepContent(stepIndex, formData) {
-  switch (stepIndex) {
-    case 0:
-      return <UserInfo formData={formData} />;
-    case 1:
-      return <Address formData={formData} />;
-    case 2:
-      return <Confirmacion formData={formData} />;
-    case 3:
-      return <Pago formData={formData} />;
- 
-    default:
-      return null;
-  }
-}
-
-function Actividad() {
-  const [activeStep, setActiveStep] = useState(0);
-  //maneja el valor de la cita
-  
-  const steps = getSteps();
-  const { formId, formField } = form;
-  const currentValidation = validations[activeStep];
-  const isLastStep = activeStep === steps.length - 1;
-
-  const sleep = (ms) =>
-    new Promise((resolve) => {
-      setTimeout(resolve, ms);
-    });
-  const handleBack = () => setActiveStep(activeStep - 1);
-
-
-
-  const submitForm = async (values, actions) => {
-    await sleep(1000);
-
-    // eslint-disable-next-line no-alert
-    alert(JSON.stringify(values, null, 2));
-
-    actions.setSubmitting(false);
-    actions.resetForm();
-
-    setActiveStep(0);
+  //modal
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
   };
 
-  const handleSubmit = (values, actions) => {
-    if (isLastStep) {
-      submitForm(values, actions);
-    } else {
-      setActiveStep(activeStep + 1);
-      actions.setTouched({});
-      actions.setSubmitting(false);
-    }
-  };
+  const renderMenu = (
+    <Menu
+      anchorEl={menu}
+      anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      transformOrigin={{ vertical: "top", horizontal: "left" }}
+      open={Boolean(menu)}
+      onClose={closeMenu}
+      keepMounted
+    >
+      <MenuItem onClick={closeMenu}>Status: Paid</MenuItem>
+      <MenuItem onClick={closeMenu}>Status: Refunded</MenuItem>
+      <MenuItem onClick={closeMenu}>Status: Canceled</MenuItem>
+      <Divider sx={{ margin: "0.5rem 0" }} />
+      <MenuItem onClick={closeMenu}>
+        <MDTypography variant="button" color="error" fontWeight="regular">
+          Remove Filter
+        </MDTypography>
+      </MenuItem>
+    </Menu>
+  );
 
   return (
     <DashboardLayout>
-    {/* // <PageLayout> */}
       <DashboardNavbar />
-      <MDBox py={1} mb={10} height="25vh">
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="center"
-          sx={{ height: "100%", mt: 8 }}
-        >
-          <Grid item xs={12} lg={8}>
-            <Formik
-              initialValues={initialValues}
-              validationSchema={currentValidation}
-              onSubmit={handleSubmit}
-            > 
-              {({ values, errors, touched, isSubmitting, setFieldValue }) => (
-                <Form id={formId} autoComplete="off">
-                  <Card sx={{ height: "100%" }}>
-                  {/* <Card sx={{ height: "500px" }}> */}
-                    <MDBox mx={2} mt={-3}>
-                      <Stepper activeStep={activeStep} alternativeLabel>
-                        {steps.map((label) => (
-                          <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                          </Step>
-                        ))}
-                      </Stepper>
-                    </MDBox>
-                    <MDBox p={3}>
-                      <MDBox>
-                        {getStepContent(activeStep, {
-                          values,
-                          touched,
-                          formField,
-                          errors,
-                          setFieldValue
-                        })}
-                        <MDBox
-                          mt={2}
-                          width="100%"
-                          display="flex"
-                          justifyContent="space-between"
-                        >
-                          {activeStep === 0 ? (
-                            <MDBox />
-                          ) : (
-                            <MDButton
-                              variant="gradient"
-                              color="light"
-                              onClick={handleBack}
-                            >
-                              atrás
-                            </MDButton>
-                          )}
-                          <MDButton
-                            disabled={isSubmitting}
-                            type="submit"
-                            variant="gradient"
-                            color="info"
-                          >
-                            {isLastStep ? "finalizar" : "siguiente"}
-                          </MDButton>
-                        </MDBox>
-                      </MDBox>
-                    </MDBox>
-                  </Card>
-                </Form>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          component: "form",
+          onSubmit: (event) => {
+            event.preventDefault();
+            handleClose();
+          },
+        }}
+      >
+        <DialogTitle>Crear Actividad</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Guardar Actividad</DialogContentText>
+          <MDBox pt={4} pb={3} px={3}>
+            <MDBox component="form" role="form">
+              <MDBox mb={2}>
+                <MDInput type="email" label="Email" fullWidth />
+              </MDBox>
+              <MDBox mb={2}>
+                <MDInput type="password" label="Password" fullWidth />
+              </MDBox>
+
+              {loading && (
+                <MDBox textAlign="center">
+                  <CircularProgress color="info" />
+                </MDBox>
               )}
-            </Formik>
-          </Grid>
-        </Grid>
+              <MDBox mt={4} mb={1}>
+                <MDButton
+                  variant="gradient"
+                  color="info"
+                  fullWidth
+                  onClick={() => {
+                    onSubmit();
+                  }}
+                >
+                  ingresar
+                </MDButton>
+              </MDBox>
+              <MDBox mt={3} mb={1} textAlign="center">
+                <MDTypography variant="button" color="text">
+                  {/* Don&apos;t have an account?{" "}  */}
+                  No tienes una cuenta?
+                  <MDTypography
+                    variant="button"
+                    color="dark"
+                    fontWeight="medium"
+                    textGradient
+                  >
+                    {/* Sign up */}
+                    Registrar
+                  </MDTypography>
+                </MDTypography>
+              </MDBox>
+            </MDBox>
+          </MDBox>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancelar</Button>
+          <Button type="submit">Guardar</Button>
+        </DialogActions>
+      </Dialog>
+      <MDBox my={3}>
+        <MDBox
+          display="flex"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          mb={2}
+        >
+          <MDButton variant="gradient" color="dark" onClick={handleClickOpen}>
+            nueva actividad
+          </MDButton>
+          <MDBox display="flex">
+            <MDButton
+              variant={menu ? "contained" : "outlined"}
+              color="dark"
+              onClick={openMenu}
+            >
+              filters&nbsp;
+              <Icon>keyboard_arrow_down</Icon>
+            </MDButton>
+            {renderMenu}
+            <MDBox ml={1}>
+              <MDButton variant="outlined" color="dark">
+                <Icon>description</Icon>
+                &nbsp;export csv
+              </MDButton>
+            </MDBox>
+          </MDBox>
+        </MDBox>
+        <Card>
+          <DataTable table={dataTableData} entriesPerPage={false} canSearch />
+        </Card>
       </MDBox>
-      {/* <Footer /> */}
+      <Footer />
     </DashboardLayout>
-    // </PageLayout>
   );
 }
 
-export default Actividad;
+export default OrderList;
