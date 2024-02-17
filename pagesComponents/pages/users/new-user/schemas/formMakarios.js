@@ -121,6 +121,10 @@ const form = {
         name: "pagado",
         type:"text"
       },
+      precio: {
+        name: "precio",
+        type:"text"
+      },
     },
   };
   

@@ -27,3 +27,6 @@ package-lock.json
 
 .next
 .env
+
+docker-compose.yml
+data.sql

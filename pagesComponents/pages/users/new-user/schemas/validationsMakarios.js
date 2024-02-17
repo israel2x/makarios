@@ -34,6 +34,7 @@ const {
     competencia,
     horario,
     pagado,
+    precio
   },
 } = checkout;
 

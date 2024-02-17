@@ -35,6 +35,7 @@ const {
     competencia,
     horario,
     pagado,
+    precio
   },
 } = checkout;
 
@@ -57,6 +58,7 @@ const initialValues = {
   [competencia.name]: "",
   [horario.name]: "",
   [pagado.name]: "",
+  [precio.name]: "",
 };
 
 export default initialValues;

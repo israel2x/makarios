@@ -19,6 +19,7 @@ const authOptions = {
                 })
                 if (!userFound) throw new Error('No user found');
 
+                console.log("userFound");
                 console.log(userFound);
         
                 const matchPassword = await bcrypt.compare(credentials.password, userFound.password);
@@ -29,7 +30,8 @@ const authOptions = {
                     id: userFound.id,
                     firstname: userFound.firstname,
                     lastname: userFound.lastname,
-                    email: userFound.email
+                    email: userFound.email,
+                    role:userFound.role
                 }
             }
         })

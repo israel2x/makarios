@@ -47,7 +47,9 @@ function Cover() {
 
   const onSubmit = handleSubmit(async(data) => {
     try {
-      
+      console.log("data");
+      data.role='participante';
+      console.log(data.role);
       const response = await axios.post('/api/auth/register/', data);
       // console.log(" antes del response");
       console.log("response login");

@@ -6,9 +6,9 @@ export default async function actividadHanler(req, res) {
   try {
     const actividadFound = await db.actividad.findMany({
       where: {
-        estado:'1'
-      },
-    });
+        estado: 'A',
+      }
+    });;
 
     if (!actividadFound) {
       return res.status(409).send("Actividad not found");

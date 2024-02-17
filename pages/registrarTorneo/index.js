@@ -87,20 +87,20 @@ function NewUser() {
 
 
   let dataPagos = { 
-    PayboxRemail: "jefefinanciero@funcrisa.org",
+    PayboxRemail: "info@makarios.club",
     PayboxSendmail: "",
-    PayboxRename: "FUNDACIÓN CRISTIANA PARA LA SALUD - FUNCRISA ",
+    PayboxRename: "CLUB DEPORTIVO ESPECIALIZADO FORMATIVO MAKARIOS",
     PayboxSendname: "",
     PayboxBase0: "2.7",
     PayboxBase12: "0",
-    PayboxDescription: "Pago de Cita Médica",
+    PayboxDescription: "Pago de TORNEO DEPORTIVO",
     PayboxProduction: false,
     PayboxEnvironment: "sandbox",
     PayboxLanguage: "es",
     PayboxPagoPlux: true,
     PayboxDirection: "Bolivar 2-80 y borrero",
-    PayBoxClientPhone: "0989891819",
-    PayBoxClientIdentification: "0104010402",
+    PayBoxClientPhone: "0996600922",
+    PayBoxClientIdentification: "0993385314001",
     // Solo si es recurrente
     PayboxRecurrent: false,
     PayboxIdPlan: "Plan Nombre",
