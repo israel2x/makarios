@@ -25,7 +25,7 @@ const {
     genero,
     condicion,
     celular,
-    fechaNacimiento,
+    fechanacimiento,
     dia,mes,anio,
     pais,
     ciudad,

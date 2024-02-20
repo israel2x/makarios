@@ -15,6 +15,7 @@ Coded by www.creative-tim.com
 
 // prop-type is a library for typechecking of props
 import PropTypes from "prop-types";
+import { getSession } from 'next-auth/react';
 
 import MDDatePicker from "/components/MDDatePicker";
 // @mui material components
@@ -33,9 +34,14 @@ import moment from "moment";
 
 function Address({ formData }) {
   const { formField, values, errors, touched, setFieldValue } = formData;
-  const { actividad, competencia, horario, precio } = formField;
+  const { actividad, email, competencia, dia, mes, anio, fechanacimiento, horario, precio } = formField;
   const {
+    email: emailV,
     actividad: actividadV,
+    fechanacimiento: fechanacimientoV,
+    dia:diaV,
+    mes:mesV,
+    anio:anioV,
     competencia: competenciaV,
     horario: horarioV, 
     precio: precioV,
@@ -50,6 +56,8 @@ function Address({ formData }) {
   const [cupo, setCupo] = useState([]);
 
   const loadActividad = async (data) => {
+    const session = await getSession(data);
+    setFieldValue("email", session.user.email);
     try {
       const response = await axios.get("/api/actividad", data);
       console.log("response actividad");
@@ -106,6 +114,9 @@ function Address({ formData }) {
       
       await loadProgramacion(resultado.id);
       setFieldValue("precio", resultado.precio);
+      const fechaNacimientoP = moment(`${anioV}-${mesV}-${diaV}`, 'YYYY-MMMM-DD');
+      const fechaFormateada = fechaNacimientoP.format('YYYY-MM-DD');
+      setFieldValue("fechanacimiento",fechaFormateada);
       console.log("programacion");
       console.log(resultado);
       console.log(precioV);

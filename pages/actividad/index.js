@@ -17,7 +17,7 @@ import { useState } from "react";
 
 // formik components
 import { Formik, Form } from "formik";
-
+import $ from "jquery";
 import Swal from 'sweetalert2';
 
 import PageLayout from "/examples/LayoutContainers/PageLayout";
@@ -49,15 +49,59 @@ import validations from "/pagesComponents/pages/users/new-user/schemas/validatio
 import form from "/pagesComponents/pages/users/new-user/schemas/formMakarios";
 import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialMakariosValues";
 
-
+import PpxButton from "/pages/pagos-online/PpxButton"; 
 
 function Actividad() {
   const [activeStep, setActiveStep] = useState(0);
   //maneja el valor de la cita
   
+  let dataPagos = { 
+    PayboxRemail: "info@makarios.club",
+    PayboxSendmail: "jcalcivar@hotmail.com",
+    PayboxRename: "CLUB DEPORTIVO ESPECIALIZADO FORMATIVO MAKARIOS",
+    PayboxSendname: "juan carlos alcivar",
+    PayboxBase0: "2.7",
+    PayboxBase12: "0",
+    PayboxDescription: "Pago de prueba",
+    PayboxProduction: false,
+    PayboxEnvironment: "sandbox",
+    PayboxLanguage: "es",
+    PayboxPagoPlux: true,
+    PayboxDirection: "VIA LA PUNTILLA SALITRE EL BUIJO KM 5",
+    PayBoxClientPhone: "0996600922",
+    PayBoxClientIdentification: "0993385314001",
+    // Solo si es recurrente
+    PayboxRecurrent: false,
+    PayboxIdPlan: "Plan Nombre",
+    PayboxPermitirCalendarizar: true,
+    PayboxPagoInmediato: false,
+    PayboxCobroPrueba: false,
+    onAuthorize: (response) => {
+	
+      if (response.status === "succeeded") {
+		    console.log(response);
+        
+         console.log("dentro de data, despues de success");
+         
+         //onSubmitxy();
+         Swal.fire(
+          'Transacción exitosa!',
+          'Preciona Ok para aceptar tu cita!',
+          'success'
+        ).then(res=>{
+          console.log("estoy aqui con MBA");
+        
+        });
+      } 
+    }
+  }
+
 
   return (
-<><h1>Hola Actividad</h1></>
+<><h1>Hola Actividad</h1>
+
+{/* <PpxButton data={dataPagos} />  */}
+</>
   );
 }
 

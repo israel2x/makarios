@@ -1,6 +1,9 @@
-import { useEffect } from "react";
-import { iniciarDatos } from "../../funciones-pagos/pagos-functions";
 
+import { iniciarDatos } from "../../funciones-pagos/pagos-functions";
+import MDBox from "/components/MDBox";
+import CircularProgress from "@mui/material/CircularProgress";
+
+import {  useEffect, useState } from "react";
 const PpxButton = ({ data }) => {
   const estiloBoton = {
     display: "none",
@@ -19,15 +22,21 @@ const PpxButton = ({ data }) => {
     boxShadow: "0px 2px 2px lightgray",
   };
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    iniciarDatos(data);    
+    // (iniciarDatos(data)) ? setLoading(true):setLoading(false);   
+    console.log("iniciar datos");
+    console.log(data);
+    iniciarDatos(data);
   }, [data]);
  
   return (
     <> 
     <div align={"center"}>
-      <div id="modalPaybox"></div>
-      <button style={estiloBoton} id="pay" type="submit"></button>
+         <div id="modalPaybox"></div>
+      <button style={estiloBoton} id="pay" type="button" onClick={iniciarDatos}></button>
+      {/* <button style={estiloBoton} id="pay" type="submit"></button> */}
       </div>
     </>
   );

@@ -91,8 +91,8 @@ function Basic() {
           console.log("login");
           console.log("res", res);
           console.log('Usuario:', session);
-          console.log('Usuario:', session.user);
-          console.log('Rol:', session.user.firstname);
+          // console.log('Usuario:', session.user);
+          // console.log('Rol:', session.user.firstname);
           // dispatch({ type: "SET_USER_EMAIL", payload: res.Email });
           router.push("/registrarTorneo");
         }

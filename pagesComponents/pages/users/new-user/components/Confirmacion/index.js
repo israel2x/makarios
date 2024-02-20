@@ -30,7 +30,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import selectData from "/pagesComponents/pages/account/settings/components/BasicInfo/data/selectData";
 
 function Confirmacion({ formData }) {
-  const { formField, values, errors, touched } = formData;
+  const { formField, values, errors, touched, setFieldValue } = formData;
   const [edad, setEdad] = useState(null);
   const [precioData, setPrecioData] = useState(null);
   // const { firstName, lastName, company, email, password, repeatPassword } =
@@ -83,6 +83,7 @@ function Confirmacion({ formData }) {
 
 
   const loadActividad = async (data) => {
+    
     try {
       const response = await axios.get("/api/actividad", data);
       console.log("response actividad");
@@ -106,6 +107,7 @@ function Confirmacion({ formData }) {
 
 // Crea un objeto moment con la fecha de nacimiento
 const fechaNacimientoP = moment(`${anioV}-${mesV}-${diaV}`, 'YYYY-MMMM-DD');
+// setFieldValue("fechaNacimiento", `${anioV}-${mesV}-${diaV}`);
 const age = moment().diff(fechaNacimientoP, 'years');
 const isLegal = (age >= 18);
 

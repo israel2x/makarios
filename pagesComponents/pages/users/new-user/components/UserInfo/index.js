@@ -15,13 +15,14 @@ Coded by www.creative-tim.com
 
 // prop-type is a library for typechecking of props
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // @mui material components
 import Grid from "@mui/material/Grid";
 
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
+
 
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
@@ -30,10 +31,12 @@ import Autocomplete from "@mui/material/Autocomplete";
 // Data
 import selectData from "/pagesComponents/pages/users/new-user/components/UserInfo/data/selectData";
 function UserInfo({ formData }) {
+  
   const { formField, values, errors, touched, setFieldValue } = formData;
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
   const {
+    email,
     nombres,
     apellidos,
     cedula,
@@ -58,6 +61,7 @@ function UserInfo({ formData }) {
   // } = values;
 
   const {
+    
     nombres: nombresV,
     apellidos: apellidosV,
     cedula: cedulaV,
@@ -73,7 +77,7 @@ function UserInfo({ formData }) {
     ciudad: ciudadV,
     direccion: direccionV,
   } = values;
-
+  // const session = await getSession(formData);
 
   const handleChangeFechaNacimiento = (tipo, valor) => {
     setFechaNac((prevState) => ({
@@ -81,6 +85,8 @@ function UserInfo({ formData }) {
       [tipo]: valor,
     }));
   };
+
+
 
   // selectData.gender.map((item) => console.log(`Fecha Nacimiento ${item}`));
 
@@ -134,6 +140,8 @@ function UserInfo({ formData }) {
               // defaultValue="Masculino"
               onChange={(e, value) => {
                 setFieldValue("genero", value);
+
+                
               }}
               renderInput={(params) => (
                 <FormField

@@ -46,6 +46,7 @@
     "flatpickr": "4.6.13",
     "formik": "2.4.5",
     "html-react-parser": "4.2.2",
+    "jquery": "^3.6.4",
     "jsvectormap": "1.5.3",
     "moment": "^2.30.1",
     "next": "14.0.4",

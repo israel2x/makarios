@@ -24,7 +24,7 @@ const {
     genero,
     condicion,
     celular,
-    fechaNacimiento,
+    fechanacimiento,
     dia,
     mes,
     anio,
@@ -35,7 +35,8 @@ const {
     competencia,
     horario,
     pagado,
-    precio
+    precio,
+    programacion
   },
 } = checkout;
 
@@ -47,7 +48,7 @@ const initialValues = {
   [genero.name]: "",
   [condicion.name]: "",
   [celular.name]: "",
-  [fechaNacimiento.name]: "",
+  [fechanacimiento.name]: "",
   [dia.name]: "",
   [mes.name]: "",
   [anio.name]: "",
@@ -59,6 +60,7 @@ const initialValues = {
   [horario.name]: "",
   [pagado.name]: "",
   [precio.name]: "",
+  [programacion.name]: "",
 };
 
 export default initialValues;

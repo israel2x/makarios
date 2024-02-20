@@ -61,7 +61,7 @@ const form = {
         type: "number",
         errorMsg: "Celular es obligatorio.",
       },
-      fechaNacimiento: {
+      fechanacimiento: {
         name: "fechanacimiento",
         label: "Fecha Nacimiento",
         type: "text",
@@ -123,6 +123,10 @@ const form = {
       },
       precio: {
         name: "precio",
+        type:"text"
+      },
+      programacion: {
+        name: "programacion",
         type:"text"
       },
     },
