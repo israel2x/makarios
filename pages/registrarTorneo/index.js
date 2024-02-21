@@ -91,7 +91,7 @@ function NewUser() {
 
 
   let dataPagos = { 
-    PayboxRemail: "info@makarios.club",
+    PayboxRemail: "pagos@makarios.club",
     PayboxSendmail: emailUser,
     PayboxRename: "CLUB DEPORTIVO ESPECIALIZADO FORMATIVO MAKARIOS",
     PayboxSendname: "juan carlos alcivar",
