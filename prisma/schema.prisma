@@ -57,7 +57,7 @@ model Programacion {
 model Actividad {
   id           Int           @id @default(autoincrement())
   descripcion  String
-  precio       Decimal
+  precio       Int
   estado       String
   createdAt    DateTime      @default(now())
   defaultAt    DateTime      @default(now())

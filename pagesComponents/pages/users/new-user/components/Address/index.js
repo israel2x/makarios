@@ -62,7 +62,7 @@ function Address({ formData }) {
       const response = await axios.get("/api/actividad", data);
       console.log("response actividad");
       console.log(response);
-      if (response.statusText === "OK") {
+      if (response.statusText === "OK" || response.status===200) {
         const dataActividad = response.data.actividadFound.map((item) => ({
           id: item.id,
           descripcion: item.descripcion,
@@ -89,7 +89,7 @@ function Address({ formData }) {
       });
       console.log("response actividad");
       console.log(response);
-      if (response.statusText === "OK") {
+      if (response.statusText === "OK" || response.status===200) {
         const dataFechas = response.data.programacionFound.map((item) => ({
           from: new Date(item.vigenciaDesde).toISOString().split("T")[0],
           to: new Date(item.vigenciaHasta).toISOString().split("T")[0],
