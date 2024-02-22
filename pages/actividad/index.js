@@ -17,7 +17,7 @@ import { useState } from "react";
 
 // formik components
 import { Formik, Form } from "formik";
-
+import $ from "jquery";
 import Swal from 'sweetalert2';
 
 import PageLayout from "/examples/LayoutContainers/PageLayout";
@@ -49,143 +49,59 @@ import validations from "/pagesComponents/pages/users/new-user/schemas/validatio
 import form from "/pagesComponents/pages/users/new-user/schemas/formMakarios";
 import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialMakariosValues";
 
-function getSteps() {
-  // return ["User Info", "Address", "Social", "Profile"];
-  return ["Perfil", "Actividad", "Confirmación", "Pago"];
-}
-
-function getStepContent(stepIndex, formData) {
-  switch (stepIndex) {
-    case 0:
-      return <UserInfo formData={formData} />;
-    case 1:
-      return <Address formData={formData} />;
-    case 2:
-      return <Confirmacion formData={formData} />;
-    case 3:
-      return <Pago formData={formData} />;
- 
-    default:
-      return null;
-  }
-}
+import PpxButton from "/pages/pagos-online/PpxButton"; 
 
 function Actividad() {
   const [activeStep, setActiveStep] = useState(0);
   //maneja el valor de la cita
   
-  const steps = getSteps();
-  const { formId, formField } = form;
-  const currentValidation = validations[activeStep];
-  const isLastStep = activeStep === steps.length - 1;
-
-  const sleep = (ms) =>
-    new Promise((resolve) => {
-      setTimeout(resolve, ms);
-    });
-  const handleBack = () => setActiveStep(activeStep - 1);
-
-
-
-  const submitForm = async (values, actions) => {
-    await sleep(1000);
-
-    // eslint-disable-next-line no-alert
-    alert(JSON.stringify(values, null, 2));
-
-    actions.setSubmitting(false);
-    actions.resetForm();
-
-    setActiveStep(0);
-  };
-
-  const handleSubmit = (values, actions) => {
-    if (isLastStep) {
-      submitForm(values, actions);
-    } else {
-      setActiveStep(activeStep + 1);
-      actions.setTouched({});
-      actions.setSubmitting(false);
+  let dataPagos = { 
+    PayboxRemail: "info@makarios.club",
+    PayboxSendmail: "jcalcivar@hotmail.com",
+    PayboxRename: "CLUB DEPORTIVO ESPECIALIZADO FORMATIVO MAKARIOS",
+    PayboxSendname: "juan carlos alcivar",
+    PayboxBase0: "2.7",
+    PayboxBase12: "0",
+    PayboxDescription: "Pago de prueba",
+    PayboxProduction: false,
+    PayboxEnvironment: "sandbox",
+    PayboxLanguage: "es",
+    PayboxPagoPlux: true,
+    PayboxDirection: "VIA LA PUNTILLA SALITRE EL BUIJO KM 5",
+    PayBoxClientPhone: "0996600922",
+    PayBoxClientIdentification: "0993385314001",
+    // Solo si es recurrente
+    PayboxRecurrent: false,
+    PayboxIdPlan: "Plan Nombre",
+    PayboxPermitirCalendarizar: true,
+    PayboxPagoInmediato: false,
+    PayboxCobroPrueba: false,
+    onAuthorize: (response) => {
+	
+      if (response.status === "succeeded") {
+		    console.log(response);
+        
+         console.log("dentro de data, despues de success");
+         
+         //onSubmitxy();
+         Swal.fire(
+          'Transacción exitosa!',
+          'Preciona Ok para aceptar tu cita!',
+          'success'
+        ).then(res=>{
+          console.log("estoy aqui con MBA");
+        
+        });
+      } 
     }
-  };
+  }
+
 
   return (
-    <DashboardLayout>
-    {/* // <PageLayout> */}
-      <DashboardNavbar />
-      <MDBox py={1} mb={10} height="25vh">
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="center"
-          sx={{ height: "100%", mt: 8 }}
-        >
-          <Grid item xs={12} lg={8}>
-            <Formik
-              initialValues={initialValues}
-              validationSchema={currentValidation}
-              onSubmit={handleSubmit}
-            > 
-              {({ values, errors, touched, isSubmitting, setFieldValue }) => (
-                <Form id={formId} autoComplete="off">
-                  <Card sx={{ height: "100%" }}>
-                  {/* <Card sx={{ height: "500px" }}> */}
-                    <MDBox mx={2} mt={-3}>
-                      <Stepper activeStep={activeStep} alternativeLabel>
-                        {steps.map((label) => (
-                          <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                          </Step>
-                        ))}
-                      </Stepper>
-                    </MDBox>
-                    <MDBox p={3}>
-                      <MDBox>
-                        {getStepContent(activeStep, {
-                          values,
-                          touched,
-                          formField,
-                          errors,
-                          setFieldValue
-                        })}
-                        <MDBox
-                          mt={2}
-                          width="100%"
-                          display="flex"
-                          justifyContent="space-between"
-                        >
-                          {activeStep === 0 ? (
-                            <MDBox />
-                          ) : (
-                            <MDButton
-                              variant="gradient"
-                              color="light"
-                              onClick={handleBack}
-                            >
-                              atrás
-                            </MDButton>
-                          )}
-                          <MDButton
-                            disabled={isSubmitting}
-                            type="submit"
-                            variant="gradient"
-                            color="info"
-                          >
-                            {isLastStep ? "finalizar" : "siguiente"}
-                          </MDButton>
-                        </MDBox>
-                      </MDBox>
-                    </MDBox>
-                  </Card>
-                </Form>
-              )}
-            </Formik>
-          </Grid>
-        </Grid>
-      </MDBox>
-      {/* <Footer /> */}
-    </DashboardLayout>
-    // </PageLayout>
+<><h1>Hola Actividad</h1>
+
+{/* <PpxButton data={dataPagos} />  */}
+</>
   );
 }
 

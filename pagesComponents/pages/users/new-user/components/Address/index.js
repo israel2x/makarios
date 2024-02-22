@@ -15,13 +15,14 @@ Coded by www.creative-tim.com
 
 // prop-type is a library for typechecking of props
 import PropTypes from "prop-types";
+import { getSession } from 'next-auth/react';
 
 import MDDatePicker from "/components/MDDatePicker";
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
-
-import axios from 'axios';
+import ComplexStatisticsCard from "/examples/Cards/StatisticsCards/ComplexStatisticsCard";
+import axios from "axios";
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
@@ -29,43 +30,134 @@ import MDInput from "/components/MDInput";
 import { useState, useEffect } from "react";
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
+import moment from "moment";
 
 function Address({ formData }) {
   const { formField, values, errors, touched, setFieldValue } = formData;
-  const { actividad, competencia, horario } = formField;
+  const { actividad, email, competencia, dia, mes, anio, fechanacimiento, horario, precio } = formField;
   const {
+    email: emailV,
     actividad: actividadV,
+    fechanacimiento: fechanacimientoV,
+    dia:diaV,
+    mes:mesV,
+    anio:anioV,
     competencia: competenciaV,
-    horario: horarioV,
+    horario: horarioV, 
+    precio: precioV,
   } = values;
 
-  
+  const [fechatorneo, setFechaTorneo] = useState(null);
   const [actividades, setActividades] = useState([]);
+  const [actividads, setActividads] = useState([]);
+  const [programacion, setProgramacion] = useState([]);
+  const [fechas, setFechas] = useState([]);
+  const [hora, setHora] = useState([]);
+  const [cupo, setCupo] = useState([]);
 
-  const loadActividad = async(data) => {
+  const loadActividad = async (data) => {
+    const session = await getSession(data);
+    setFieldValue("email", session.user.email);
     try {
-      const response = await axios.get('/api/actividad', data);
+      const response = await axios.get("/api/actividad", data);
       console.log("response actividad");
       console.log(response);
-      if(response.statusText === "OK"){
-       const dataActividad=response.data.actividadFound.map(item => item.actividad);
-        setActividades(dataActividad);
-      }else{
+      if (response.statusText === "OK") {
+        const dataActividad = response.data.actividadFound.map((item) => ({
+          id: item.id,
+          descripcion: item.descripcion,
+          precio: item.precio
+        }));
+        const data_Actividad = response.data.actividadFound.map(
+          (item) => item.descripcion
+        );
+        setActividads(dataActividad);
+        setActividades(data_Actividad);
+        console.log(actividad);
+      } else {
       }
-  } catch (error) {
-  
+    } catch (error) {
       console.log("error");
       console.log(error);
+    }
+  };
 
-  }
-};
-const flatpickrOptions = {
-  mode: 'range', // Establece el modo en 'range' para habilitar un rango de fecha
-  // Agrega más opciones según sea necesario
-};
-useEffect(() => {
-  loadActividad();
-}, []);
+  const loadProgramacion = async (actividadId) => {
+    try {
+      const response = await axios.get("/api/programacion", {
+        params: { actividad: actividadId },
+      });
+      console.log("response actividad");
+      console.log(response);
+      if (response.statusText === "OK") {
+        const dataFechas = response.data.programacionFound.map((item) => ({
+          from: new Date(item.vigenciaDesde).toISOString().split("T")[0],
+          to: new Date(item.vigenciaHasta).toISOString().split("T")[0],
+        }));
+        await setFechas(dataFechas);
+        setProgramacion(response.data.programacionFound);
+        console.log("fechas");
+        console.log(fechas);
+      } else {
+      }
+    } catch (error) {
+      console.log("error");
+      console.log(error);
+    }
+  };
+
+  const loadFecha = async (e, data) => {
+    try {
+      const resultado = actividads.find(
+        (actividad) => actividad.descripcion === data
+      );
+      
+      await loadProgramacion(resultado.id);
+      setFieldValue("precio", resultado.precio);
+      const fechaNacimientoP = moment(`${anioV}-${mesV}-${diaV}`, 'YYYY-MMMM-DD');
+      const fechaFormateada = fechaNacimientoP.format('YYYY-MM-DD');
+      setFieldValue("fechanacimiento",fechaFormateada);
+      console.log("programacion");
+      console.log(resultado);
+      console.log(precioV);
+    } catch (error) {
+      console.log("error");
+      console.log(error);
+    }
+  };
+
+  const loadHora = async (e, data) => {
+    try {
+      console.log("load hora");
+      console.log(programacion);
+      const resultado = await programacion.filter(
+        (actividad) =>
+          new Date(actividad.vigenciaDesde).toISOString().split("T")[0] <=
+            data &&
+          new Date(actividad.vigenciaHasta).toISOString().split("T")[0] >= data
+      );
+      const horas = await resultado.map((item) => item.horaDesde);
+      console.log("resultado fecha y hora");
+      console.log(resultado);
+      console.log(horas);
+      await setHora(horas);
+      console.log(hora);
+    } catch (error) {
+      console.log("error");
+      console.log(error);
+    }
+  };
+
+  const flatpickrOptions = {
+    // mode: 'range', // Establece el modo en 'range' para habilitar un rango de fecha
+    // Agrega más opciones según sea necesario {
+    enable: fechas,
+  };
+
+  useEffect(() => {
+    loadActividad();
+    loadProgramacion();
+  }, []);
 
   return (
     <MDBox>
@@ -79,20 +171,12 @@ useEffect(() => {
       <MDBox mt={1.625}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            {/* <FormField
-              type={actividad.type}
-              label={actividad.label}
-              name={actividad.name}
-              value={actividadV}
-              placeholder={actividad.placeholder}
-              error={errors.actividad && touched.actividad}
-              success={actividadV.length > 0 && !errors.actividad}
-            /> */}
             <Autocomplete
               options={actividades}
-              // defaultValue="ENTRENAMIENTO EXPRESS"
               onChange={(e, value) => {
+                loadFecha(e, value);
                 setFieldValue("actividad", value);
+                setFieldValue("competencia", "");
               }}
               renderInput={(params) => (
                 <FormField
@@ -109,32 +193,61 @@ useEffect(() => {
               )}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <MDDatePicker
               options={flatpickrOptions}
-              input={{ placeholder: "Selecciones una fecha" }}
+              value={competenciaV}
+              onChange={(e, dateStr) => {
+                // competenciaV=fech;
+                setFieldValue("competencia", dateStr);
+                loadHora(e, dateStr);
+              }}
+              input={{ placeholder: "Ingrese fecha competencia" }}
             />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={5}>
             <Autocomplete
-              options={["8:00", "9:24", "10:25"]}
+              // options={["8:00", "9:24", "10:25"]}
+              options={hora}
               onChange={(e, value) => {
                 setFieldValue("horario", value);
               }}
               renderInput={(params) => (
-                <MDInput
+                <FormField
                   {...params}
-                  variant="standard"
+                  type={horario.type}
                   label={horario.label}
                   name={horario.name}
                   value={horarioV}
                   InputLabelProps={{ shrink: true }}
-                  // error={errors.horario && touched.horario}
-                  // success={horarioV.length > 0 && !errors.horario}
+                  // error={errors.actividad && touched.actividad}
+                  // success={actividadV.length > 0 && !errors.actividad}
+                  // InputLabelProps={{ shrink: true }}
                 />
+                // <MDInput
+                //   {...params}
+                //   variant="standard"
+                //   label={horario.label}
+                //   name={horario.name}
+                //   value={horarioV}
+                //   InputLabelProps={{ shrink: true }}
+                //   // error={errors.horario && touched.horario}
+                //   // success={horarioV.length > 0 && !errors.horario}
+                // />
               )}
             />
+          </Grid>
+          <Grid item xs={3}>
+            <MDBox mb={1.5}>
+              <MDBox textAlign="right" lineHeight={1.25}>
+                <MDTypography variant="button" fontWeight="light" color="text">
+                  {/* {title} */}
+                  Cupo
+                </MDTypography>
+                <MDTypography variant="h4">200</MDTypography>
+              </MDBox>
+            </MDBox>
           </Grid>
         </Grid>
         <Grid container spacing={3}>

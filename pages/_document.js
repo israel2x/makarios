@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 
 import Document, { Html, Head, Main, NextScript } from "next/document";
-
+import Script from 'next/script';
 // @emotion
 import createCache from "@emotion/cache";
 import createEmotionServer from "@emotion/server/create-instance";
@@ -35,7 +35,11 @@ export default class MyDocument extends Document {
             rel="stylesheet"
           />
           <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-          <script src="https://sandbox-paybox.pagoplux.com/paybox/index_angular.js"></script>
+          {/* <script src="https://sandbox-paybox.pagoplux.com/paybox/index_angular.js"></script>
+          {/* <script src="https://sandbox-paybox.pagoplux.com/paybox/index_angular.js"></script> */}
+          {/* <Script src="https://code.jquery.com/jquery-3.4.1.min.js"/>
+          <Script src="https://sandbox-paybox.pagoplux.com/paybox/index_angular.js"/> */}
+                          
           <script src="https://paybox.pagoplux.com/paybox/index_angular.js"></script>
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {this.props.emotionStyleTags}

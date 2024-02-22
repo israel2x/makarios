@@ -13,6 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
+import { getSession } from 'next-auth/react';
 
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
@@ -55,6 +56,7 @@ const { transparent, gradients, socialMediaColors, badgeColors } = colors;
 import { useRouter } from "next/router";
 
 function Basic() {
+  
   const [loading, setLoading] = useState(false);
   // const { dispatch } = useContext(UserCitaContext);
   const router = useRouter();
@@ -72,6 +74,7 @@ function Basic() {
   const [passwordlUser, setPasswordUser] = useState(false);
 
   const onSubmit = handleSubmit(async (data) => {
+    const session = await getSession(data);
     try {
       await setLoading(true);
       const res = await signIn("credentials", {
@@ -85,7 +88,11 @@ function Basic() {
         if (res.error) {
           alert("Usuario o contraseña incorrectos");
         } else {
+          console.log("login");
           console.log("res", res);
+          console.log('Usuario:', session);
+          // console.log('Usuario:', session.user);
+          // console.log('Rol:', session.user.firstname);
           // dispatch({ type: "SET_USER_EMAIL", payload: res.Email });
           router.push("/registrarTorneo");
         }

@@ -14,7 +14,7 @@ Coded by www.creative-tim.com
 */
 
 import { useState } from "react";
-
+import { getSession } from 'next-auth/react';
 // formik components
 import { Formik, Form } from "formik";
 
@@ -72,6 +72,10 @@ function getStepContent(stepIndex, formData, dataPagos) {
 
 function NewUser() {
   const [activeStep, setActiveStep] = useState(0);
+
+  const [precio, setPrecio] = useState(null);
+  const [emailUser, setEmailUser] = useState(null);
+  const [nombreUser, setNombreUser] = useState(null);
   //maneja el valor de la cita
   
   const steps = getSteps();
@@ -87,20 +91,20 @@ function NewUser() {
 
 
   let dataPagos = { 
-    PayboxRemail: "jefefinanciero@funcrisa.org",
-    PayboxSendmail: "",
-    PayboxRename: "FUNDACIÓN CRISTIANA PARA LA SALUD - FUNCRISA ",
-    PayboxSendname: "",
-    PayboxBase0: "2.7",
+    PayboxRemail: "pagos@makarios.club",
+    PayboxSendmail: emailUser,
+    PayboxRename: "CLUB DEPORTIVO ESPECIALIZADO FORMATIVO MAKARIOS",
+    PayboxSendname: "juan carlos alcivar",
+    PayboxBase0: precio,
     PayboxBase12: "0",
-    PayboxDescription: "Pago de Cita Médica",
+    PayboxDescription: "Pago de TORNEO DEPORTIVO",
     PayboxProduction: false,
     PayboxEnvironment: "sandbox",
     PayboxLanguage: "es",
     PayboxPagoPlux: true,
     PayboxDirection: "Bolivar 2-80 y borrero",
-    PayBoxClientPhone: "0989891819",
-    PayBoxClientIdentification: "0104010402",
+    PayBoxClientPhone: "0996600922",
+    PayBoxClientIdentification: "0993385314001",
     // Solo si es recurrente
     PayboxRecurrent: false,
     PayboxIdPlan: "Plan Nombre",
@@ -110,11 +114,11 @@ function NewUser() {
     onAuthorize: (response) => {
 	
       if (response.status === "succeeded") {
-		    console.log(response);
+		    // console.log(response);
         
          console.log("dentro de data, despues de success");
          
-         //onSubmitxy();
+         onSubmitxy();
          Swal.fire(
           'Transacción exitosa!',
           'Preciona Ok para aceptar tu cita!',
@@ -135,15 +139,26 @@ function NewUser() {
     alert(JSON.stringify(values, null, 2));
 
     actions.setSubmitting(false);
-    actions.resetForm();
-
+    // actions.resetForm();
     setActiveStep(0);
+    await  window.location.reload(); 
   };
 
-  const handleSubmit = (values, actions) => {
+  const handleSubmit = async (values, actions) => {
+    
     if (isLastStep) {
+      // actions.stopPropagation(); 
+      console.log("last step"); 
+      console.log(values);
+      console.log(actions);  
       submitForm(values, actions);
     } else {
+
+      const session = await getSession(values);
+
+      setPrecio(values.precio);
+      setEmailUser(session.user.email);
+      
       setActiveStep(activeStep + 1);
       actions.setTouched({});
       actions.setSubmitting(false);
@@ -207,13 +222,14 @@ function NewUser() {
                             </MDButton>
                           )}
                           <MDButton
-                            disabled={isSubmitting}
-                            type="submit"
+                            // disabled={isSubmitting}
+                            type="Submit"
                             variant="gradient"
                             color="info"
                           >
                             {isLastStep ? "finalizar" : "siguiente"}
                           </MDButton>
+                          {isLastStep}
                         </MDBox>
                       </MDBox>
                     </MDBox>

@@ -22,14 +22,17 @@ import Grid from "@mui/material/Grid";
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
-
+import { useState, useEffect } from "react";
+import moment from 'moment';
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 import Autocomplete from "@mui/material/Autocomplete";
 import selectData from "/pagesComponents/pages/account/settings/components/BasicInfo/data/selectData";
 
 function Confirmacion({ formData }) {
-  const { formField, values, errors, touched } = formData;
+  const { formField, values, errors, touched, setFieldValue } = formData;
+  const [edad, setEdad] = useState(null);
+  const [precioData, setPrecioData] = useState(null);
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
   const {
@@ -37,6 +40,9 @@ function Confirmacion({ formData }) {
     apellidos,
     cedula,
     genero,
+    dia,
+    mes,
+    anio,
     fechaNacimiento,
     condicion,
     celular,
@@ -45,6 +51,7 @@ function Confirmacion({ formData }) {
     ciudad,
     direccion,
     pais,
+    precio
   } = formField;
   // const {
   //   firstName: firstNameV,
@@ -63,11 +70,50 @@ function Confirmacion({ formData }) {
     genero: generoV,
     condicion: condicionV,
     celular: celularV,
+    dia: diaV,
+    mes: mesV,
+    anio: anioV,
+    actividad: actividadV,
     fechaNacimiento: fechaNacimientoV,
     pais: paisV,
     ciudad: ciudadV,
     direccion: direccionV,
+    precio: precioV
   } = values;
+
+
+  const loadActividad = async (data) => {
+    
+    try {
+      const response = await axios.get("/api/actividad", data);
+      console.log("response actividad");
+      console.log(response);
+      if (response.statusText === "OK") {
+        const data_Actividad = response.data.actividadFound.filter(
+          (item) => item.descripcion === actividadV
+        );
+        
+        setPrecio(data_Actividad);
+        console.log(precio);
+      } else {
+      }
+    } catch (error) {
+      console.log("error");
+      console.log(error);
+    }
+  };
+
+  useEffect(()=>{
+
+// Crea un objeto moment con la fecha de nacimiento
+const fechaNacimientoP = moment(`${anioV}-${mesV}-${diaV}`, 'YYYY-MMMM-DD');
+// setFieldValue("fechaNacimiento", `${anioV}-${mesV}-${diaV}`);
+const age = moment().diff(fechaNacimientoP, 'years');
+const isLegal = (age >= 18);
+
+loadActividad(age);
+    setEdad(age);
+  }); 
 
   return (
     <MDBox>
@@ -112,14 +158,15 @@ function Confirmacion({ formData }) {
           </Grid>
           <Grid item xs={6} sm={6}>
             <MDTypography variant="body2">
-              Marina Belen Casares Tesky
+              {/* Marina Belen Casares Tesky */}
+              {nombresV +' ' + apellidosV}
             </MDTypography>
           </Grid>
           <Grid item xs={6} sm={6}>
             <MDTypography variant="body1">Edad</MDTypography>
           </Grid>
           <Grid item xs={6} sm={6}>
-            <MDTypography variant="body2">22 años</MDTypography>
+            <MDTypography variant="body2">{edad} años</MDTypography>
           </Grid>
           <Grid item xs={6} sm={6}>
             <MDTypography variant="body1">Categoria</MDTypography>
@@ -131,7 +178,9 @@ function Confirmacion({ formData }) {
             <MDTypography variant="body1">Total a pagar</MDTypography>
           </Grid>
           <Grid item xs={6} sm={6}>
-            <MDTypography variant="body2">$94.99</MDTypography>
+            <MDTypography variant="body2">$
+            {precioV}
+            </MDTypography>
           </Grid>
         </Grid>
       </MDBox>

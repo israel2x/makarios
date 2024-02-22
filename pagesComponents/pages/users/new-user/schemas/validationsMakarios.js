@@ -25,7 +25,7 @@ const {
     genero,
     condicion,
     celular,
-    fechaNacimiento,
+    fechanacimiento,
     dia,mes,anio,
     pais,
     ciudad,
@@ -34,6 +34,7 @@ const {
     competencia,
     horario,
     pagado,
+    precio
   },
 } = checkout;
 
