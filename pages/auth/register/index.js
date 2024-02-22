@@ -57,7 +57,7 @@ function Cover() {
       // const resJSON = await response.json()
       // console.log(resJSON);
       console.log(router);
-      if(response.statusText === "OK"){
+      if(response.statusText === "OK" || response.status===200) {
         router.push('/auth/login');
 
       }else{
@@ -65,6 +65,8 @@ function Cover() {
         setErrorEmail(true);
       }
   } catch (error) {
+    
+    console.log(error);
     if(error.response.status === 409 ){
       alert("Usuario o contraseña incorrectos");
     }

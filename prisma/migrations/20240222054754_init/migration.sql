@@ -53,7 +53,7 @@ CREATE TABLE "Programacion" (
 CREATE TABLE "Actividad" (
     "id" SERIAL NOT NULL,
     "descripcion" TEXT NOT NULL,
-    "precio" DECIMAL(65,30) NOT NULL,
+    "precio" INTEGER NOT NULL,
     "estado" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "defaultAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
