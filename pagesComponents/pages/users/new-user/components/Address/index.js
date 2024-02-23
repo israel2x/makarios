@@ -73,9 +73,8 @@ function Address({ formData }) {
     await setFieldValue("horario", "");
     await setFieldValue("competencia", event.target.value);
     await loadHora(event, event.target.value);
-    
   };
-  
+
   const handleHorarioChange = async (event) => {
     await setFieldValue("horario", event.target.value);
   };
@@ -115,17 +114,18 @@ function Address({ formData }) {
       console.log("response actividad");
       console.log(response);
       if (response.statusText === "OK" || response.status === 200) {
-
-        const dataFechas = await response.data.programacionFound.map((item) => ({
-          from: new Date(item.vigenciaDesde).toISOString().split("T")[0],
-          to: new Date(item.vigenciaHasta).toISOString().split("T")[0],
-        }));
+        const dataFechas = await response.data.programacionFound.map(
+          (item) => ({
+            from: new Date(item.vigenciaDesde).toISOString().split("T")[0],
+            to: new Date(item.vigenciaHasta).toISOString().split("T")[0],
+          })
+        );
 
         setProgramacion(response.data.programacionFound);
         console.log("array duplicados");
-        const arrayConDuplicados = dataFechas.map((item)=> item.from);
+        const arrayConDuplicados = dataFechas.map((item) => item.from);
         await setFechasProgramacion([...new Set(arrayConDuplicados)]);
-  
+
         console.log("fechas");
         console.log(fechas.from);
       } else {
@@ -163,7 +163,7 @@ function Address({ formData }) {
     try {
       console.log("load hora");
       console.log(programacion);
-      
+
       const resultado = await programacion.filter(
         (actividad) =>
           new Date(actividad.vigenciaDesde).toISOString().split("T")[0] <=
@@ -243,19 +243,15 @@ function Address({ formData }) {
                 <MenuItem value="">
                   <em>Ninguno</em>
                 </MenuItem>
-                {
-   
-                fechasprogramacion.map((opcion, index) => (
-										<MenuItem value={opcion} key={index}>{opcion}</MenuItem>
-									  ))
-								  }
+                {fechasprogramacion.map((opcion, index) => (
+                  <MenuItem value={opcion} key={index}>
+                    {opcion}
+                  </MenuItem>
+                ))}
                 {/* <MenuItem value={10}>Ten</MenuItem>
                 <MenuItem value={20}>Twenty</MenuItem>
                 <MenuItem value={30}>Thirty</MenuItem> */}
               </Select>
-      
-								 
-					
             </FormControl>
 
             {/* <Select
@@ -304,7 +300,7 @@ function Address({ formData }) {
 
               )}
             /> */}
-              <FormControl variant="standard" sx={{ m: 1, minWidth: 250 }}>
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 250 }}>
               <InputLabel id="demo-simple-select-standard-label">
                 Horario
               </InputLabel>
@@ -318,19 +314,15 @@ function Address({ formData }) {
                 <MenuItem value="">
                   <em>Ninguno</em>
                 </MenuItem>
-                {
-   
-                   hora.map((opcion, index) => (
-										<MenuItem value={opcion} key={index}>{opcion}</MenuItem>
-									  ))
-								  }
+                {hora.map((opcion, index) => (
+                  <MenuItem value={opcion} key={index}>
+                    {opcion}
+                  </MenuItem>
+                ))}
                 {/* <MenuItem value={10}>Ten</MenuItem>
                 <MenuItem value={20}>Twenty</MenuItem>
                 <MenuItem value={30}>Thirty</MenuItem> */}
               </Select>
-      
-								 
-					
             </FormControl>
           </Grid>
           <Grid item xs={3}>
@@ -340,7 +332,12 @@ function Address({ formData }) {
                   {/* {title} */}
                   Cupo
                 </MDTypography>
-                <MDTypography variant="h4">200</MDTypography>
+                <MDTypography variant="h6" color={"success"}>
+                  200
+                  <MDTypography variant="h7" color={"secondary"}>
+                    /200
+                  </MDTypography>
+                </MDTypography>
               </MDBox>
             </MDBox>
           </Grid>
