@@ -65,12 +65,19 @@ function Address({ formData }) {
   const [actividads, setActividads] = useState([]);
   const [programacion, setProgramacion] = useState([]);
   const [fechas, setFechas] = useState([]);
+  const [fechasprogramacion, setFechasProgramacion] = useState([]);
   const [hora, setHora] = useState([]);
   const [cupo, setCupo] = useState([]);
 
   const handleChange = async (event) => {
+    await setFieldValue("horario", "");
     await setFieldValue("competencia", event.target.value);
     await loadHora(event, event.target.value);
+    
+  };
+  
+  const handleHorarioChange = async (event) => {
+    await setFieldValue("horario", event.target.value);
   };
 
   const loadActividad = async (data) => {
@@ -108,16 +115,17 @@ function Address({ formData }) {
       console.log("response actividad");
       console.log(response);
       if (response.statusText === "OK" || response.status === 200) {
-        // const dataFechas = response.data.programacionFound.map((item) => ({
-        //   from: new Date(item.vigenciaDesde).toISOString().split("T")[0],
-        //   to: new Date(item.vigenciaHasta).toISOString().split("T")[0],
-        // }));
-        const dataFechas = response.data.programacionFound.map((item) => ({
+
+        const dataFechas = await response.data.programacionFound.map((item) => ({
           from: new Date(item.vigenciaDesde).toISOString().split("T")[0],
           to: new Date(item.vigenciaHasta).toISOString().split("T")[0],
         }));
-        await setFechas(dataFechas);
+
         setProgramacion(response.data.programacionFound);
+        console.log("array duplicados");
+        const arrayConDuplicados = dataFechas.map((item)=> item.from);
+        await setFechasProgramacion([...new Set(arrayConDuplicados)]);
+  
         console.log("fechas");
         console.log(fechas.from);
       } else {
@@ -155,6 +163,7 @@ function Address({ formData }) {
     try {
       console.log("load hora");
       console.log(programacion);
+      
       const resultado = await programacion.filter(
         (actividad) =>
           new Date(actividad.vigenciaDesde).toISOString().split("T")[0] <=
@@ -202,6 +211,7 @@ function Address({ formData }) {
                 loadFecha(e, value);
                 setFieldValue("actividad", value);
                 setFieldValue("competencia", "");
+                console.log(horarioV);
               }}
               renderInput={(params) => (
                 <FormField
@@ -234,8 +244,9 @@ function Address({ formData }) {
                   <em>Ninguno</em>
                 </MenuItem>
                 {
-									  fechas.map((opcion, index) => (
-										<MenuItem value={opcion.from}>{opcion.from}</MenuItem>
+   
+                fechasprogramacion.map((opcion, index) => (
+										<MenuItem value={opcion} key={index}>{opcion}</MenuItem>
 									  ))
 								  }
                 {/* <MenuItem value={10}>Ten</MenuItem>
@@ -275,8 +286,7 @@ function Address({ formData }) {
           </Grid>
 
           <Grid item xs={5}>
-            <Autocomplete
-              // options={["8:00", "9:24", "10:25"]}
+            {/* <Autocomplete
               options={hora}
               onChange={(e, value) => {
                 setFieldValue("horario", value);
@@ -289,22 +299,39 @@ function Address({ formData }) {
                   name={horario.name}
                   value={horarioV}
                   InputLabelProps={{ shrink: true }}
-                  // error={errors.actividad && touched.actividad}
-                  // success={actividadV.length > 0 && !errors.actividad}
-                  // InputLabelProps={{ shrink: true }}
+                 
                 />
-                // <MDInput
-                //   {...params}
-                //   variant="standard"
-                //   label={horario.label}
-                //   name={horario.name}
-                //   value={horarioV}
-                //   InputLabelProps={{ shrink: true }}
-                //   // error={errors.horario && touched.horario}
-                //   // success={horarioV.length > 0 && !errors.horario}
-                // />
+
               )}
-            />
+            /> */}
+              <FormControl variant="standard" sx={{ m: 1, minWidth: 250 }}>
+              <InputLabel id="demo-simple-select-standard-label">
+                Horario
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={horarioV}
+                onChange={handleHorarioChange}
+                label="Competencia"
+              >
+                <MenuItem value="">
+                  <em>Ninguno</em>
+                </MenuItem>
+                {
+   
+                   hora.map((opcion, index) => (
+										<MenuItem value={opcion} key={index}>{opcion}</MenuItem>
+									  ))
+								  }
+                {/* <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem> */}
+              </Select>
+      
+								 
+					
+            </FormControl>
           </Grid>
           <Grid item xs={3}>
             <MDBox mb={1.5}>
