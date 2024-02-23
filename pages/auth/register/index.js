@@ -28,15 +28,22 @@ import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
 import MDInput from "/components/MDInput";
 import MDButton from "/components/MDButton";
-
+import MDSnackbar from "/components/MDSnackbar";
+import moment from "moment";
 // Authentication layout components
 import CoverLayout from "/pagesComponents/authentication/components/CoverLayout";
 
+import CircularProgress from "@mui/material/CircularProgress";
 // Images
 import bgImage from "/assets/images/fondo_registrar.avif";
 
 function Cover() {
 
+
+  const [loading, setLoading] = useState(false);
+  const [errorSB, setErrorSB] = useState(false);
+  const openErrorSB = () => setErrorSB(true);
+  const closeErrorSB = () => setErrorSB(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const  router  = useRouter();
   const {
@@ -45,10 +52,26 @@ function Cover() {
     formState: { errors },
   } = useForm();
 
+
+  const renderErrorSB = (
+    <MDSnackbar
+      color="error"
+      icon="warning"
+      title="Error"
+      content="Error de registro"
+      dateTime="hace 1 min"
+      open={errorSB}
+      onClose={closeErrorSB}
+      close={closeErrorSB}
+      bgWhite
+    />
+  );
+
   const onSubmit = handleSubmit(async(data) => {
     try {
       console.log("data");
       data.role='participante';
+      await setLoading(true);
       // console.log(data.role);
       const response = await axios.post('/api/auth/register/', data);
       // console.log(" antes del response");
@@ -57,18 +80,25 @@ function Cover() {
       // const resJSON = await response.json()
       // console.log(resJSON);
       console.log(router);
+      await setTimeout(() => {
+        setLoading(false);
+        
+
       if(response.statusText === "OK" || response.status===200) {
         router.push('/auth/login');
 
       }else{
+        
         console.log("ess");
         setErrorEmail(true);
       }
+    }, 2000);
   } catch (error) {
     
     console.log(error);
+    await openErrorSB();
     if(error.response.status === 409 ){
-      alert("Usuario o contraseña incorrectos");
+      // alert("Usuario o contraseña incorrectos");
     }
   
       console.log("error");
@@ -178,6 +208,11 @@ function Cover() {
                 Termino y Condiciones
               </MDTypography>
             </MDBox>
+            {loading && (
+            <MDBox textAlign="center">
+              <CircularProgress color="info" />
+            </MDBox>
+          )}
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
@@ -190,6 +225,7 @@ function Cover() {
                 Registrar
               </MDButton>
             </MDBox>
+            {renderErrorSB}
             <MDBox mt={3} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
                 Ya tienes un usuario?{" "}

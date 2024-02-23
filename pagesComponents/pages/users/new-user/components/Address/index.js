@@ -15,9 +15,12 @@ Coded by www.creative-tim.com
 
 // prop-type is a library for typechecking of props
 import PropTypes from "prop-types";
-import { getSession } from 'next-auth/react';
-
+import { getSession } from "next-auth/react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
 import MDDatePicker from "/components/MDDatePicker";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -34,16 +37,26 @@ import moment from "moment";
 
 function Address({ formData }) {
   const { formField, values, errors, touched, setFieldValue } = formData;
-  const { actividad, email, competencia, dia, mes, anio, fechanacimiento, horario, precio } = formField;
+  const {
+    actividad,
+    email,
+    competencia,
+    dia,
+    mes,
+    anio,
+    fechanacimiento,
+    horario,
+    precio,
+  } = formField;
   const {
     email: emailV,
     actividad: actividadV,
     fechanacimiento: fechanacimientoV,
-    dia:diaV,
-    mes:mesV,
-    anio:anioV,
+    dia: diaV,
+    mes: mesV,
+    anio: anioV,
     competencia: competenciaV,
-    horario: horarioV, 
+    horario: horarioV,
     precio: precioV,
   } = values;
 
@@ -55,6 +68,11 @@ function Address({ formData }) {
   const [hora, setHora] = useState([]);
   const [cupo, setCupo] = useState([]);
 
+  const handleChange = async (event) => {
+    await setFieldValue("competencia", event.target.value);
+    await loadHora(event, event.target.value);
+  };
+
   const loadActividad = async (data) => {
     const session = await getSession(data);
     setFieldValue("email", session.user.email);
@@ -62,11 +80,11 @@ function Address({ formData }) {
       const response = await axios.get("/api/actividad", data);
       console.log("response actividad");
       console.log(response);
-      if (response.statusText === "OK" || response.status===200) {
+      if (response.statusText === "OK" || response.status === 200) {
         const dataActividad = response.data.actividadFound.map((item) => ({
           id: item.id,
           descripcion: item.descripcion,
-          precio: item.precio
+          precio: item.precio,
         }));
         const data_Actividad = response.data.actividadFound.map(
           (item) => item.descripcion
@@ -89,7 +107,11 @@ function Address({ formData }) {
       });
       console.log("response actividad");
       console.log(response);
-      if (response.statusText === "OK" || response.status===200) {
+      if (response.statusText === "OK" || response.status === 200) {
+        // const dataFechas = response.data.programacionFound.map((item) => ({
+        //   from: new Date(item.vigenciaDesde).toISOString().split("T")[0],
+        //   to: new Date(item.vigenciaHasta).toISOString().split("T")[0],
+        // }));
         const dataFechas = response.data.programacionFound.map((item) => ({
           from: new Date(item.vigenciaDesde).toISOString().split("T")[0],
           to: new Date(item.vigenciaHasta).toISOString().split("T")[0],
@@ -97,7 +119,7 @@ function Address({ formData }) {
         await setFechas(dataFechas);
         setProgramacion(response.data.programacionFound);
         console.log("fechas");
-        console.log(fechas);
+        console.log(fechas.from);
       } else {
       }
     } catch (error) {
@@ -111,12 +133,15 @@ function Address({ formData }) {
       const resultado = actividads.find(
         (actividad) => actividad.descripcion === data
       );
-      
+
       await loadProgramacion(resultado.id);
       setFieldValue("precio", resultado.precio);
-      const fechaNacimientoP = moment(`${anioV}-${mesV}-${diaV}`, 'YYYY-MMMM-DD');
-      const fechaFormateada = fechaNacimientoP.format('YYYY-MM-DD');
-      setFieldValue("fechanacimiento",fechaFormateada);
+      const fechaNacimientoP = moment(
+        `${anioV}-${mesV}-${diaV}`,
+        "YYYY-MMMM-DD"
+      );
+      const fechaFormateada = fechaNacimientoP.format("YYYY-MM-DD");
+      setFieldValue("fechanacimiento", fechaFormateada);
       console.log("programacion");
       console.log(resultado);
       console.log(precioV);
@@ -194,7 +219,50 @@ function Address({ formData }) {
             />
           </Grid>
           <Grid item xs={4}>
-            <MDDatePicker
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 250 }}>
+              <InputLabel id="demo-simple-select-standard-label">
+                Competencia
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={competenciaV}
+                onChange={handleChange}
+                label="Competencia"
+              >
+                <MenuItem value="">
+                  <em>Ninguno</em>
+                </MenuItem>
+                {
+									  fechas.map((opcion, index) => (
+										<MenuItem value={opcion.from}>{opcion.from}</MenuItem>
+									  ))
+								  }
+                {/* <MenuItem value={10}>Ten</MenuItem>
+                <MenuItem value={20}>Twenty</MenuItem>
+                <MenuItem value={30}>Thirty</MenuItem> */}
+              </Select>
+      
+								 
+					
+            </FormControl>
+
+            {/* <Select
+          labelId="demo-simple-select-helper-label"
+          id="demo-simple-select-helper"
+          value={competenciaV}
+          label="Competencia"
+          onChange={handleChange}
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          <MenuItem value={10}>Ten</MenuItem>
+          <MenuItem value={20}>Twenty</MenuItem>
+          <MenuItem value={30}>Thirty</MenuItem>
+        </Select> */}
+
+            {/* <MDDatePicker
               options={flatpickrOptions}
               value={competenciaV}
               onChange={(e, dateStr) => {
@@ -203,7 +271,7 @@ function Address({ formData }) {
                 loadHora(e, dateStr);
               }}
               input={{ placeholder: "Ingrese fecha competencia" }}
-            />
+            /> */}
           </Grid>
 
           <Grid item xs={5}>

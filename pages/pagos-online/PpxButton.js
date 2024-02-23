@@ -27,7 +27,6 @@ const PpxButton = ({ data }) => {
   useEffect(() => {
     // (iniciarDatos(data)) ? setLoading(true):setLoading(false);   
     console.log("iniciar datos");
-    console.log(data);
     iniciarDatos(data);
   }, [data]);
  
