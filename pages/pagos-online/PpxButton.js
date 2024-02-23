@@ -23,18 +23,37 @@ const PpxButton = ({ data }) => {
   };
 
   const [loading, setLoading] = useState(false);
-
+  
+  const handleButtonClick = async () => {
+    console.log("en el boton");
+    setLoading(true);
+    await iniciarDatos(data);
+    await setLoading(false);
+  };
   useEffect(() => {
-    // (iniciarDatos(data)) ? setLoading(true):setLoading(false);   
+
     console.log("iniciar datos");
-    iniciarDatos(data);
+    setLoading(true);
+    setTimeout(async() => {
+     await iniciarDatos(data);
+     await setLoading(false);
+    }, 1000);
+    
   }, [data]);
- 
+
+
   return (
     <> 
     <div align={"center"}>
+    {loading && (
+            <MDBox textAlign="center">
+              <CircularProgress color="info" />
+              </MDBox>
+           )}
          <div id="modalPaybox"></div>
       <button style={estiloBoton} id="pay" type="button" onClick={iniciarDatos}></button>
+   
+  
       {/* <button style={estiloBoton} id="pay" type="submit"></button> */}
       </div>
     </>
