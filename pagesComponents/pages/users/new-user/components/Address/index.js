@@ -221,9 +221,6 @@ function Address({ formData }) {
                   name={actividad.name}
                   value={actividadV}
                   placeholder={actividad.placeholder}
-                  // error={errors.actividad && touched.actividad}
-                  // success={actividadV.length > 0 && !errors.actividad}
-                  // InputLabelProps={{ shrink: true }}
                 />
               )}
             />
@@ -254,52 +251,10 @@ function Address({ formData }) {
               </Select>
             </FormControl>
 
-            {/* <Select
-          labelId="demo-simple-select-helper-label"
-          id="demo-simple-select-helper"
-          value={competenciaV}
-          label="Competencia"
-          onChange={handleChange}
-        >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select> */}
-
-            {/* <MDDatePicker
-              options={flatpickrOptions}
-              value={competenciaV}
-              onChange={(e, dateStr) => {
-                // competenciaV=fech;
-                setFieldValue("competencia", dateStr);
-                loadHora(e, dateStr);
-              }}
-              input={{ placeholder: "Ingrese fecha competencia" }}
-            /> */}
           </Grid>
 
           <Grid item xs={5}>
-            {/* <Autocomplete
-              options={hora}
-              onChange={(e, value) => {
-                setFieldValue("horario", value);
-              }}
-              renderInput={(params) => (
-                <FormField
-                  {...params}
-                  type={horario.type}
-                  label={horario.label}
-                  name={horario.name}
-                  value={horarioV}
-                  InputLabelProps={{ shrink: true }}
-                 
-                />
 
-              )}
-            /> */}
             <FormControl variant="standard" sx={{ m: 1, minWidth: 250 }}>
               <InputLabel id="demo-simple-select-standard-label">
                 Horario

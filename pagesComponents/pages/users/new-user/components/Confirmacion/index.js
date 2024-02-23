@@ -23,7 +23,7 @@ import Grid from "@mui/material/Grid";
 import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
 import { useState, useEffect } from "react";
-import moment from 'moment';
+import moment from "moment";
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -51,7 +51,7 @@ function Confirmacion({ formData }) {
     ciudad,
     direccion,
     pais,
-    precio
+    precio,
   } = formField;
   // const {
   //   firstName: firstNameV,
@@ -78,42 +78,18 @@ function Confirmacion({ formData }) {
     pais: paisV,
     ciudad: ciudadV,
     direccion: direccionV,
-    precio: precioV
+    precio: precioV,
   } = values;
 
+  useEffect(() => {
+    // Crea un objeto moment con la fecha de nacimiento
+    const fechaNacimientoP = moment(`${anioV}-${mesV}-${diaV}`, "YYYY-MMMM-DD");
+    // setFieldValue("fechaNacimiento", `${anioV}-${mesV}-${diaV}`);
+    const age = moment().diff(fechaNacimientoP, "years");
+    const isLegal = age >= 18;
 
-  const loadActividad = async (data) => {
-    
-    try {
-      const response = await axios.get("/api/actividad", data);
-      console.log("response actividad");
-      console.log(response);
-      if (response.statusText === "OK") {
-        const data_Actividad = response.data.actividadFound.filter(
-          (item) => item.descripcion === actividadV
-        );
-        
-        setPrecio(data_Actividad);
-        console.log(precio);
-      } else {
-      }
-    } catch (error) {
-      console.log("error");
-      console.log(error);
-    }
-  };
-
-  useEffect(()=>{
-
-// Crea un objeto moment con la fecha de nacimiento
-const fechaNacimientoP = moment(`${anioV}-${mesV}-${diaV}`, 'YYYY-MMMM-DD');
-// setFieldValue("fechaNacimiento", `${anioV}-${mesV}-${diaV}`);
-const age = moment().diff(fechaNacimientoP, 'years');
-const isLegal = (age >= 18);
-
-loadActividad(age);
     setEdad(age);
-  }); 
+  });
 
   return (
     <MDBox>
@@ -159,7 +135,7 @@ loadActividad(age);
           <Grid item xs={6} sm={6}>
             <MDTypography variant="body2">
               {/* Marina Belen Casares Tesky */}
-              {nombresV +' ' + apellidosV}
+              {nombresV + " " + apellidosV}
             </MDTypography>
           </Grid>
           <Grid item xs={6} sm={6}>
@@ -178,9 +154,7 @@ loadActividad(age);
             <MDTypography variant="body1">Total a pagar</MDTypography>
           </Grid>
           <Grid item xs={6} sm={6}>
-            <MDTypography variant="body2">$
-            {precioV}
-            </MDTypography>
+            <MDTypography variant="body2">${precioV}</MDTypography>
           </Grid>
         </Grid>
       </MDBox>

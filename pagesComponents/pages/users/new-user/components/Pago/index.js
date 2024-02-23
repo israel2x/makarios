@@ -94,7 +94,7 @@ function Pago({ formData, pagos }) {
           alignItems="center"
         >
           <MDTypography variant="h6" color="text">
-            Inscrición Personal a Torneo Vacacional de Tiro con Arco
+            Inscripción Personal a Torneo Vacacional de Tiro con Arco
           </MDTypography>
         </Grid>
       </MDBox>
