@@ -116,7 +116,7 @@ function Address({ formData }) {
       const response = await axios.get("/api/programacion", {
         params: { actividad: actividadId },
       });
-      console.log("response actividad");
+      console.log("response programacion");
       console.log(response);
       if (response.statusText === "OK" || response.status === 200) {
         const detalle = await response.data.programacionFound.map((item) => ({
@@ -132,7 +132,7 @@ function Address({ formData }) {
       } else {
       }
     } catch (error) {
-      console.log("error");
+      console.log("error programacion");
       console.log(error);
     }
   };
