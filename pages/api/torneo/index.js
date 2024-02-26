@@ -6,55 +6,60 @@ export default async function torneoHanler(req, res) {
     const dataProfile = {
       nombres: req.body.nombres,
       apellidos: req.body.apellidos,
-      cedula: req.body.cedula,
-      celular: req.body.celular,
+      cedula: String(req.body.cedula),
+      celular: String(req.body.celular),
       condicion: req.body.condicion,
-      fechaNacimiento: req.body.fechaacimiento,
+      fechaNacimiento: req.body.fechanacimiento,
       genero: req.body.genero,
       pais: req.body.pais,
       ciudad: req.body.ciudad,
       direccion: req.body.direccion,
-      userId: req.body.user
     };
-
-    const userFound = await db.profile.findUnique({
+    let idProfile = 0;
+    const userFound = await db.user.findUnique({
       where: {
-        userId: req.body.user,
+        email: req.body.email,
       },
     });
 
-    if (!userFound) {
-        
+    console.log("user found");
+    console.log(req.body);
+    console.log(userFound);
+
+    const profileFound = await db.profile.findUnique({
+      where: {
+        userId: userFound.id,
+      },
+    });
+
+    if (!profileFound) {
+      dataProfile.userId= userFound.id;
       const newTorneo = await db.profile.create({
         data: dataProfile,
+        // user: {
+        //   connect: {
+        //     id: userFound.id,
+        //   },
+        // },
       });
+      idProfile = newTorneo.id;
     }
-
-    const actividadFound = await db.actividad.findUnique({
-      where: {
-        actividad: req.body.actividad,
-      },
-    });
-
-    const horarioFound = await db.horario.findUnique({
-      where: {
-        horario: req.body.horario,
-      },
-    });
-
-    const datos = {
-      fechatorneo: req.body.fechatorneo,
-      pagado: req.body.pagado,
-      actividadId: actividadFound.id,
-      profileId: userFound.id,
-      horarioId: horarioFound.id,
+    console.log("idProfile");
+    console.log(idProfile);
+    const programacionData = {
+      programacionId: req.body.programacionid,
+      pagado: true,
+      fechatorneo: String(new Date()),
+      profileId: idProfile,
     };
 
     const newTorneo = await db.registro.create({
-      data: req.body,
+      data: programacionData,
     });
     return res.status(200).json({ message: "sucess ", newTorneo });
   } catch (error) {
+    console.log("error backend");
+    console.log(error);
     return res.status(500).json({ message: error.message });
   }
 }

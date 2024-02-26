@@ -38,6 +38,7 @@ import DashboardLayout from "/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
 import Footer from "/examples/Footer";
 
+import axios from 'axios';
 // NewUser page components
 import UserInfo from "/pagesComponents/pages/users/new-user/components/UserInfo";
 import Address from "/pagesComponents/pages/users/new-user/components/Address";
@@ -131,6 +132,9 @@ function NewUser() {
     }
   }
 
+
+
+
   const [dataPagoCita, setDataPagoCita] = useState(dataPagos);
   const submitForm = async (values, actions) => {
     await sleep(1000);
@@ -144,6 +148,41 @@ function NewUser() {
     await  window.location.reload(); 
   };
 
+  const onSubmitCreate = (async(data) => {
+    try {
+      console.log("data");
+
+      const response = await axios.post('/api/torneo/', data);
+      // console.log(" antes del response");
+      console.log("response event Torneo");
+      console.log(response);
+
+
+      if(response.statusText === "OK" || response.status===200) {
+       
+
+      }else{
+        
+        console.log("ess");
+        setErrorEmail(true);
+      }
+
+  } catch (error) {
+    
+    console.log(error);
+
+    if(error.response.status === 409 ){
+      // alert("Usuario o contraseña incorrectos");
+    }
+  
+      console.log("error create event");
+
+
+  }
+
+
+  });
+
   const handleSubmit = async (values, actions) => {
     
     if (isLastStep) {
@@ -151,7 +190,9 @@ function NewUser() {
       console.log("last step"); 
       console.log(values);
       console.log(actions);  
+      await onSubmitCreate(values);
       submitForm(values, actions);
+      
     } else {
 
       const session = await getSession(values);

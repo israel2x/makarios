@@ -32,7 +32,8 @@ import selectData from "/pagesComponents/pages/account/settings/components/Basic
 function Confirmacion({ formData }) {
   const { formField, values, errors, touched, setFieldValue } = formData;
   const [edad, setEdad] = useState(null);
-  const [precioData, setPrecioData] = useState(null);
+  const [categoria, setCategoria] = useState(null);
+
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
   const {
@@ -87,6 +88,17 @@ function Confirmacion({ formData }) {
     // setFieldValue("fechaNacimiento", `${anioV}-${mesV}-${diaV}`);
     const age = moment().diff(fechaNacimientoP, "years");
     const isLegal = age >= 18;
+    if (age>=10 && age<=14) {
+      setCategoria("Infantil");
+    }else if(age>=15 && age<=17){
+      setCategoria("Cadete");
+    }else if(age>=18 && age<=20){
+      setCategoria("Juvenil");
+    }else if(age>=21 && age<=49){
+      setCategoria("Senior");
+    }else if(age>=50){
+      setCategoria("Master");
+    }
 
     setEdad(age);
   });
@@ -148,7 +160,7 @@ function Confirmacion({ formData }) {
             <MDTypography variant="body1">Categoria</MDTypography>
           </Grid>
           <Grid item xs={6} sm={6}>
-            <MDTypography variant="body2">Senior</MDTypography>
+            <MDTypography variant="body2">{categoria}</MDTypography>
           </Grid>
           <Grid item xs={6} sm={6}>
             <MDTypography variant="body1">Total a pagar</MDTypography>

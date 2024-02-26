@@ -40,12 +40,13 @@ function Address({ formData }) {
   const {
     actividad,
     email,
-    competencia,
+    actividadid,
+    programacionid,
+    programacion,
     dia,
     mes,
     anio,
     fechanacimiento,
-    horario,
     precio,
   } = formField;
   const {
@@ -55,29 +56,32 @@ function Address({ formData }) {
     dia: diaV,
     mes: mesV,
     anio: anioV,
-    competencia: competenciaV,
+    programacion: programacionV,
+    programacionid: programacionidV,
+    actividadid: actividadidV,
     horario: horarioV,
     precio: precioV,
   } = values;
 
-  const [fechatorneo, setFechaTorneo] = useState(null);
   const [actividades, setActividades] = useState([]);
-  const [actividads, setActividads] = useState([]);
-  const [programacion, setProgramacion] = useState([]);
-  const [fechas, setFechas] = useState([]);
-  const [fechasprogramacion, setFechasProgramacion] = useState([]);
-  const [hora, setHora] = useState([]);
+  const [actividadesNombre, setActividadesNombre] = useState([]);
+  const [detalle, setDetalle] = useState([]);
   const [cupo, setCupo] = useState([]);
 
   const handleChange = async (event) => {
     await setFieldValue("horario", "");
-    await setFieldValue("competencia", event.target.value);
-    await loadHora(event, event.target.value);
+    console.log("programacion id");
+    console.log(detalle);
+    const programacion = await detalle.find((item) => event.target.value===item.id);
+    // await setFieldValue("programacionid", event.target.value);
+    console.log(programacion);
+    console.log(programacionV);
+    console.log(event.target.value);
+    await setFieldValue("programacionid", event.target.value);
+    await setFieldValue("programacion", programacion.detalle);
+    // await loadHora(event, event.target.value);
   };
 
-  const handleHorarioChange = async (event) => {
-    await setFieldValue("horario", event.target.value);
-  };
 
   const loadActividad = async (data) => {
     const session = await getSession(data);
@@ -92,12 +96,13 @@ function Address({ formData }) {
           descripcion: item.descripcion,
           precio: item.precio,
         }));
+        setActividades(dataActividad);
+        // carga los nombres para el list 
         const data_Actividad = response.data.actividadFound.map(
           (item) => item.descripcion
         );
-        setActividads(dataActividad);
-        setActividades(data_Actividad);
-        console.log(actividad);
+        setActividadesNombre(data_Actividad);
+        console.log(actividadesNombre);
       } else {
       }
     } catch (error) {
@@ -114,20 +119,16 @@ function Address({ formData }) {
       console.log("response actividad");
       console.log(response);
       if (response.statusText === "OK" || response.status === 200) {
-        const dataFechas = await response.data.programacionFound.map(
-          (item) => ({
-            from: new Date(item.vigenciaDesde).toISOString().split("T")[0],
-            to: new Date(item.vigenciaHasta).toISOString().split("T")[0],
-          })
-        );
+        const detalle = await response.data.programacionFound.map((item) => ({
+          id: item.id,
+          detalle: item.detalle,
+        }));
 
-        setProgramacion(response.data.programacionFound);
-        console.log("array duplicados");
-        const arrayConDuplicados = dataFechas.map((item) => item.from);
-        await setFechasProgramacion([...new Set(arrayConDuplicados)]);
-
-        console.log("fechas");
-        console.log(fechas.from);
+        setDetalle(detalle);
+        console.log("array detalle");
+        console.log(detalle);
+        // const arrayConDuplicados = dataFechas.map((item) => item.from);
+        // await setFechasProgramacion([...new Set(arrayConDuplicados)]);
       } else {
       }
     } catch (error) {
@@ -136,14 +137,15 @@ function Address({ formData }) {
     }
   };
 
-  const loadFecha = async (e, data) => {
+  const handleProgramacion = async (e, data) => {
     try {
-      const resultado = actividads.find(
+      const resultado = actividades.find(
         (actividad) => actividad.descripcion === data
       );
 
       await loadProgramacion(resultado.id);
       setFieldValue("precio", resultado.precio);
+      setFieldValue("actividadid", resultado.id);
       const fechaNacimientoP = moment(
         `${anioV}-${mesV}-${diaV}`,
         "YYYY-MMMM-DD"
@@ -159,34 +161,30 @@ function Address({ formData }) {
     }
   };
 
-  const loadHora = async (e, data) => {
-    try {
-      console.log("load hora");
-      console.log(programacion);
+  // const loadHora = async (e, data) => {
+  //   try {
+  //     console.log("load hora");
+  //     console.log(programacion);
 
-      const resultado = await programacion.filter(
-        (actividad) =>
-          new Date(actividad.vigenciaDesde).toISOString().split("T")[0] <=
-            data &&
-          new Date(actividad.vigenciaHasta).toISOString().split("T")[0] >= data
-      );
-      const horas = await resultado.map((item) => item.horaDesde);
-      console.log("resultado fecha y hora");
-      console.log(resultado);
-      console.log(horas);
-      await setHora(horas);
-      console.log(hora);
-    } catch (error) {
-      console.log("error");
-      console.log(error);
-    }
-  };
+  //     const resultado = await programacion.filter(
+  //       (actividad) =>
+  //         new Date(actividad.vigenciaDesde).toISOString().split("T")[0] <=
+  //           data &&
+  //         new Date(actividad.vigenciaHasta).toISOString().split("T")[0] >= data
+  //     );
+  //     const horas = await resultado.map((item) => item.horaDesde);
+  //     console.log("resultado fecha y hora");
+  //     console.log(resultado);
+  //     console.log(horas);
+  //     await setHora(horas);
+  //     console.log(hora);
+  //   } catch (error) {
+  //     console.log("error");
+  //     console.log(error);
+  //   }
+  // };
 
-  const flatpickrOptions = {
-    // mode: 'range', // Establece el modo en 'range' para habilitar un rango de fecha
-    // Agrega más opciones según sea necesario {
-    enable: fechas,
-  };
+ 
 
   useEffect(() => {
     loadActividad();
@@ -206,12 +204,10 @@ function Address({ formData }) {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Autocomplete
-              options={actividades}
+              options={actividadesNombre}
               onChange={(e, value) => {
-                loadFecha(e, value);
+                handleProgramacion(e, value);
                 setFieldValue("actividad", value);
-                setFieldValue("competencia", "");
-                console.log(horarioV);
               }}
               renderInput={(params) => (
                 <FormField
@@ -225,24 +221,24 @@ function Address({ formData }) {
               )}
             />
           </Grid>
-          <Grid item xs={4}>
-            <FormControl variant="standard" sx={{ m: 1, minWidth: 250 }}>
+          <Grid item xs={8}>
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 350 }}>
               <InputLabel id="demo-simple-select-standard-label">
-                Competencia
+                Programación
               </InputLabel>
               <Select
                 labelId="demo-simple-select-standard-label"
                 id="demo-simple-select-standard"
-                value={competenciaV}
+                value={programacionidV}
                 onChange={handleChange}
-                label="Competencia"
+                label="Programación"
               >
                 <MenuItem value="">
                   <em>Ninguno</em>
                 </MenuItem>
-                {fechasprogramacion.map((opcion, index) => (
-                  <MenuItem value={opcion} key={index}>
-                    {opcion}
+                {detalle.map((opcion, index) => (
+                  <MenuItem value={opcion.id} key={index}>
+                    {opcion.detalle}
                   </MenuItem>
                 ))}
                 {/* <MenuItem value={10}>Ten</MenuItem>
@@ -250,11 +246,9 @@ function Address({ formData }) {
                 <MenuItem value={30}>Thirty</MenuItem> */}
               </Select>
             </FormControl>
-
           </Grid>
 
-          <Grid item xs={5}>
-
+          {/* <Grid item xs={5}>
             <FormControl variant="standard" sx={{ m: 1, minWidth: 250 }}>
               <InputLabel id="demo-simple-select-standard-label">
                 Horario
@@ -274,12 +268,9 @@ function Address({ formData }) {
                     {opcion}
                   </MenuItem>
                 ))}
-                {/* <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem> */}
               </Select>
             </FormControl>
-          </Grid>
+          </Grid> */}
           <Grid item xs={3}>
             <MDBox mb={1.5}>
               <MDBox textAlign="right" lineHeight={1.25}>

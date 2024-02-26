@@ -20,7 +20,7 @@ model User {
 }
 
 model Profile {
-  id              Int       @id @default(autoincrement())
+  id              Int        @id @default(autoincrement())
   nombres         String
   apellidos       String
   cedula          String
@@ -31,47 +31,46 @@ model Profile {
   pais            String
   ciudad          String
   direccion       String
-  userId          Int       @unique
-  createdAt       DateTime  @default(now())
-  defaultAt       DateTime  @default(now())
-  user            User      @relation(fields: [userId], references: [id])
+  userId          Int        @unique
+  createdAt       DateTime   @default(now())
+  defaultAt       DateTime   @default(now())
+  user            User       @relation(fields: [userId], references: [id])
   registro        Registro[]
 }
 
-
 model Programacion {
-  id            Int       @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   vigenciaDesde DateTime
   vigenciaHasta DateTime
   horaDesde     String
   horaHasta     String
+  fechaTope     String
   detalle       String
   estado        String
   cupo          Int
-  actividadId   Int       
-  createdAt     DateTime  @default(now())
-  defaultAt     DateTime  @default(now())
-  actividad     Actividad @relation(fields: [actividadId], references: [id])
+  actividadId   Int
+  createdAt     DateTime   @default(now())
+  defaultAt     DateTime   @default(now())
+  actividad     Actividad  @relation(fields: [actividadId], references: [id])
   registro      Registro[]
 }
+
 model Actividad {
-  id           Int           @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   descripcion  String
   precio       Int
   estado       String
-  createdAt    DateTime      @default(now())
-  defaultAt    DateTime      @default(now())
+  createdAt    DateTime       @default(now())
+  defaultAt    DateTime       @default(now())
   programacion Programacion[]
 }
-
-
 
 model Registro {
   id             Int          @id @default(autoincrement())
   fechatorneo    String
   pagado         Boolean      @default(false)
-  programacionId Int          
-  profileId      Int          
+  programacionId Int
+  profileId      Int
   createdAt      DateTime     @default(now())
   defaultAt      DateTime     @default(now())
   profile        Profile      @relation(fields: [profileId], references: [id])
