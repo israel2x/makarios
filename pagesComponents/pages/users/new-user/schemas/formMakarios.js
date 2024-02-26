@@ -99,23 +99,21 @@ const form = {
         type: "text",
         
       },
+      actividadid: {
+        name: "actividadid",
+        type: "text",
+      },
       actividad: {
         name: "actividad",
-        label: "Actividad",
         type: "text",
-        errorMsg: "Actividad es obligatorio.",
       },
-      competencia: {
-        name: "competencia",
-        label: "Fecha Competencia",
+      programacionid: {
+        name: "programacionid",
         type: "text",
-        errorMsg: "Fecha competencia es obligatorio.",
       },
-      horario: {
-        name: "horario",
-        label: "Horario",
+      programacion: {
+        name: "programacion",
         type: "text",
-        errorMsg: "Horario es obligatorio.",
       },
       pagado: {
         name: "pagado",
@@ -123,10 +121,6 @@ const form = {
       },
       precio: {
         name: "precio",
-        type:"text"
-      },
-      programacion: {
-        name: "programacion",
         type:"text"
       },
     },

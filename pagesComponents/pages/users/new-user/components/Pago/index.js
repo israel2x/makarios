@@ -45,6 +45,7 @@ function Pago({ formData, pagos }) {
     celular,
     fechaCompetencia,
     actividad,
+    programacion,
     ciudad,
     direccion,
     pais,
@@ -67,6 +68,8 @@ function Pago({ formData, pagos }) {
     condicion: condicionV,
     celular: celularV,
     fechaNacimiento: fechaNacimientoV,
+    actividad: actividadV,
+    programacion:programacionV,
     pais: paisV,
     ciudad: ciudadV,
     direccion: direccionV,
@@ -94,7 +97,8 @@ function Pago({ formData, pagos }) {
           alignItems="center"
         >
           <MDTypography variant="h6" color="text">
-            Inscripción Personal a Torneo Vacacional de Tiro con Arco
+            {/* Inscripción Personal a Torneo Vacacional de Tiro con Arco */}
+            {actividadV} - {programacionV}
           </MDTypography>
         </Grid>
       </MDBox>
