@@ -34,15 +34,13 @@ export default async function torneoHanler(req, res) {
 
     if (!profileFound) {
       dataProfile.userId= userFound.id;
-      const newTorneo = await db.profile.create({
+      const newProfile = await db.profile.create({
         data: dataProfile,
-        // user: {
-        //   connect: {
-        //     id: userFound.id,
-        //   },
-        // },
       });
-      idProfile = newTorneo.id;
+      console.log(newProfile);
+      idProfile = newProfile.id;
+    }else{
+      idProfile = profileFound.id;
     }
     console.log("idProfile");
     console.log(idProfile);
