@@ -67,7 +67,7 @@ model Actividad {
 
 model Registro {
   id             Int          @id @default(autoincrement())
-  fechatorneo    String
+  fecharegistro  String
   pagado         Boolean      @default(false)
   programacionId Int
   profileId      Int
