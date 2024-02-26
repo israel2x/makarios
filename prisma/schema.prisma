@@ -44,7 +44,7 @@ model Programacion {
   vigenciaHasta DateTime
   horaDesde     String
   horaHasta     String
-  fechaTope     String
+  fechatope     String
   detalle       String
   estado        String
   cupo          Int

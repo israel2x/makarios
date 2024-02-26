@@ -188,7 +188,7 @@ function Address({ formData }) {
 
   useEffect(() => {
     loadActividad();
-    loadProgramacion();
+    // loadProgramacion();
   }, []);
 
   return (
