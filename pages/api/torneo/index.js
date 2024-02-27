@@ -47,7 +47,7 @@ export default async function torneoHanler(req, res) {
     const programacionData = {
       programacionId: req.body.programacionid,
       pagado: true,
-      fechatorneo: String(new Date()),
+      fecharegistro: String(new Date()),
       profileId: idProfile,
     };
 
