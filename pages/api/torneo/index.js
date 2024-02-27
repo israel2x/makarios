@@ -1,5 +1,5 @@
 const { NextResponse } = require("next/server");
-import db from "/libs/db";
+import db from "../../../libs/db";
 
 export default async function torneoHanler(req, res) {
   try {
