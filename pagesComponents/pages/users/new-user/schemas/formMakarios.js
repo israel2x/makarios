@@ -58,7 +58,7 @@ const form = {
       celular: {
         name: "celular",
         label: "Celular",
-        type: "number",
+        type: "text",
         errorMsg: "Celular es obligatorio.",
       },
       fechanacimiento: {

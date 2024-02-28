@@ -132,6 +132,13 @@ function UserInfo({ formData }) {
     }
 })
 
+const onChangeNumberCelular =((e)=>{
+  const re = /^[0-9\b]+$/; //rules
+  if (e.target.value === "" || re.test(e.target.value)) {
+    setFieldValue("celular", e.target.value);;
+  }
+})
+
   useEffect(() => {
     loadDataProfile();
   }, []);
@@ -238,6 +245,7 @@ function UserInfo({ formData }) {
               label={celular.label}
               name={celular.name}
               value={celularV}
+              onChange={onChangeNumberCelular}
               placeholder={celular.placeholder}
               error={errors.celular && touched.celular}
               success={celularV.length > 0 && !errors.celular}
