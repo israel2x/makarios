@@ -216,7 +216,7 @@ function NewUser() {
   return (
     // <DashboardLayout>
     <PageLayout>
-      <DashboardNavbar />
+      {/* <DashboardNavbar /> */}
       <MDBox py={1} mb={10} height="25vh">
         <Grid
           container
