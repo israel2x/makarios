@@ -123,6 +123,27 @@ const form = {
         name: "precio",
         type:"text"
       },
+      rucfactura:{
+        name: "rucfactura",
+        type:"text",
+        label: "Ruc/CI"
+      },
+      nombrefactura:{
+        name: "nombrefactura",
+        type:"text",
+        label: "Nombre",
+      },
+      mailfactura:{
+        name: "mailfactura",
+        type:"text",
+        label: "email",
+      },
+      direccionfactura:{
+        name: "direccionfactura",
+        type:"text",
+        label: "Dirección"
+      },
+      
     },
   };
   

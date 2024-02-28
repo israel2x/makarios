@@ -28,27 +28,19 @@ import FormField from "/pagesComponents/pages/users/new-user/components/FormFiel
 import Autocomplete from "@mui/material/Autocomplete";
 import selectData from "/pagesComponents/pages/account/settings/components/BasicInfo/data/selectData";
 
-
-import PpxButton from "/pages/pagos-online/PpxButton"; 
+import PpxButton from "/pages/pagos-online/PpxButton";
 import PagoTarjeta from "/pagesComponents/pages/users/new-user/components/PagoTarjeta";
 function Pago({ formData, pagos }) {
   const { formField, values, errors, touched } = formData;
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
   const {
-    nombres,
-    apellidos,
-    cedula,
-    genero,
-    fechaNacimiento,
-    condicion,
-    celular,
-    fechaCompetencia,
+    nombrefactura,
+    rucfactura,
+    direccionfactura,
+    mailfactura,
     actividad,
     programacion,
-    ciudad,
-    direccion,
-    pais,
   } = formField;
   // const {
   //   firstName: firstNameV,
@@ -60,19 +52,12 @@ function Pago({ formData, pagos }) {
   // } = values;
 
   const {
-    nombres: nombresV,
-    apellidos: apellidosV,
-    cedula: cedulaV,
-    email: emailV,
-    genero: generoV,
-    condicion: condicionV,
-    celular: celularV,
-    fechaNacimiento: fechaNacimientoV,
+    nombrefactura: nombrefacturaV,
+    rucfactura: rucfacturaV,
+    direccionfactura: direccionfacturaV,
+    mailfactura: mailfacturaV,
     actividad: actividadV,
-    programacion:programacionV,
-    pais: paisV,
-    ciudad: ciudadV,
-    direccion: direccionV,
+    programacion: programacionV,
   } = values;
 
   return (
@@ -104,18 +89,60 @@ function Pago({ formData, pagos }) {
       </MDBox>
       <MDBox mt={1.625}>
         <Grid container spacing={3}>
-          <Grid
-            item
-            xs={12}
-            sm={6}
-           
-          >
-            <MDTypography variant="h5">Datos de Tarjeta</MDTypography>
-              {/* <PagoTarjeta /> */}
-              <PpxButton data={pagos} /> 
-          </Grid>
           <Grid item xs={12} sm={6}>
             <MDTypography variant="body1">Facturación</MDTypography>
+            <Grid item xs={12} sm={12}>
+              <FormField
+                type={nombrefactura.type}
+                label={nombrefactura.label}
+                name={nombrefactura.name}
+                value={nombrefacturaV}
+                placeholder={nombrefactura.placeholder}
+                // error={errors.nombres && touched.nombres}
+                // success={nombresV.length > 0 && !errors.nombres}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <FormField
+                type={rucfactura.type}
+                label={rucfactura.label}
+                name={rucfactura.name}
+                value={rucfacturaV}
+                placeholder={rucfactura.placeholder}
+                // error={errors.nombres && touched.nombres}
+                // success={nombresV.length > 0 && !errors.nombres}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <FormField
+                type={direccionfactura.type}
+                label={direccionfactura.label}
+                name={direccionfactura.name}
+                value={direccionfacturaV}
+                placeholder={direccionfactura.placeholder}
+                // error={errors.nombres && touched.nombres}
+                // success={nombresV.length > 0 && !errors.nombres}
+              />
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <FormField
+                type={mailfactura.type}
+                label={mailfactura.label}
+                name={mailfactura.name}
+                value={mailfacturaV}
+                placeholder={mailfactura.placeholder}
+                // error={errors.nombres && touched.nombres}
+                // success={nombresV.length > 0 && !errors.nombres}
+              />
+            </Grid>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <MDTypography variant="h5">Ingrese su tarjeta</MDTypography>
+            {/* <PagoTarjeta /> */}
+            <Grid item xs={12} sm={12}>
+
+            <PpxButton data={pagos} />
+            </Grid>
           </Grid>
         </Grid>
       </MDBox>
