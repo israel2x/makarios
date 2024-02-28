@@ -80,7 +80,7 @@ function Pago({ formData, pagos }) {
   const onChangeNumberCelular =((e)=>{
     const re = /^[0-9\b]+$/; //rules
     if (e.target.value === "" || re.test(e.target.value)) {
-      setFieldValue("celular", e.target.value);;
+      setFieldValue("rucfactura", e.target.value);;
     }
   });
   return (
