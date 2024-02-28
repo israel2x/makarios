@@ -36,7 +36,11 @@ const {
     programacionid,
     pagado,
     precio,
-    programacion
+    programacion,
+    rucfactura,
+    nombrefactura,
+    direccionfactura,
+    mailfactura
   },
 } = checkout;
 
@@ -61,6 +65,10 @@ const initialValues = {
   [pagado.name]: "",
   [precio.name]: "",
   [programacion.name]: "",
+  [rucfactura.name]: "",
+  [nombrefactura.name]: "",
+  [direccionfactura.name]: "",
+  [mailfactura.name]: "",
 };
 
 export default initialValues;
