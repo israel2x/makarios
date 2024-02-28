@@ -18,20 +18,18 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 // @mui material components
 import Grid from "@mui/material/Grid";
-
+import axios from "axios";
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
-
-
+import moment from "moment";
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 import Autocomplete from "@mui/material/Autocomplete";
-
+import { getSession } from "next-auth/react";
 // Data
 import selectData from "/pagesComponents/pages/users/new-user/components/UserInfo/data/selectData";
 function UserInfo({ formData }) {
-  
   const { formField, values, errors, touched, setFieldValue } = formData;
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
@@ -42,7 +40,9 @@ function UserInfo({ formData }) {
     cedula,
     genero,
     fechaNacimiento,
-    dia,mes,anio,
+    dia,
+    mes,
+    anio,
     condicion,
     celular,
     fechaCompetencia,
@@ -61,7 +61,6 @@ function UserInfo({ formData }) {
   // } = values;
 
   const {
-    
     nombres: nombresV,
     apellidos: apellidosV,
     cedula: cedulaV,
@@ -86,7 +85,49 @@ function UserInfo({ formData }) {
     }));
   };
 
+  const loadDataProfile = async () => {
+    try {
+      const session = await getSession();
+      console.log(session);
+      const response = await axios.get("/api/user", {
+        params: { email: session.user.email },
+      });
+      console.log("response infodata");
+      console.log(response);
+      if (response.statusText === "OK" || response.status === 200) {
+        const infoProfile = response.data.newUser.profile;
+        // = await response.data.newUser.find((item) => ({
+        //  profile: item.profile
+        // }));
+        setFieldValue("nombres", infoProfile.nombres);
+        setFieldValue("apellidos", infoProfile.apellidos);
+        setFieldValue("cedula", infoProfile.cedula);
+        setFieldValue('genero',infoProfile.genero);
+        setFieldValue("anio", String(moment(infoProfile.fechaNacimiento, "YYYY-MM-DD").year()));
+        setFieldValue("dia", String(moment(infoProfile.fechaNacimiento, "YYYY-MM-DD").day()));
+        setFieldValue("mes", moment(infoProfile.fechaNacimiento).format("MMMM"));
+        setFieldValue("cedula", infoProfile.cedula);
+        setFieldValue("celular", infoProfile.celular);
+        setFieldValue("condicion", infoProfile.condicion);
+        setFieldValue("ciudad", infoProfile.ciudad);
+        setFieldValue("pais", infoProfile.pais);
+        setFieldValue("direccion", infoProfile.direccion);
 
+        console.log("array profile");
+        console.log(infoProfile);
+        // const arrayConDuplicados = dataFechas.map((item) => item.from);
+        // await setFechasProgramacion([...new Set(arrayConDuplicados)]);
+      } else {
+      }
+    } catch (error) {
+      console.log("error info profile");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    loadDataProfile();
+  }, []);
 
   // selectData.gender.map((item) => console.log(`Fecha Nacimiento ${item}`));
 
@@ -138,10 +179,13 @@ function UserInfo({ formData }) {
             <Autocomplete
               options={selectData.gender}
               // defaultValue="Masculino"
+              // defaultValue={generoV}
+              value={generoV}
+              isOptionEqualToValue={(option, value) =>
+                option.label === value.label
+              }
               onChange={(e, value) => {
                 setFieldValue("genero", value);
-
-                
               }}
               renderInput={(params) => (
                 <FormField
@@ -159,10 +203,13 @@ function UserInfo({ formData }) {
           <Grid item xs={12} sm={3}>
             <Autocomplete
               options={selectData.condicion}
-              // defaultValue="Ninguno"
+              value={condicionV}
               onChange={(e, value) => {
-                setFieldValue("condicion", value); 
+                setFieldValue("condicion", value);
               }}
+              isOptionEqualToValue={(option, value) =>
+                option.label === value.label
+              }
               renderInput={(params) => (
                 <FormField
                   {...params}
@@ -172,7 +219,7 @@ function UserInfo({ formData }) {
                   value={condicionV}
                   // placeholder={condicion.placeholder}
                   error={errors.condicion && touched.condicion}
-                  success={(condicionV.length > 0 ) && !errors.condicion}
+                  success={condicionV.length > 0 && !errors.condicion}
                 />
               )}
             />
@@ -189,76 +236,86 @@ function UserInfo({ formData }) {
             />
           </Grid>
 
-              <Grid item xs={12} sm={6}>
-                <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  options={selectData.days}
+                  defaultValue="1"
+                  onChange={(e, value) => {
+                    setFieldValue("dia", value);
+                  }}
+                  value={diaV}
+                  isOptionEqualToValue={(option, value) =>
+                    option.label === value.label
+                  }
+                  renderInput={(params) => (
+                    <FormField
+                      {...params}
+                      type={dia.type}
+                      label={dia.label}
+                      name={dia.name}
+                      value={diaV}
+                      placeholder={dia.placeholder}
+                      error={errors.dia && touched.dia}
+                      success={diaV.length > 0 && !errors.dia}
 
-                  <Grid item xs={12} sm={4}>
-                    <Autocomplete
-                      options={selectData.days}
-                      defaultValue="1"
-                      onChange={(e, value) => {
-                        setFieldValue("dia", value); 
-                      }}
-                      renderInput={(params) => (
-                        <FormField
-                          {...params}
-                          type={dia.type}
-                          label={dia.label}
-                          name={dia.name}
-                          value={diaV}
-                          placeholder={dia.placeholder}
-                          error={errors.dia && touched.dia}
-                          success={diaV.length > 0 && !errors.dia}
-
-                          // InputLabelProps={{ shrink: true }}
-                        />
-                      )}
+                      // InputLabelProps={{ shrink: true }}
                     />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Autocomplete
-                      options={selectData.birthDate}
-                      defaultValue="February"
-                      onChange={(e, value) => {
-                        setFieldValue("mes", value); 
-                      }}
-                      renderInput={(params) => (
-                        <FormField
-                        {...params}
-                        type={mes.type}
-                        label={mes.label}
-                        name={mes.name}
-                        value={mesV}
-                        placeholder={mes.placeholder}
-                        error={errors.mes && touched.mes}
-                        success={mesV.length > 0 && !errors.mes}
-                        />
-                      )}
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  options={selectData.birthDate}
+                  defaultValue="February"
+                  onChange={(e, value) => {
+                    setFieldValue("mes", value);
+                  }}
+                  value={mesV}
+                  isOptionEqualToValue={(option, value) =>
+                    option.label === value.label
+                  }
+                  renderInput={(params) => (
+                    <FormField
+                      {...params}
+                      type={mes.type}
+                      label={mes.label}
+                      name={mes.name}
+                      value={mesV}
+                      placeholder={mes.placeholder}
+                      error={errors.mes && touched.mes}
+                      success={mesV.length > 0 && !errors.mes}
                     />
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Autocomplete
-                      options={selectData.years}
-                      defaultValue="2021"
-                      onChange={(e, value) => {
-                        setFieldValue("anio", value); 
-                      }}
-                      renderInput={(params) => (
-                        <FormField
-                          {...params}
-                          type={anio.type}
-                          label={anio.label}
-                          name={anio.name}
-                          value={anioV}
-                          placeholder={anio.placeholder}
-                          error={errors.anio && touched.anio}
-                          success={anioV.length > 0 && !errors.anio}
-                        />
-                      )}
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Autocomplete
+                  options={selectData.years}
+                  defaultValue="2000"
+                  onChange={(e, value) => {
+                    setFieldValue("anio", value);
+                  }}
+                  value={anioV}
+                  isOptionEqualToValue={(option, value) =>
+                    option.label === value.label
+                  }
+                  renderInput={(params) => (
+                    <FormField
+                      {...params}
+                      type={anio.type}
+                      label={anio.label}
+                      name={anio.name}
+                      value={anioV}
+                      placeholder={anio.placeholder}
+                      error={errors.anio && touched.anio}
+                      success={anioV.length > 0 && !errors.anio}
                     />
-                  </Grid>
-                </Grid>
-
+                  )}
+                />
+              </Grid>
+            </Grid>
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormField

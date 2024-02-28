@@ -15,7 +15,7 @@ Coded by www.creative-tim.com
 
 // prop-type is a library for typechecking of props
 import PropTypes from "prop-types";
-
+import { useState, useEffect } from "react";
 // @mui material components
 import Grid from "@mui/material/Grid";
 
@@ -31,10 +31,15 @@ import selectData from "/pagesComponents/pages/account/settings/components/Basic
 import PpxButton from "/pages/pagos-online/PpxButton";
 import PagoTarjeta from "/pagesComponents/pages/users/new-user/components/PagoTarjeta";
 function Pago({ formData, pagos }) {
-  const { formField, values, errors, touched } = formData;
+  const { formField, values, errors, touched, setFieldValue } = formData;
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
   const {
+    nombres,
+    apellidos,
+    direccion,
+    cedula,
+    email,
     nombrefactura,
     rucfactura,
     direccionfactura,
@@ -52,6 +57,11 @@ function Pago({ formData, pagos }) {
   // } = values;
 
   const {
+    nombres:nombresV,
+    apellidos:apellidosV,
+    direccion:direccionV,
+    cedula:cedulaV,
+    email:emailV,
     nombrefactura: nombrefacturaV,
     rucfactura: rucfacturaV,
     direccionfactura: direccionfacturaV,
@@ -59,6 +69,14 @@ function Pago({ formData, pagos }) {
     actividad: actividadV,
     programacion: programacionV,
   } = values;
+
+
+  useEffect(() => {
+    setFieldValue("rucfactura", cedulaV);
+    setFieldValue("direccionfactura", direccionV);
+    setFieldValue("mailfactura", emailV);
+    setFieldValue("nombrefactura", nombresV+' '+apellidosV);
+  }, []);
 
   return (
     <MDBox>
