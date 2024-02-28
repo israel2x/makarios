@@ -77,7 +77,12 @@ function Pago({ formData, pagos }) {
     setFieldValue("mailfactura", emailV);
     setFieldValue("nombrefactura", nombresV+' '+apellidosV);
   }, []);
-
+  const onChangeNumberCelular =((e)=>{
+    const re = /^[0-9\b]+$/; //rules
+    if (e.target.value === "" || re.test(e.target.value)) {
+      setFieldValue("celular", e.target.value);;
+    }
+  });
   return (
     <MDBox>
       <MDBox lineHeight={0}>
@@ -126,6 +131,7 @@ function Pago({ formData, pagos }) {
                 label={rucfactura.label}
                 name={rucfactura.name}
                 value={rucfacturaV}
+                onChange={onChangeNumberCelular}
                 placeholder={rucfactura.placeholder}
                 // error={errors.nombres && touched.nombres}
                 // success={nombresV.length > 0 && !errors.nombres}
