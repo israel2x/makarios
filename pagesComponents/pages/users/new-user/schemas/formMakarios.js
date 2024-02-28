@@ -31,7 +31,7 @@ const form = {
       cedula: {
         name: "cedula",
         label: "CI o DNI",
-        type: "number",
+        type: "text",
         errorMsg: "Identificación es obligatorio.",
       },
       email: {

@@ -125,6 +125,13 @@ function UserInfo({ formData }) {
     }
   };
 
+  const onChange =((e)=>{
+    const re = /^[0-9\b]+$/; //rules
+    if (e.target.value === "" || re.test(e.target.value)) {
+      setFieldValue("cedula", e.target.value);;
+    }
+})
+
   useEffect(() => {
     loadDataProfile();
   }, []);
@@ -170,6 +177,7 @@ function UserInfo({ formData }) {
               label={cedula.label}
               name={cedula.name}
               value={cedulaV}
+              onChange={onChange}
               placeholder={cedula.placeholder}
               error={errors.cedula && touched.cedula}
               success={cedulaV.length > 0 && !errors.cedula}
