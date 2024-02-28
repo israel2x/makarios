@@ -137,7 +137,7 @@ const onChangeNumberCelular =((e)=>{
   if (e.target.value === "" || re.test(e.target.value)) {
     setFieldValue("celular", e.target.value);;
   }
-})
+});
 
   useEffect(() => {
     loadDataProfile();
