@@ -159,7 +159,14 @@ function NewUser() {
 
 
       if(response.statusText === "OK" || response.status===200) {
-       
+        Swal.fire(
+          'Registro exitoso!',
+          'Registro aceptado!',
+          'success'
+        ).then(res=>{
+          console.log("revuelve el Ok");
+        
+        });
 
       }else{
         
