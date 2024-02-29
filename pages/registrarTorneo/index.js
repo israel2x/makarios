@@ -52,7 +52,7 @@ import initialValues from "/pagesComponents/pages/users/new-user/schemas/initial
 
 function getSteps() {
   // return ["User Info", "Address", "Social", "Profile"];
-  return ["Perfil", "Actividad", "Confirmación", "Pago"];
+  return ["Participante", "Actividad", "Confirmación", "Pago"];
 }
 
 function getStepContent(stepIndex, formData, dataPagos) {
