@@ -148,9 +148,9 @@ const onChangeNumberCelular =((e)=>{
   return (
     <MDBox>
       <MDBox lineHeight={0}>
-        <MDTypography variant="h5">Perfil</MDTypography>
+        <MDTypography variant="h5">Participante</MDTypography>
         <MDTypography variant="button" color="text">
-          Información personal
+          Datos del participante
         </MDTypography>
       </MDBox>
       <MDBox mt={1.625}>
