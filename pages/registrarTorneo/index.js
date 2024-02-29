@@ -143,7 +143,7 @@ function NewUser() {
     // alert(JSON.stringify(values, null, 2));
 
     actions.setSubmitting(false);
-    // actions.resetForm();
+    actions.resetForm();
     setActiveStep(0);
     await  window.location.reload(); 
   };
@@ -216,7 +216,7 @@ function NewUser() {
   return (
     // <DashboardLayout>
     <PageLayout>
-      {/* <DashboardNavbar /> */}
+      <DashboardNavbar />
       <MDBox py={1} mb={10} height="25vh">
         <Grid
           container

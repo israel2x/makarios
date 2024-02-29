@@ -16,7 +16,7 @@ model User {
   role      String
   createdAt DateTime @default(now())
   defaultAt DateTime @default(now())
-  profile   Profile?
+  profile   Profile[]
 }
 
 model Profile {
@@ -31,7 +31,7 @@ model Profile {
   pais            String
   ciudad          String
   direccion       String
-  userId          Int        @unique
+  userId          Int        
   createdAt       DateTime   @default(now())
   defaultAt       DateTime   @default(now())
   user            User       @relation(fields: [userId], references: [id])

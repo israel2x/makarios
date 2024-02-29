@@ -85,17 +85,17 @@ function UserInfo({ formData }) {
     }));
   };
 
-  const loadDataProfile = async () => {
+  const loadDataProfile = async (data) => {
     try {
       const session = await getSession();
       console.log(session);
       const response = await axios.get("/api/user", {
-        params: { email: session.user.email },
+        params: { cedula: data },
       });
       console.log("response infodata");
       console.log(response);
       if (response.statusText === "OK" || response.status === 200) {
-        const infoProfile = response.data.newUser.profile;
+        const infoProfile = response.data.newUser;
         // = await response.data.newUser.find((item) => ({
         //  profile: item.profile
         // }));
@@ -128,19 +128,20 @@ function UserInfo({ formData }) {
   const onChange =((e)=>{
     const re = /^[0-9\b]+$/; //rules
     if (e.target.value === "" || re.test(e.target.value)) {
-      setFieldValue("cedula", e.target.value);;
+      setFieldValue("cedula", e.target.value);
+      
     }
 })
 
 const onChangeNumberCelular =((e)=>{
   const re = /^[0-9\b]+$/; //rules
   if (e.target.value === "" || re.test(e.target.value)) {
-    setFieldValue("celular", e.target.value);;
+    setFieldValue("celular", e.target.value);
   }
 });
 
   useEffect(() => {
-    loadDataProfile();
+    // loadDataProfile();
   }, []);
 
   // selectData.gender.map((item) => console.log(`Fecha Nacimiento ${item}`));
@@ -201,6 +202,7 @@ const onChangeNumberCelular =((e)=>{
               }
               onChange={(e, value) => {
                 setFieldValue("genero", value);
+                loadDataProfile(cedulaV);
               }}
               renderInput={(params) => (
                 <FormField
