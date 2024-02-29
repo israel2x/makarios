@@ -1,5 +1,5 @@
 const { NextResponse } = require("next/server");
-import db from "../../../libs/db";
+import db from "/libs/db";
 
 export default async function torneoHanler(req, res) {
   try {
@@ -24,22 +24,31 @@ export default async function torneoHanler(req, res) {
 
     console.log("user found");
     console.log(req.body);
-    console.log(userFound);
+    // console.log(userFound);
+    console.log(userFound.id + typeof(userFound.id));
+    console.log(req.body.cedula + typeof(req.body.cedula));
 
-    const profileFound = await db.profile.findUnique({
+    const profileFound = await db.profile.findFirst({
       where: {
-        userId: userFound.id,
+        AND: [
+          {
+            userId: userFound.id,
+          },
+          {
+            cedula: dataProfile.cedula,
+          },
+        ],
       },
     });
 
     if (!profileFound) {
-      dataProfile.userId= userFound.id;
+      dataProfile.userId = userFound.id;
       const newProfile = await db.profile.create({
         data: dataProfile,
       });
       console.log(newProfile);
       idProfile = newProfile.id;
-    }else{
+    } else {
       idProfile = profileFound.id;
     }
     console.log("idProfile");

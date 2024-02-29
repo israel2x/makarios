@@ -6,17 +6,14 @@ export default async function userHanler(req, res) {
   try {
     console.log("en backend user");
 
-    const userFound = await db.user.findUnique({
-        where: { email: req.query.email },
-      include: {
-        profile: true,
-      },
+    const userFound = await db.profile.findFirst({
+        where: { cedula: req.query.cedula },
     });
     if (!userFound) {
         return res.status(409).send("User not found");
     }
-    const newUser = exclude(userFound, ['password','role','createdAt','defaultAt']);
-    return res.status(200).json({ message: "sucess user", newUser });
+    const newUser = exclude(userFound, ['createdAt','defaultAt']);
+    return res.status(200).json({ message: "sucess profile", newUser });
   } catch (error) {
     console.log("error en API:", error);
     return res.status(500).json({ message: error.message });
