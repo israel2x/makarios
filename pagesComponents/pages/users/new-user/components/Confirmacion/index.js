@@ -88,15 +88,15 @@ function Confirmacion({ formData }) {
     // setFieldValue("fechaNacimiento", `${anioV}-${mesV}-${diaV}`);
     const age = moment().diff(fechaNacimientoP, "years");
     const isLegal = age >= 18;
-    if (age>=10 && age<=14) {
+    if (age >= 10 && age <= 14) {
       setCategoria("Infantil");
-    }else if(age>=15 && age<=17){
+    } else if (age >= 15 && age <= 17) {
       setCategoria("Cadete");
-    }else if(age>=18 && age<=20){
+    } else if (age >= 18 && age <= 20) {
       setCategoria("Juvenil");
-    }else if(age>=21 && age<=49){
+    } else if (age >= 21 && age <= 49) {
       setCategoria("Senior");
-    }else if(age>=50){
+    } else if (age >= 50) {
       setCategoria("Master");
     }
 
@@ -141,33 +141,41 @@ function Confirmacion({ formData }) {
           >
             <MDTypography variant="h5">Datos de Participante</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={6}>
+          <Grid item xs={6} sm={2}></Grid>
+          <Grid item xs={6} sm={4}>
             <MDTypography variant="body1">Nombre Completo</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={6}>
+          <Grid item xs={6} sm={4}>
             <MDTypography variant="body2">
               {/* Marina Belen Casares Tesky */}
               {nombresV + " " + apellidosV}
             </MDTypography>
           </Grid>
-          <Grid item xs={6} sm={6}>
+          <Grid item xs={6} sm={2}></Grid>
+          <Grid item xs={6} sm={2}></Grid>
+          <Grid item xs={6} sm={4}>
             <MDTypography variant="body1">Edad</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={6}>
+          <Grid item xs={6} sm={4}>
             <MDTypography variant="body2">{edad} años</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={6}>
+          <Grid item xs={6} sm={2}></Grid>
+          <Grid item xs={6} sm={2}></Grid>
+          <Grid item xs={6} sm={4}>
             <MDTypography variant="body1">Categoria</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={6}>
+          <Grid item xs={6} sm={4}>
             <MDTypography variant="body2">{categoria}</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={6}>
+          <Grid item xs={6} sm={2}></Grid>
+          <Grid item xs={6} sm={2}></Grid>
+          <Grid item xs={6} sm={4}>
             <MDTypography variant="body1">Total a pagar</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={6}>
+          <Grid item xs={6} sm={4}>
             <MDTypography variant="body2">${precioV}</MDTypography>
           </Grid>
+          <Grid item xs={6} sm={2}></Grid>
         </Grid>
       </MDBox>
     </MDBox>

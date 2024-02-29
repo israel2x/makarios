@@ -80,7 +80,7 @@ function Pago({ formData, pagos }) {
   const onChangeNumberCelular =((e)=>{
     const re = /^[0-9\b]+$/; //rules
     if (e.target.value === "" || re.test(e.target.value)) {
-      setFieldValue("rucfactura", e.target.value);;
+      setFieldValue("rucfactura ", e.target.value);;
     }
   });
   return (
@@ -113,7 +113,7 @@ function Pago({ formData, pagos }) {
       <MDBox mt={1.625}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <MDTypography variant="body1">Facturación</MDTypography>
+            <MDTypography variant="body1">Datos de facturación</MDTypography>
             <Grid item xs={12} sm={12}>
               <FormField
                 type={nombrefactura.type}
