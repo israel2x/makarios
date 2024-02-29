@@ -39,6 +39,7 @@ CREATE TABLE "Programacion" (
     "vigenciaHasta" TIMESTAMP(3) NOT NULL,
     "horaDesde" TEXT NOT NULL,
     "horaHasta" TEXT NOT NULL,
+    "fechatope" TEXT NOT NULL,
     "detalle" TEXT NOT NULL,
     "estado" TEXT NOT NULL,
     "cupo" INTEGER NOT NULL,
@@ -64,7 +65,7 @@ CREATE TABLE "Actividad" (
 -- CreateTable
 CREATE TABLE "Registro" (
     "id" SERIAL NOT NULL,
-    "fechatorneo" TEXT NOT NULL,
+    "fecharegistro" TEXT NOT NULL,
     "pagado" BOOLEAN NOT NULL DEFAULT false,
     "programacionId" INTEGER NOT NULL,
     "profileId" INTEGER NOT NULL,
@@ -76,9 +77,6 @@ CREATE TABLE "Registro" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
 
 -- AddForeignKey
 ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
