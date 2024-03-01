@@ -13,8 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
-
+import axios from "axios";
 // @mui material components
 import Card from "@mui/material/Card";
 import Icon from "@mui/material/Icon";
@@ -32,7 +31,7 @@ import DashboardLayout from "/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
 import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
-
+import { useState, useEffect } from "react";
 // Data
 import dataTableData from "/pagesComponents/ecommerce/orders/order-list/data/dataTableData";
 
@@ -62,6 +61,32 @@ function OrderList() {
       </MenuItem>
     </Menu>
   );
+
+const loadRegistrados = (async()=>{
+  try {
+
+    const response = await axios.get("/api/registro");
+    console.log("response infodata");
+    console.log(response);
+    if (response.statusText === "OK" || response.status === 200) {
+      const infoRegistro = response.data.registroFound;
+
+      
+      console.log("array registro");
+      console.log(infoRegistro);
+    } else {
+    }
+  } catch (error) {
+    console.log("error info registro");
+    console.log(error);
+  }
+
+
+});
+
+  useEffect(() => {
+    loadRegistrados();
+  }, []);
 
   return (
     <DashboardLayout>

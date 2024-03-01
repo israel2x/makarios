@@ -26,6 +26,8 @@ import moment from "moment";
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 import Autocomplete from "@mui/material/Autocomplete";
+
+
 import { getSession } from "next-auth/react";
 // Data
 import selectData from "/pagesComponents/pages/users/new-user/components/UserInfo/data/selectData";
@@ -142,8 +144,9 @@ const onChangeNumberCelular =((e)=>{
 
   useEffect(() => {
     // loadDataProfile();
-  }, []);
 
+  }, []);
+ 
   // selectData.gender.map((item) => console.log(`Fecha Nacimiento ${item}`));
 
   return (
