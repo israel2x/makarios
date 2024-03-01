@@ -1,5 +1,6 @@
 const { NextResponse } = require("next/server");
 import db from "/libs/db";
+import moment from 'moment-timezone';
 
 export default async function torneoHanler(req, res) {
   try {
@@ -56,7 +57,7 @@ export default async function torneoHanler(req, res) {
     const programacionData = {
       programacionId: req.body.programacionid,
       pagado: true,
-      fecharegistro: String(new Date()),
+      fecharegistro: String(moment.tz("America/Guayaquil").format()),
       profileId: idProfile,
     };
 

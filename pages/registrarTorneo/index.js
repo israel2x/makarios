@@ -115,7 +115,7 @@ function NewUser() {
     onAuthorize: (response) => {
 	
       if (response.status === "succeeded") {
-		    // console.log(response);
+		    console.log(response);
         
          console.log("dentro de data, despues de success");
          
