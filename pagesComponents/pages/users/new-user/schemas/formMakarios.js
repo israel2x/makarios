@@ -143,7 +143,11 @@ const form = {
         type:"text",
         label: "Dirección"
       },
-      
+      promocion:{
+        name: "promocion",
+        type:"text",
+        label: "Codigo promoción"
+      },
     },
   };
   

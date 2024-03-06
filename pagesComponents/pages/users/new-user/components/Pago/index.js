@@ -27,7 +27,7 @@ import MDTypography from "/components/MDTypography";
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 import Autocomplete from "@mui/material/Autocomplete";
 import selectData from "/pagesComponents/pages/account/settings/components/BasicInfo/data/selectData";
-
+import MDButton from "/components/MDButton";
 import PpxButton from "/pages/pagos-online/PpxButton";
 import PagoTarjeta from "/pagesComponents/pages/users/new-user/components/PagoTarjeta";
 function Pago({ formData, pagos }) {
@@ -46,6 +46,8 @@ function Pago({ formData, pagos }) {
     mailfactura,
     actividad,
     programacion,
+    precio,
+    promocion,
   } = formField;
   // const {
   //   firstName: firstNameV,
@@ -57,32 +59,33 @@ function Pago({ formData, pagos }) {
   // } = values;
 
   const {
-    nombres:nombresV,
-    apellidos:apellidosV,
-    direccion:direccionV,
-    cedula:cedulaV,
-    email:emailV,
+    nombres: nombresV,
+    apellidos: apellidosV,
+    direccion: direccionV,
+    cedula: cedulaV,
+    email: emailV,
     nombrefactura: nombrefacturaV,
     rucfactura: rucfacturaV,
     direccionfactura: direccionfacturaV,
     mailfactura: mailfacturaV,
     actividad: actividadV,
     programacion: programacionV,
+    precio: precioV,
+    promocion: promocionV,
   } = values;
-
 
   useEffect(() => {
     setFieldValue("rucfactura", cedulaV);
     setFieldValue("direccionfactura", direccionV);
     setFieldValue("mailfactura", emailV);
-    setFieldValue("nombrefactura", nombresV+' '+apellidosV);
+    setFieldValue("nombrefactura", nombresV + " " + apellidosV);
   }, []);
-  const onChangeNumberCelular =((e)=>{
+  const onChangeNumberCelular = (e) => {
     const re = /^[0-9\b]+$/; //rules
     if (e.target.value === "" || re.test(e.target.value)) {
-      setFieldValue("rucfactura ", e.target.value);;
+      setFieldValue("rucfactura ", e.target.value);
     }
-  });
+  };
   return (
     <MDBox>
       <MDBox lineHeight={0}>
@@ -164,8 +167,37 @@ function Pago({ formData, pagos }) {
             <MDTypography variant="h5">Ingrese su tarjeta</MDTypography>
             {/* <PagoTarjeta /> */}
             <Grid item xs={12} sm={12}>
-
-            <PpxButton data={pagos} />
+              <MDTypography variant="h6">Monto a Pagar: </MDTypography>
+              <MDTypography
+                variant="h3"
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                color="info"
+              >
+                {" "}
+                ${precioV}
+              </MDTypography>
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <PpxButton data={pagos} />
+            </Grid>
+            <br/>
+            <Grid container spacing={4}>
+              <Grid item xs={12} sm={6}>
+                <FormField
+                  type={promocion.type}
+                  label={promocion.label}
+                  name={promocion.name}
+                  value={promocionV}
+                  placeholder={promocion.placeholder}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <MDButton variant="gradient" color="success">
+                  Promoción
+                </MDButton>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
