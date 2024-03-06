@@ -2,9 +2,9 @@ const { NextResponse } = require("next/server");
 import db from "/libs/db";
 import moment from 'moment-timezone';
 
-export default async function torneoHanler(req, res) {
+export default async function torneoHandler(req, res) {
   try {
-    const dataProfile = {
+    const userData = {
       nombres: req.body.nombres,
       apellidos: req.body.apellidos,
       cedula: String(req.body.cedula),
@@ -16,58 +16,56 @@ export default async function torneoHanler(req, res) {
       ciudad: req.body.ciudad,
       direccion: req.body.direccion,
     };
-    let idProfile = 0;
+
     const userFound = await db.user.findUnique({
       where: {
         email: req.body.email,
       },
     });
 
-    console.log("user found");
-    console.log(req.body);
-    // console.log(userFound);
-    console.log(userFound.id + typeof(userFound.id));
-    console.log(req.body.cedula + typeof(req.body.cedula));
+    // Log relevant information for debugging
+    console.log("user found:", userFound.id, typeof userFound.id);
+    console.log("userData cedula:", userData.cedula, typeof userData.cedula);
 
     const profileFound = await db.profile.findFirst({
       where: {
         AND: [
-          {
-            userId: userFound.id,
-          },
-          {
-            cedula: dataProfile.cedula,
-          },
+          { userId: userFound.id },
+          { cedula: userData.cedula },
         ],
       },
     });
 
+    let profileId;
+
     if (!profileFound) {
-      dataProfile.userId = userFound.id;
+      userData.userId = userFound.id;
       const newProfile = await db.profile.create({
-        data: dataProfile,
+        data: userData,
       });
-      console.log(newProfile);
-      idProfile = newProfile.id;
+      console.log("New profile created:", newProfile);
+      profileId = newProfile.id;
     } else {
-      idProfile = profileFound.id;
+      profileId = profileFound.id;
     }
-    console.log("idProfile");
-    console.log(idProfile);
+
+    // Log relevant information for debugging
+    console.log("profileId:", profileId);
+
     const programacionData = {
       programacionId: req.body.programacionid,
       pagado: true,
       fecharegistro: String(moment.tz("America/Guayaquil").format()),
-      profileId: idProfile,
+      profileId: profileId,
     };
 
     const newTorneo = await db.registro.create({
       data: programacionData,
     });
-    return res.status(200).json({ message: "sucess ", newTorneo });
+
+    return res.status(200).json({ message: "success", newTorneo });
   } catch (error) {
-    console.log("error backend");
-    console.log(error);
-    return res.status(500).json({ message: error.message });
+    console.error("Backend error:", error);
+    return res.status(500).json({ error: { message: error.message, stack: error.stack } });
   }
 }

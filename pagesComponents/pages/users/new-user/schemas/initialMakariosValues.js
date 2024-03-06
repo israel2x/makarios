@@ -40,7 +40,8 @@ const {
     rucfactura,
     nombrefactura,
     direccionfactura,
-    mailfactura
+    mailfactura,
+    promocion
   },
 } = checkout;
 
@@ -69,6 +70,7 @@ const initialValues = {
   [nombrefactura.name]: "",
   [direccionfactura.name]: "",
   [mailfactura.name]: "",
+  [promocion.name]: "",
 };
 
 export default initialValues;

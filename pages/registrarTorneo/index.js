@@ -14,11 +14,11 @@ Coded by www.creative-tim.com
 */
 
 import { useState } from "react";
-import { getSession } from 'next-auth/react';
+import { getSession } from "next-auth/react";
 // formik components
 import { Formik, Form } from "formik";
 
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 import PageLayout from "/examples/LayoutContainers/PageLayout";
 
@@ -38,7 +38,7 @@ import DashboardLayout from "/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
 import Footer from "/examples/Footer";
 
-import axios from 'axios';
+import axios from "axios";
 // NewUser page components
 import UserInfo from "/pagesComponents/pages/users/new-user/components/UserInfo";
 import Address from "/pagesComponents/pages/users/new-user/components/Address";
@@ -51,24 +51,17 @@ import form from "/pagesComponents/pages/users/new-user/schemas/formMakarios";
 import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialMakariosValues";
 
 function getSteps() {
-  // return ["User Info", "Address", "Social", "Profile"];
   return ["Participante", "Actividad", "Confirmación", "Pago"];
 }
 
 function getStepContent(stepIndex, formData, dataPagos) {
-  switch (stepIndex) {
-    case 0:
-      return <UserInfo formData={formData} />;
-    case 1:
-      return <Address formData={formData} />;
-    case 2:
-      return <Confirmacion formData={formData} />;
-    case 3:
-      return <Pago formData={formData} pagos={dataPagos} />;
- 
-    default:
-      return null;
-  }
+  const components = [UserInfo, Address, Confirmacion, Pago];
+  const Component = components[stepIndex];
+  return stepIndex === 3 ? (
+    <Component formData={formData} pagos={dataPagos} />
+  ) : (
+    <Component formData={formData} />
+  );
 }
 
 function NewUser() {
@@ -76,22 +69,18 @@ function NewUser() {
 
   const [precio, setPrecio] = useState(null);
   const [emailUser, setEmailUser] = useState(null);
-  const [nombreUser, setNombreUser] = useState(null);
   //maneja el valor de la cita
-  
+
   const steps = getSteps();
   const { formId, formField } = form;
   const currentValidation = validations[activeStep];
   const isLastStep = activeStep === steps.length - 1;
 
-  const sleep = (ms) =>
-    new Promise((resolve) => {
-      setTimeout(resolve, ms);
-    });
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  
   const handleBack = () => setActiveStep(activeStep - 1);
 
-
-  let dataPagos = { 
+  let dataPagos = {
     PayboxRemail: "pagos@makarios.club",
     PayboxSendmail: emailUser,
     PayboxRename: "CLUB DEPORTIVO ESPECIALIZADO FORMATIVO MAKARIOS",
@@ -113,104 +102,113 @@ function NewUser() {
     PayboxPagoInmediato: false,
     PayboxCobroPrueba: false,
     onAuthorize: (response) => {
-	
       if (response.status === "succeeded") {
-		    console.log(response);
-        
-         console.log("dentro de data, despues de success");
-         
-         onSubmitxy();
-         Swal.fire(
-          'Transacción exitosa!',
-          'Preciona Ok para aceptar tu cita!',
-          'success'
-        ).then(res=>{
-          console.log("estoy aqui con MBA");
-        
+        console.log(response);
+
+        console.log("dentro de data, despues de success");
+
+        // onSubmitxy();
+        Swal.fire(
+          "Transacción exitosa!",
+          "Preciona Ok para aceptar tu cita!",
+          "success"
+        ).then((res) => {
+          console.log("estoy aqui con pagoplux Response");
         });
-      } 
-    }
-  }
-
-
-
-
-  const [dataPagoCita, setDataPagoCita] = useState(dataPagos);
-  const submitForm = async (values, actions) => {
-    await sleep(1000);
-
-    // eslint-disable-next-line no-alert
-    // alert(JSON.stringify(values, null, 2));
-
-    actions.setSubmitting(false);
-    actions.resetForm();
-    setActiveStep(0);
-    await  window.location.reload(); 
+      }
+    },
   };
 
-  const onSubmitCreate = (async(data) => {
+  const [dataPagoCita, setDataPagoCita] = useState(dataPagos);
+  // const submitForm = async (values, actions) => {
+  //   await sleep(1000);
+
+  //   // eslint-disable-next-line no-alert
+  //   // alert(JSON.stringify(values, null, 2));
+
+  //   actions.setSubmitting(false);
+  //   actions.resetForm();
+  //   setActiveStep(0);
+   
+  // };
+  const submitForm = (actions) => {
+    sleep(1500).then(() => {
+      handleResetForm(actions);
+    });
+  };
+
+  const handleResetForm = async (actions) => {
+    setActiveStep(0);
+    actions.resetForm();
+    await window.location.reload();
+  };
+
+  const onSubmitCreate = async (data) => {
     try {
       console.log("data");
 
-      const response = await axios.post('/api/torneo/', data);
+      const response = await axios.post("/api/torneo/", data);
       // console.log(" antes del response");
       console.log("response event Torneo");
       console.log(response);
 
-
-      if(response.statusText === "OK" || response.status===200) {
-        Swal.fire(
-          'Registro exitoso!',
-          'Registro aceptado!',
-          'success'
-        ).then(res=>{
-          console.log("revuelve el Ok");
-        
-        });
-
-      }else{
-        
+      if (response.statusText === "OK" || response.status === 200) {
+        Swal.fire("Registro exitoso!", "Registro aceptado!", "success").then(
+          (res) => {
+            console.log("revuelve el Ok");
+          }
+        );
+      } else {
         console.log("ess");
         setErrorEmail(true);
       }
+    } catch (error) {
+      console.log(error);
 
-  } catch (error) {
-    
-    console.log(error);
+      if (error.response.status === 409) {
+        // alert("Usuario o contraseña incorrectos");
+      }
 
-    if(error.response.status === 409 ){
-      // alert("Usuario o contraseña incorrectos");
-    }
-  
       console.log("error create event");
+    }
+  };
 
+  // const handleSubmit = async (values, actions) => {
+  //   if (isLastStep) {
+  //     // actions.stopPropagation();
+  //     console.log("last step");
+  //     console.log(values);
+  //     console.log(actions);
+  //     await onSubmitCreate(values);
+  //     submitForm(values, actions);
+  //   } else {
+  //     const session = await getSession(values);
 
-  }
+  //     setPrecio(values.precio);
+  //     setEmailUser(session.user.email);
 
+  //     setActiveStep(activeStep + 1);
+  //     actions.setTouched({});
+  //     actions.setSubmitting(false);
+  //   }
+  // };
 
-  });
+  const handleNextStep = async (values, actions) => {
+    const session = await getSession(values);
+    setPrecio(values.precio);
+    setEmailUser(session.user.email);
+    setActiveStep(activeStep + 1);
+    actions.setTouched({});
+    actions.setSubmitting(false);
+  };
 
-  const handleSubmit = async (values, actions) => {
-    
-    if (isLastStep) {
-      // actions.stopPropagation(); 
-      console.log("last step"); 
-      console.log(values);
-      console.log(actions);  
+  const handleFinalStep = async (values, actions) => {
       await onSubmitCreate(values);
       submitForm(values, actions);
-      
-    } else {
+  };
 
-      const session = await getSession(values);
-
-      setPrecio(values.precio);
-      setEmailUser(session.user.email);
-      
-      setActiveStep(activeStep + 1);
-      actions.setTouched({});
-      actions.setSubmitting(false);
-    }
+  const handleSubmit = async (values, actions) => {
+    isLastStep ? await handleFinalStep(values, actions) : await handleNextStep(values, actions);
   };
 
   return (
@@ -229,11 +227,11 @@ function NewUser() {
               initialValues={initialValues}
               validationSchema={currentValidation}
               onSubmit={handleSubmit}
-            > 
+            >
               {({ values, errors, touched, isSubmitting, setFieldValue }) => (
                 <Form id={formId} autoComplete="off">
                   <Card sx={{ height: "100%" }}>
-                  {/* <Card sx={{ height: "500px" }}> */}
+                    {/* <Card sx={{ height: "500px" }}> */}
                     <MDBox mx={2} mt={-3}>
                       <Stepper activeStep={activeStep} alternativeLabel>
                         {steps.map((label) => (
@@ -245,13 +243,17 @@ function NewUser() {
                     </MDBox>
                     <MDBox p={3}>
                       <MDBox>
-                        {getStepContent(activeStep, {
-                          values,
-                          touched,
-                          formField,
-                          errors,
-                          setFieldValue
-                        }, dataPagos)}
+                        {getStepContent(
+                          activeStep,
+                          {
+                            values,
+                            touched,
+                            formField,
+                            errors,
+                            setFieldValue,
+                          },
+                          dataPagos
+                        )}
                         <MDBox
                           mt={2}
                           width="100%"
@@ -289,7 +291,7 @@ function NewUser() {
         </Grid>
       </MDBox>
       {/* <Footer /> */}
-    {/* </DashboardLayout> */}
+      {/* </DashboardLayout> */}
     </PageLayout>
   );
 }
