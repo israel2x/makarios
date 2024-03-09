@@ -41,7 +41,10 @@ const {
     nombrefactura,
     direccionfactura,
     mailfactura,
-    promocion
+    promocion,
+    promocionid,
+    porcentajepromo
+    ,pagoplux
   },
 } = checkout;
 
@@ -71,6 +74,9 @@ const initialValues = {
   [direccionfactura.name]: "",
   [mailfactura.name]: "",
   [promocion.name]: "",
+  [promocionid.name]: "",
+  [porcentajepromo.name]: "",
+  [pagoplux.name]: "",  
 };
 
 export default initialValues;

@@ -8,14 +8,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   firstname String
   lastname  String
-  email     String   @unique
+  email     String    @unique
   password  String
   role      String
-  createdAt DateTime @default(now())
-  defaultAt DateTime @default(now())
+  createdAt DateTime  @default(now())
+  defaultAt DateTime  @default(now())
   profile   Profile[]
 }
 
@@ -31,7 +31,7 @@ model Profile {
   pais            String
   ciudad          String
   direccion       String
-  userId          Int        
+  userId          Int
   createdAt       DateTime   @default(now())
   defaultAt       DateTime   @default(now())
   user            User       @relation(fields: [userId], references: [id])
@@ -65,10 +65,66 @@ model Actividad {
   programacion Programacion[]
 }
 
+model Pagoplux {
+  id               Int      @id @default(autoincrement())
+  idtransaccion    String
+  description      String
+  token            String
+  amount           Float
+  cardType         String
+  cardIssuer       String
+  cardInfo         String
+  clientID         String
+  clientName       String
+  state            String
+  fecha            String
+  acquirer         String
+  deferred         Int
+  interests        String
+  interestValue    Float
+  amountWoTaxes    String
+  amountWTaxes     String
+  taxesValue       String
+  amountAuthorized Int
+  discountRate     Float?
+  extras           String?
+  tipoPago         String
+  createdAt        DateTime @default(now())
+  defaultAt        DateTime @default(now())
+}
+
+model Promocion {
+  id          Int      @id @default(autoincrement())
+  descripcion String?
+  codigo      String
+  porcentaje  String
+  fechainicio String
+  fechafin    String
+  estado      String
+  createdAt   DateTime @default(now())
+  defaultAt   DateTime @default(now())
+}
+
+model Facturacion {
+  id        Int      @id @default(autoincrement())
+  referencia String
+  ruc       String
+  nombres   String
+  direccion String
+  correo    String
+  monto     String
+  registroId String?
+  createdAt DateTime @default(now())
+  defaultAt DateTime @default(now())
+}
+
 model Registro {
   id             Int          @id @default(autoincrement())
   fecharegistro  String
   pagado         Boolean      @default(false)
+  promocionId    Int?
+  preciopromocion Decimal?
+  pagopluxId     Int?
   programacionId Int
   profileId      Int
   createdAt      DateTime     @default(now())

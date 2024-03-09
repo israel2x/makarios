@@ -37,16 +37,20 @@ export default async function torneoHandler(req, res) {
     });
 
     let profileId;
+    let participante;
 
     if (!profileFound) {
       userData.userId = userFound.id;
+      
       const newProfile = await db.profile.create({
         data: userData,
       });
       console.log("New profile created:", newProfile);
       profileId = newProfile.id;
+      participante= newProfile;
     } else {
       profileId = profileFound.id;
+      participante= profileFound;
     }
 
     // Log relevant information for debugging
@@ -55,12 +59,29 @@ export default async function torneoHandler(req, res) {
     const programacionData = {
       programacionId: req.body.programacionid,
       pagado: true,
+      promocionId: req.body.promocionid || null,
+      pagopluxId: req.body.pagoplux || null,
       fecharegistro: String(moment.tz("America/Guayaquil").format()),
       profileId: profileId,
-    };
+     };
 
     const newTorneo = await db.registro.create({
       data: programacionData,
+    });
+    console.log("torneo resgistrado");
+    console.log(newTorneo);
+    const facturacionData = {
+      monto: String(req.body.precio),
+      referencia: `Factura de participante ${req.body.nombres} ${req.body.apellidos} - ${req.body.actividad} - ${req.body.programacion}`,
+      nombres: req.body.nombrefactura,
+      ruc: req.body.rucfactura,
+      direccion: req.body.direccionfactura,
+      correo: req.body.mailfactura,
+      registroId: newTorneo.id
+    }
+
+    const newFactura = await db.facturacion.create({
+      data: facturacionData,
     });
 
     return res.status(200).json({ message: "success", newTorneo });

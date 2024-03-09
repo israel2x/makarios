@@ -78,7 +78,7 @@ const form = {
       },
       anio: {
         name: "anio",
-        label: "anio",
+        label: "año",
         type: "number",
       },
       pais: {
@@ -95,7 +95,7 @@ const form = {
       },
       direccion: {
         name: "direccion",
-        label: "Dirección",
+        label: "Dirección (opcional)",
         type: "text",
         
       },
@@ -143,10 +143,24 @@ const form = {
         type:"text",
         label: "Dirección"
       },
+      promocionid:{
+        name: "promocionid",
+        type:"text",
+        
+      },
+      porcentajepromo:{
+        name: "porcentajepromo",
+        type:"text",
+      },
       promocion:{
         name: "promocion",
         type:"text",
-        label: "Codigo promoción"
+        label: "Tienes un código promocional?"
+      },
+      pagoplux:{
+        name: "pagoplux",
+        type:"text",
+
       },
     },
   };

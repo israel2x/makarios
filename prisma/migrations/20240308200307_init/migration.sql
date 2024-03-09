@@ -63,10 +63,74 @@ CREATE TABLE "Actividad" (
 );
 
 -- CreateTable
+CREATE TABLE "Pagoplux" (
+    "id" SERIAL NOT NULL,
+    "idtransaccion" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "token" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "cardType" TEXT NOT NULL,
+    "cardIssuer" TEXT NOT NULL,
+    "cardInfo" TEXT NOT NULL,
+    "clientID" TEXT NOT NULL,
+    "clientName" TEXT NOT NULL,
+    "state" TEXT NOT NULL,
+    "fecha" TEXT NOT NULL,
+    "acquirer" TEXT NOT NULL,
+    "deferred" INTEGER NOT NULL,
+    "interests" TEXT NOT NULL,
+    "interestValue" DOUBLE PRECISION NOT NULL,
+    "amountWoTaxes" TEXT NOT NULL,
+    "amountWTaxes" TEXT NOT NULL,
+    "taxesValue" TEXT NOT NULL,
+    "amountAuthorized" INTEGER NOT NULL,
+    "discountRate" DOUBLE PRECISION,
+    "extras" TEXT,
+    "tipoPago" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "defaultAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Pagoplux_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Promocion" (
+    "id" SERIAL NOT NULL,
+    "descripcion" TEXT,
+    "codigo" TEXT NOT NULL,
+    "porcentaje" TEXT NOT NULL,
+    "fechainicio" TEXT NOT NULL,
+    "fechafin" TEXT NOT NULL,
+    "estado" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "defaultAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Promocion_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Facturacion" (
+    "id" SERIAL NOT NULL,
+    "referencia" TEXT NOT NULL,
+    "ruc" TEXT NOT NULL,
+    "nombres" TEXT NOT NULL,
+    "direccion" TEXT NOT NULL,
+    "correo" TEXT NOT NULL,
+    "monto" TEXT NOT NULL,
+    "registroId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "defaultAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Facturacion_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Registro" (
     "id" SERIAL NOT NULL,
     "fecharegistro" TEXT NOT NULL,
     "pagado" BOOLEAN NOT NULL DEFAULT false,
+    "promocionId" INTEGER,
+    "pagopluxId" INTEGER,
     "programacionId" INTEGER NOT NULL,
     "profileId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

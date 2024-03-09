@@ -22,7 +22,7 @@ import Grid from "@mui/material/Grid";
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
-
+import axios from "axios";
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -31,7 +31,13 @@ import MDButton from "/components/MDButton";
 import PpxButton from "/pages/pagos-online/PpxButton";
 import PagoTarjeta from "/pagesComponents/pages/users/new-user/components/PagoTarjeta";
 function Pago({ formData, pagos }) {
+  const [precioState, setPrecioState] = useState(null);
+  
+  const [detallepromo, setDetallepromo] = useState('');
+
+  const [botonDesactivado, setBotonDesactivado] = useState(false);
   const { formField, values, errors, touched, setFieldValue } = formData;
+  const [dataPago, setDataPago] = useState(pagos);
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
   const {
@@ -74,11 +80,64 @@ function Pago({ formData, pagos }) {
     promocion: promocionV,
   } = values;
 
+  const validarPromo = async () => {
+    const dataPromo = await loadPromo(promocionV);
+    if (dataPromo) {
+      const porcentaje = dataPromo[0].porcentaje;
+      console.log(porcentaje);
+      setDetallepromo(dataPromo[0].descripcion);
+      setFieldValue("promocionid", dataPromo[0].id);
+      setFieldValue("porcentajepromo", porcentaje);
+      let newPrecio =
+        parseFloat(precioV) * (1 - parseFloat(porcentaje) / 100);
+      console.log("newPrecio");
+      console.log(dataPromo);
+      console.log(parseFloat(precioV));
+      console.log(newPrecio);
+      // setFieldValue("precio", newPrecio);
+      setPrecioState(newPrecio);
+      // aqui va el context del precio
+      await setDataPago((prevdataPago) => ({...prevdataPago, PayboxBase0: newPrecio }));
+      setBotonDesactivado(true);
+    }
+    console.log("data promo");
+    console.log(dataPromo);
+  };
+
+  const loadPromo = async (data) => {
+    // setFieldValue("precio", session.user.email);
+    console.log(data);
+    try {
+      const response = await axios.get("/api/promocion", {
+        params: { codigo: data },
+      });
+      console.log("response promociones");
+      console.log(response);
+      if (response.statusText === "OK" || response.status === 200) {
+        const dataPromo = response.data.promocionFound.map((item) => ({
+          id: item.id,
+          descripcion: item.descripcion,
+          codigo: item.codigo,
+          porcentaje: item.porcentaje,
+        }));
+        
+        console.log("pagos paglplux MONTO ");
+        console.log(pagos);
+        return dataPromo;
+      }
+    } catch (error) {
+      console.log("error promocion");
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     setFieldValue("rucfactura", cedulaV);
+    setFieldValue("promocion", "");
     setFieldValue("direccionfactura", direccionV);
     setFieldValue("mailfactura", emailV);
     setFieldValue("nombrefactura", nombresV + " " + apellidosV);
+    setPrecioState(precioV);
   }, []);
   const onChangeNumberCelular = (e) => {
     const re = /^[0-9\b]+$/; //rules
@@ -176,26 +235,36 @@ function Pago({ formData, pagos }) {
                 color="info"
               >
                 {" "}
-                ${precioV}
+                ${precioState}
               </MDTypography>
             </Grid>
             <Grid item xs={12} sm={12}>
-              <PpxButton data={pagos} />
+              <PpxButton data={dataPago} />
             </Grid>
-            <br/>
+            <br />
+            <MDTypography variant="overline">{detallepromo}</MDTypography>
             <Grid container spacing={4}>
+            
               <Grid item xs={12} sm={6}>
+              
+            
                 <FormField
                   type={promocion.type}
                   label={promocion.label}
                   name={promocion.name}
                   value={promocionV}
                   placeholder={promocion.placeholder}
+                  disabled={botonDesactivado}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <MDButton variant="gradient" color="success">
-                  Promoción
+                <MDButton
+                  variant="gradient"
+                  disabled={botonDesactivado}
+                  onClick={validarPromo}
+                  color="success"
+                >
+                  Validar
                 </MDButton>
               </Grid>
             </Grid>
