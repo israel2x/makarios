@@ -69,7 +69,9 @@ const loadRegistrados = (async()=>{
     console.log("response infodata");
     console.log(response);
     if (response.statusText === "OK" || response.status === 200) {
-      const infoRegistro = response.data.registroFound;
+      const infoRegistro = response.data.registroFound.map((item)=>{
+        
+      });
 
       
       console.log("array registro");

@@ -12,8 +12,8 @@ Coded by www.creative-tim.com
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
-
-import { useState } from "react";
+"use client";
+import { useState, useContext } from "react";
 import { getSession } from "next-auth/react";
 // formik components
 import { Formik, Form } from "formik";
@@ -21,6 +21,8 @@ import { Formik, Form } from "formik";
 import Swal from "sweetalert2";
 
 import PageLayout from "/examples/LayoutContainers/PageLayout";
+
+import { MakariosProvider } from "/contextMakarios";
 
 // @mui material components
 import Grid from "@mui/material/Grid";
@@ -67,9 +69,14 @@ function getStepContent(stepIndex, formData, dataPagos) {
 function NewUser() {
   const [activeStep, setActiveStep] = useState(0);
 
+  const [pagoPlux, setPagoplux] = useState(null);
   const [precio, setPrecio] = useState(null);
+  const [pagado, setPagado] = useState(null);
   const [emailUser, setEmailUser] = useState(null);
   //maneja el valor de la cita
+  //inicializando el context
+  // const { state, dispatch } = useContext(UserCitaContext);
+  // const precioRegistroP = state.precio;
 
   const steps = getSteps();
   const { formId, formField } = form;
@@ -77,7 +84,7 @@ function NewUser() {
   const isLastStep = activeStep === steps.length - 1;
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  
+
   const handleBack = () => setActiveStep(activeStep - 1);
 
   let dataPagos = {
@@ -101,66 +108,98 @@ function NewUser() {
     PayboxPermitirCalendarizar: true,
     PayboxPagoInmediato: false,
     PayboxCobroPrueba: false,
-    onAuthorize: (response) => {
+    onAuthorize: async (response) => {
       if (response.status === "succeeded") {
         console.log(response);
-
+        setPagado(true);
         console.log("dentro de data, despues de success");
-
-        // onSubmitxy();
-        Swal.fire(
-          "Transacción exitosa!",
-          "Preciona Ok para aceptar tu cita!",
-          "success"
-        ).then((res) => {
-          console.log("estoy aqui con pagoplux Response");
-        });
+        await onPayPagoPluxCreate(response.detail);
       }
     },
   };
 
   const [dataPagoCita, setDataPagoCita] = useState(dataPagos);
-  // const submitForm = async (values, actions) => {
-  //   await sleep(1000);
 
-  //   // eslint-disable-next-line no-alert
-  //   // alert(JSON.stringify(values, null, 2));
-
-  //   actions.setSubmitting(false);
-  //   actions.resetForm();
-  //   setActiveStep(0);
-   
-  // };
-  const submitForm = (actions) => {
-    sleep(1500).then(() => {
-      handleResetForm(actions);
+  const submitForm = (values, actions) => {
+    sleep(1500).then(async () => {
+      await handleResetForm(actions);
     });
   };
 
   const handleResetForm = async (actions) => {
     setActiveStep(0);
-    actions.resetForm();
+    await actions.resetForm();
     await window.location.reload();
+  };
+
+  const onPayPagoPluxCreate = async (data) => {
+    try {
+      console.log("data");
+
+      const response = await axios.post("/api/pagoplux/", data);
+      // console.log(" antes del response");
+      console.log("response event PagoPlux");
+      console.log(response);
+
+      if (response.statusText === "OK" || response.status === 200) {
+        // setPagoplux(response.data.id);
+        await Swal.fire({
+          icon: "success",
+          title: "Pago exitoso!",
+          text: "Pago aceptado!",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+        // const boton1 = document.getElementById("btnGuardar");
+        // boton1.click();
+      } else {
+        console.log("ess");
+        setErrorEmail(true);
+      }
+    } catch (error) {
+      console.log(error);
+
+      if (error.response.status === 409) {
+        // alert("Usuario o contraseña incorrectos");
+      }
+
+      console.log("error create event");
+    }
   };
 
   const onSubmitCreate = async (data) => {
     try {
       console.log("data");
+      console.log(data);
+      console.log(pagado);
+      if (pagado) {
+        const response = await axios.post("/api/torneo/", data);
+        // console.log(" antes del response");
+        console.log("response event Torneo");
+        console.log(response);
 
-      const response = await axios.post("/api/torneo/", data);
-      // console.log(" antes del response");
-      console.log("response event Torneo");
-      console.log(response);
-
-      if (response.statusText === "OK" || response.status === 200) {
-        Swal.fire("Registro exitoso!", "Registro aceptado!", "success").then(
-          (res) => {
-            console.log("revuelve el Ok");
-          }
-        );
+        if (response.statusText === "OK" || response.status === 200) {
+          console.log("response");
+          console.log("guardado el registro OK");
+          //  await Swal.fire({
+          //     icon: "success",
+          //     title: "Registro exitoso!",
+          //     text: "Registro aceptado!",
+          //     showConfirmButton: false,
+          //     timer: 2000,
+          //   });
+        } else {
+          console.log("ess");
+          setErrorEmail(true);
+        }
       } else {
-        console.log("ess");
-        setErrorEmail(true);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "No se realizó el pago!",
+          showConfirmButton: false,
+          timer: 2500,
+        });
       }
     } catch (error) {
       console.log(error);
@@ -195,104 +234,113 @@ function NewUser() {
 
   const handleNextStep = async (values, actions) => {
     const session = await getSession(values);
+    setPagado(false);
     setPrecio(values.precio);
     setEmailUser(session.user.email);
     setActiveStep(activeStep + 1);
     actions.setTouched({});
     actions.setSubmitting(false);
+    console.log("activeStep");
+    console.log(activeStep);
   };
 
   const handleFinalStep = async (values, actions) => {
-      await onSubmitCreate(values);
-      submitForm(values, actions);
+    await onSubmitCreate(values);
+    submitForm(values, actions);
   };
 
   const handleSubmit = async (values, actions) => {
-    isLastStep ? await handleFinalStep(values, actions) : await handleNextStep(values, actions);
+    isLastStep
+      ? await handleFinalStep(values, actions)
+      : await handleNextStep(values, actions);
   };
 
+ 
   return (
     // <DashboardLayout>
-    <PageLayout>
-      <DashboardNavbar />
-      <MDBox py={1} mb={10} height="25vh">
-        <Grid
-          container
-          justifyContent="center"
-          alignItems="center"
-          sx={{ height: "100%", mt: 8 }}
-        >
-          <Grid item xs={12} lg={8}>
-            <Formik
-              initialValues={initialValues}
-              validationSchema={currentValidation}
-              onSubmit={handleSubmit}
-            >
-              {({ values, errors, touched, isSubmitting, setFieldValue }) => (
-                <Form id={formId} autoComplete="off">
-                  <Card sx={{ height: "100%" }}>
-                    {/* <Card sx={{ height: "500px" }}> */}
-                    <MDBox mx={2} mt={-3}>
-                      <Stepper activeStep={activeStep} alternativeLabel>
-                        {steps.map((label) => (
-                          <Step key={label}>
-                            <StepLabel>{label}</StepLabel>
-                          </Step>
-                        ))}
-                      </Stepper>
-                    </MDBox>
-                    <MDBox p={3}>
-                      <MDBox>
-                        {getStepContent(
-                          activeStep,
-                          {
-                            values,
-                            touched,
-                            formField,
-                            errors,
-                            setFieldValue,
-                          },
-                          dataPagos
-                        )}
-                        <MDBox
-                          mt={2}
-                          width="100%"
-                          display="flex"
-                          justifyContent="space-between"
-                        >
-                          {activeStep === 0 ? (
-                            <MDBox />
-                          ) : (
-                            <MDButton
-                              variant="gradient"
-                              color="light"
-                              onClick={handleBack}
-                            >
-                              atrás
-                            </MDButton>
+    // <MakariosProvider>
+      <PageLayout>
+        <DashboardNavbar />
+        <MDBox py={1} mb={10} height="25vh">
+          <Grid
+            container
+            justifyContent="center"
+            alignItems="center"
+            sx={{ height: "100%", mt: 8 }}
+          >
+            <Grid item xs={12} lg={8}>
+              <Formik
+                initialValues={initialValues}
+                validationSchema={currentValidation}
+                onSubmit={handleSubmit}
+              >
+                {({ values, errors, touched, isSubmitting, setFieldValue }) => (
+                  <Form id={formId} autoComplete="off">
+                    <Card sx={{ height: "100%" }}>
+                      {/* <Card sx={{ height: "500px" }}> */}
+                      <MDBox mx={2} mt={-3}>
+                        <Stepper activeStep={activeStep} alternativeLabel>
+                          {steps.map((label) => (
+                            <Step key={label}>
+                              <StepLabel>{label}</StepLabel>
+                            </Step>
+                          ))}
+                        </Stepper>
+                      </MDBox>
+                      <MDBox p={3}>
+                        <MDBox>
+                          {getStepContent(
+                            activeStep,
+                            {
+                              values,
+                              touched,
+                              formField,
+                              errors,
+                              setFieldValue,
+                            },
+                            dataPagos
                           )}
-                          <MDButton
-                            // disabled={isSubmitting}
-                            type="Submit"
-                            variant="gradient"
-                            color="info"
+                          <MDBox
+                            mt={2}
+                            width="100%"
+                            display="flex"
+                            justifyContent="space-between"
                           >
-                            {isLastStep ? "finalizar" : "siguiente"}
-                          </MDButton>
-                          {isLastStep}
+                            {activeStep === 0 ? (
+                              <MDBox />
+                            ) : (
+                              <MDButton
+                                variant="gradient"
+                                color="light"
+                                onClick={handleBack}
+                              >
+                                atrás
+                              </MDButton>
+                            )}
+                            <MDButton
+                              // disabled={isSubmitting}
+                              type="Submit"
+                              variant="gradient"
+                              color="info"
+                              id="btnGuardar"
+                            >
+                              {isLastStep ? "finalizar" : "siguiente"}
+                            </MDButton>
+                            {isLastStep}
+                          </MDBox>
                         </MDBox>
                       </MDBox>
-                    </MDBox>
-                  </Card>
-                </Form>
-              )}
-            </Formik>
+                    </Card>
+                  </Form>
+                )}
+              </Formik>
+            </Grid>
           </Grid>
-        </Grid>
-      </MDBox>
-      {/* <Footer /> */}
-      {/* </DashboardLayout> */}
-    </PageLayout>
+        </MDBox>
+        {/* <Footer /> */}
+        {/* </DashboardLayout> */}
+      </PageLayout>
+    // </MakariosProvider>
   );
 }
 
