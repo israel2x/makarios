@@ -31,9 +31,9 @@ import MDButton from "/components/MDButton";
 import PpxButton from "/pages/pagos-online/PpxButton";
 import PagoTarjeta from "/pagesComponents/pages/users/new-user/components/PagoTarjeta";
 function Pago({ formData, pagos }) {
-  const [precioState, setPrecioState] = useState(null);
   
-  const [detallepromo, setDetallepromo] = useState('');
+
+  const [detallepromo, setDetallepromo] = useState("");
 
   const [botonDesactivado, setBotonDesactivado] = useState(false);
   const { formField, values, errors, touched, setFieldValue } = formData;
@@ -80,24 +80,28 @@ function Pago({ formData, pagos }) {
     promocion: promocionV,
   } = values;
 
+  const [precioState, setPrecioState] = useState(precioV);
+
   const validarPromo = async () => {
     const dataPromo = await loadPromo(promocionV);
-    if (dataPromo) {
+    if (dataPromo[0]) {
       const porcentaje = dataPromo[0].porcentaje;
       console.log(porcentaje);
       setDetallepromo(dataPromo[0].descripcion);
       setFieldValue("promocionid", dataPromo[0].id);
-      setFieldValue("porcentajepromo", porcentaje);
-      let newPrecio =
-        parseFloat(precioV) * (1 - parseFloat(porcentaje) / 100);
+      // setFieldValue("porcentajepromo", porcentaje);
+      let newPrecio = parseFloat(precioV) * (1 - parseFloat(porcentaje) / 100);
       console.log("newPrecio");
       console.log(dataPromo);
       console.log(parseFloat(precioV));
       console.log(newPrecio);
-      // setFieldValue("precio", newPrecio);
       setPrecioState(newPrecio);
+      setFieldValue("porcentajepromo", newPrecio);
       // aqui va el context del precio
-      await setDataPago((prevdataPago) => ({...prevdataPago, PayboxBase0: newPrecio }));
+      await setDataPago((prevdataPago) => ({
+        ...prevdataPago,
+        PayboxBase0: newPrecio,
+      }));
       setBotonDesactivado(true);
     }
     console.log("data promo");
@@ -120,9 +124,9 @@ function Pago({ formData, pagos }) {
           codigo: item.codigo,
           porcentaje: item.porcentaje,
         }));
-        
+
         console.log("pagos paglplux MONTO ");
-        console.log(pagos);
+        // console.log(pagos);
         return dataPromo;
       }
     } catch (error) {
@@ -130,15 +134,9 @@ function Pago({ formData, pagos }) {
       console.log(error);
     }
   };
+  // setFieldValue("promocion", "");
 
-  useEffect(() => {
-    setFieldValue("rucfactura", cedulaV);
-    setFieldValue("promocion", "");
-    setFieldValue("direccionfactura", direccionV);
-    setFieldValue("mailfactura", emailV);
-    setFieldValue("nombrefactura", nombresV + " " + apellidosV);
-    setPrecioState(precioV);
-  }, []);
+
   const onChangeNumberCelular = (e) => {
     const re = /^[0-9\b]+$/; //rules
     if (e.target.value === "" || re.test(e.target.value)) {
@@ -244,10 +242,7 @@ function Pago({ formData, pagos }) {
             <br />
             <MDTypography variant="overline">{detallepromo}</MDTypography>
             <Grid container spacing={4}>
-            
               <Grid item xs={12} sm={6}>
-              
-            
                 <FormField
                   type={promocion.type}
                   label={promocion.label}

@@ -27,6 +27,7 @@ import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
 import Grid from "@mui/material/Grid";
 import MuiLink from "@mui/material/Link";
+import Swal from "sweetalert2";
 
 // @mui icons
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -86,7 +87,13 @@ function Basic() {
         setLoading(false);
         
         if (res.error) {
-          alert("Usuario o contraseña incorrectos");
+          // alert("Usuario o contraseña incorrectos");
+          Swal.fire({
+            icon: "error",
+            text: "Usuario o contraseña incorrectos!",
+            showConfirmButton: false,
+            timer: 1500
+          });
         } else {
           console.log("login");
           console.log("res", res);

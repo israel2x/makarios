@@ -3,19 +3,17 @@ import db from "../../../libs/db";
 
 export default async function programacionHanler(req, res) {
   try {
-    console.log("en backend programacion");
-    console.info(req.query);
     const actividadId = parseInt(req.query.actividad, 10);
 
     if (isNaN(actividadId)) {
       return res.status(400).send("Invalid actividadId");
     }
-    
+
     const programacionFound = await db.programacion.findMany({
       where: {
         estado: "A",
-        actividadId: actividadId
-      }
+        actividadId: actividadId,
+      },
     });
 
     if (!programacionFound) {

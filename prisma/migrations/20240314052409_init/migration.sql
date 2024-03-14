@@ -117,7 +117,7 @@ CREATE TABLE "Facturacion" (
     "direccion" TEXT NOT NULL,
     "correo" TEXT NOT NULL,
     "monto" TEXT NOT NULL,
-    "registroId" TEXT,
+    "registroId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "defaultAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -130,6 +130,7 @@ CREATE TABLE "Registro" (
     "fecharegistro" TEXT NOT NULL,
     "pagado" BOOLEAN NOT NULL DEFAULT false,
     "promocionId" INTEGER,
+    "preciopromocion" DECIMAL(65,30),
     "pagopluxId" INTEGER,
     "programacionId" INTEGER NOT NULL,
     "profileId" INTEGER NOT NULL,

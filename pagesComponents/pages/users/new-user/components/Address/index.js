@@ -50,6 +50,11 @@ function Address({ formData }) {
     precio,
   } = formField;
   const {
+    cedula: cedulaV,
+    direccion: direccionV,
+    direccionfactura: direccionfacturaV,
+    nombres: nombresV,
+    apellidos: apellidosV,
     email: emailV,
     actividad: actividadV,
     fechanacimiento: fechanacimientoV,
@@ -66,22 +71,31 @@ function Address({ formData }) {
   const [actividades, setActividades] = useState([]);
   const [actividadesNombre, setActividadesNombre] = useState([]);
   const [detalle, setDetalle] = useState([]);
-  const [cupo, setCupo] = useState([]);
+  const [cupoTotal, setCupoTotal] = useState(null);
+  const [ocupado, setOcupado] = useState(null);
+  const [disponible, setDisponible] = useState(null);
 
   const handleChange = async (event) => {
     await setFieldValue("horario", "");
     console.log("programacion id");
     console.log(detalle);
-    const programacion = await detalle.find((item) => event.target.value===item.id);
+    await loadCupos(event.target.value);
+    const programacion = await detalle.find(
+      (item) => event.target.value === item.id
+    );
     // await setFieldValue("programacionid", event.target.value);
     console.log(programacion);
     console.log(programacionV);
     console.log(event.target.value);
     await setFieldValue("programacionid", event.target.value);
     await setFieldValue("programacion", programacion.detalle);
+    setFieldValue("rucfactura", cedulaV);
+    setFieldValue("direccionfactura", direccionV);
+    setFieldValue("mailfactura", emailV);
+    setFieldValue("nombrefactura", nombresV + " " + apellidosV);
+
     // await loadHora(event, event.target.value);
   };
-
 
   const loadActividad = async (data) => {
     const session = await getSession(data);
@@ -97,7 +111,7 @@ function Address({ formData }) {
           precio: item.precio,
         }));
         setActividades(dataActividad);
-        // carga los nombres para el list 
+        // carga los nombres para el list
         const data_Actividad = response.data.actividadFound.map(
           (item) => item.descripcion
         );
@@ -129,6 +143,34 @@ function Address({ formData }) {
         console.log(detalle);
         // const arrayConDuplicados = dataFechas.map((item) => item.from);
         // await setFechasProgramacion([...new Set(arrayConDuplicados)]);
+      } else {
+      }
+    } catch (error) {
+      console.log("error programacion");
+      console.log(error);
+    }
+  };
+
+  const loadCupos = async (programacion) => {
+    try {
+      const response = await axios.get("/api/cupos", {
+        params: { cupos: programacion },
+      });
+      console.log("cupos response");
+      console.log(response);
+      if (response.statusText === "OK" || response.status === 200) {
+        const cupo = response.data.resultCupos.cupo;
+        const ocupado = response.data.resultCupos.ocupado;
+        const disponible = response.data.resultCupos.disponible;
+        // const cupos = await response.data.resultCupos.map((item) => ({
+        //   cupo: item.cupo,
+        //   ocupado: item.ocupado,
+        //   disponible: item.disponible
+        // }));
+
+        setCupoTotal(cupo);
+        setOcupado(ocupado);
+        setDisponible(disponible);
       } else {
       }
     } catch (error) {
@@ -183,8 +225,6 @@ function Address({ formData }) {
   //     console.log(error);
   //   }
   // };
-
- 
 
   useEffect(() => {
     loadActividad();
@@ -276,12 +316,12 @@ function Address({ formData }) {
               <MDBox textAlign="right" lineHeight={1.25}>
                 <MDTypography variant="button" fontWeight="light" color="text">
                   {/* {title} */}
-                  Cupo
+                  Cupos disponibles
                 </MDTypography>
-                <MDTypography variant="h6" color={"success"}>
-                  200
+                <MDTypography variant="h5" color={"success"}>
+                  {disponible}
                   <MDTypography variant="h7" color={"secondary"}>
-                    /200
+                    /{cupoTotal}
                   </MDTypography>
                 </MDTypography>
               </MDBox>
