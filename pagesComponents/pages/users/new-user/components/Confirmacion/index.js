@@ -53,6 +53,10 @@ function Confirmacion({ formData }) {
     direccion,
     pais,
     precio,
+    nombrefactura,
+    rucfactura,
+    direccionfactura,
+    mailfactura,
   } = formField;
   // const {
   //   firstName: firstNameV,
@@ -80,6 +84,10 @@ function Confirmacion({ formData }) {
     ciudad: ciudadV,
     direccion: direccionV,
     precio: precioV,
+    nombrefactura: nombrefacturaV,
+    rucfactura: rucfacturaV,
+    direccionfactura: direccionfacturaV,
+    mailfactura: mailfacturaV,
   } = values;
 
   useEffect(() => {
@@ -101,6 +109,8 @@ function Confirmacion({ formData }) {
     }
 
     setEdad(age);
+   
+
   });
 
   return (
@@ -124,7 +134,8 @@ function Confirmacion({ formData }) {
           justifyContent="center"
           alignItems="center"
         >
-          <MDTypography variant="button" color="text">
+       
+          <MDTypography variant="subtitle2" color="text">
             Revisa los detalles del registro
           </MDTypography>
         </Grid>
@@ -139,14 +150,14 @@ function Confirmacion({ formData }) {
             justifyContent="center"
             alignItems="center"
           >
-            <MDTypography variant="h5">Datos de Participante</MDTypography>
+            <MDTypography variant="h4">Datos de Participante</MDTypography>
           </Grid>
           <Grid item xs={6} sm={2}></Grid>
           <Grid item xs={6} sm={4}>
             <MDTypography variant="body1">Nombre Completo</MDTypography>
           </Grid>
           <Grid item xs={6} sm={4}>
-            <MDTypography variant="body2">
+            <MDTypography variant="subtitle1">
               {/* Marina Belen Casares Tesky */}
               {nombresV + " " + apellidosV}
             </MDTypography>
@@ -157,7 +168,7 @@ function Confirmacion({ formData }) {
             <MDTypography variant="body1">Edad</MDTypography>
           </Grid>
           <Grid item xs={6} sm={4}>
-            <MDTypography variant="body2">{edad} años</MDTypography>
+            <MDTypography variant="subtitle1">{edad} años</MDTypography>
           </Grid>
           <Grid item xs={6} sm={2}></Grid>
           <Grid item xs={6} sm={2}></Grid>
@@ -165,7 +176,7 @@ function Confirmacion({ formData }) {
             <MDTypography variant="body1">Categoria</MDTypography>
           </Grid>
           <Grid item xs={6} sm={4}>
-            <MDTypography variant="body2">{categoria}</MDTypography>
+            <MDTypography variant="subtitle1">{categoria}</MDTypography>
           </Grid>
           <Grid item xs={6} sm={2}></Grid>
           <Grid item xs={6} sm={2}></Grid>
@@ -173,7 +184,7 @@ function Confirmacion({ formData }) {
             <MDTypography variant="body1">Total a pagar</MDTypography>
           </Grid>
           <Grid item xs={6} sm={4}>
-            <MDTypography variant="body2">${precioV}</MDTypography>
+            <MDTypography variant="subtitle1">$ {precioV}</MDTypography>
           </Grid>
           <Grid item xs={6} sm={2}></Grid>
         </Grid>

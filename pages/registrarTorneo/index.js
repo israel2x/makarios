@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 "use client";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { getSession } from "next-auth/react";
 // formik components
 import { Formik, Form } from "formik";
@@ -71,8 +71,9 @@ function NewUser() {
 
   const [pagoPlux, setPagoplux] = useState(null);
   const [precio, setPrecio] = useState(null);
-  const [pagado, setPagado] = useState(null);
+  const [pagado, setPagado] = useState(false);
   const [emailUser, setEmailUser] = useState(null);
+  const [responsePagoPlux, setResponsePagoPlux] = useState(null);
   //maneja el valor de la cita
   //inicializando el context
   // const { state, dispatch } = useContext(UserCitaContext);
@@ -111,15 +112,18 @@ function NewUser() {
     onAuthorize: async (response) => {
       if (response.status === "succeeded") {
         console.log(response);
-        setPagado(true);
+
+        await setPagado(true);
+        await setResponsePagoPlux(response);
+        console.log("pagado:", pagado);
         console.log("dentro de data, despues de success");
-        await onPayPagoPluxCreate(response.detail);
       }
     },
   };
 
   const [dataPagoCita, setDataPagoCita] = useState(dataPagos);
 
+  
   const submitForm = (values, actions) => {
     sleep(1500).then(async () => {
       await handleResetForm(actions);
@@ -148,10 +152,9 @@ function NewUser() {
           title: "Pago exitoso!",
           text: "Pago aceptado!",
           showConfirmButton: false,
-          timer: 2000,
+          timer: 2400,
         });
-        // const boton1 = document.getElementById("btnGuardar");
-        // boton1.click();
+        return response.data.newPago.id;
       } else {
         console.log("ess");
         setErrorEmail(true);
@@ -169,10 +172,15 @@ function NewUser() {
 
   const onSubmitCreate = async (data) => {
     try {
-      console.log("data");
+      console.log("data on submit  Create");
       console.log(data);
       console.log(pagado);
       if (pagado) {
+        // procede a guardar la informacion de pagoplux response
+        const responseCard = await onPayPagoPluxCreate(responsePagoPlux.detail);
+        console.log("responseCard");
+        console.log(responseCard);
+        data.pagoplux =  responseCard;
         const response = await axios.post("/api/torneo/", data);
         // console.log(" antes del response");
         console.log("response event Torneo");
@@ -181,13 +189,13 @@ function NewUser() {
         if (response.statusText === "OK" || response.status === 200) {
           console.log("response");
           console.log("guardado el registro OK");
-          //  await Swal.fire({
-          //     icon: "success",
-          //     title: "Registro exitoso!",
-          //     text: "Registro aceptado!",
-          //     showConfirmButton: false,
-          //     timer: 2000,
-          //   });
+          await Swal.fire({
+            icon: "success",
+            title: "Registro exitoso!",
+            text: "Registro aceptado!",
+            showConfirmButton: false,
+            timer: 2000,
+          });
         } else {
           console.log("ess");
           setErrorEmail(true);
@@ -234,9 +242,10 @@ function NewUser() {
 
   const handleNextStep = async (values, actions) => {
     const session = await getSession(values);
-    setPagado(false);
+    // setPagado(false);
     setPrecio(values.precio);
     setEmailUser(session.user.email);
+
     setActiveStep(activeStep + 1);
     actions.setTouched({});
     actions.setSubmitting(false);
@@ -255,91 +264,98 @@ function NewUser() {
       : await handleNextStep(values, actions);
   };
 
- 
+  useEffect(() => {
+    if (isLastStep) {
+      const buttonSave = document.getElementById("btnGuardar");
+      buttonSave.click();
+    }
+  }, [responsePagoPlux]);
+
+
   return (
     // <DashboardLayout>
     // <MakariosProvider>
-      <PageLayout>
-        <DashboardNavbar />
-        <MDBox py={1} mb={10} height="25vh">
-          <Grid
-            container
-            justifyContent="center"
-            alignItems="center"
-            sx={{ height: "100%", mt: 8 }}
-          >
-            <Grid item xs={12} lg={8}>
-              <Formik
-                initialValues={initialValues}
-                validationSchema={currentValidation}
-                onSubmit={handleSubmit}
-              >
-                {({ values, errors, touched, isSubmitting, setFieldValue }) => (
-                  <Form id={formId} autoComplete="off">
-                    <Card sx={{ height: "100%" }}>
-                      {/* <Card sx={{ height: "500px" }}> */}
-                      <MDBox mx={2} mt={-3}>
-                        <Stepper activeStep={activeStep} alternativeLabel>
-                          {steps.map((label) => (
-                            <Step key={label}>
-                              <StepLabel>{label}</StepLabel>
-                            </Step>
-                          ))}
-                        </Stepper>
-                      </MDBox>
-                      <MDBox p={3}>
-                        <MDBox>
-                          {getStepContent(
-                            activeStep,
-                            {
-                              values,
-                              touched,
-                              formField,
-                              errors,
-                              setFieldValue,
-                            },
-                            dataPagos
-                          )}
-                          <MDBox
-                            mt={2}
-                            width="100%"
-                            display="flex"
-                            justifyContent="space-between"
-                          >
-                            {activeStep === 0 ? (
-                              <MDBox />
-                            ) : (
-                              <MDButton
-                                variant="gradient"
-                                color="light"
-                                onClick={handleBack}
-                              >
-                                atrás
-                              </MDButton>
-                            )}
+    <PageLayout>
+      <DashboardNavbar />
+      <MDBox py={1} mb={10} height="25vh">
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+          sx={{ height: "100%", mt: 8 }}
+        >
+          <Grid item xs={12} lg={8}>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={currentValidation}
+              onSubmit={handleSubmit}
+            >
+              {({ values, errors, touched, isSubmitting, setFieldValue }) => (
+                <Form id={formId} autoComplete="off">
+                  <Card sx={{ height: "100%" }}>
+                    {/* <Card sx={{ height: "500px" }}> */}
+                    <MDBox mx={2} mt={-3}>
+                      <Stepper activeStep={activeStep} alternativeLabel>
+                        {steps.map((label) => (
+                          <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                          </Step>
+                        ))}
+                      </Stepper>
+                    </MDBox>
+                    <MDBox p={3}>
+                      <MDBox>
+                        {getStepContent(
+                          activeStep,
+                          {
+                            values,
+                            touched,
+                            formField,
+                            errors,
+                            setFieldValue,
+                          },
+                          dataPagos
+                        )}
+                        <MDBox
+                          mt={2}
+                          width="100%"
+                          display="flex"
+                          justifyContent="space-between"
+                        >
+                          {activeStep === 0 ? (
+                            <MDBox />
+                          ) : (
                             <MDButton
-                              // disabled={isSubmitting}
-                              type="Submit"
                               variant="gradient"
-                              color="info"
-                              id="btnGuardar"
+                              color="light"
+                              onClick={handleBack}
                             >
-                              {isLastStep ? "finalizar" : "siguiente"}
+                              atrás
                             </MDButton>
-                            {isLastStep}
-                          </MDBox>
+                          )}
+                          <MDButton
+                            // disabled={isSubmitting}
+                            type="Submit"
+                            variant="gradient"
+                            color="info"
+                            id="btnGuardar"
+                          >
+                            {isLastStep ? "finalizar" : "siguiente"}
+                          </MDButton>
+                          {isLastStep}
                         </MDBox>
                       </MDBox>
-                    </Card>
-                  </Form>
-                )}
-              </Formik>
-            </Grid>
+                    </MDBox>
+                  </Card>
+                </Form>
+              )}
+            </Formik>
           </Grid>
-        </MDBox>
-        {/* <Footer /> */}
-        {/* </DashboardLayout> */}
-      </PageLayout>
+        </Grid>
+      </MDBox>
+      {/* <Footer /> */}
+      {/* </DashboardLayout> */}
+    </PageLayout>
     // </MakariosProvider>
   );
 }

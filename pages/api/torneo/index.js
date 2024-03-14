@@ -1,6 +1,6 @@
 const { NextResponse } = require("next/server");
 import db from "/libs/db";
-import moment from 'moment-timezone';
+import moment from "moment-timezone";
 
 export default async function torneoHandler(req, res) {
   try {
@@ -29,10 +29,7 @@ export default async function torneoHandler(req, res) {
 
     const profileFound = await db.profile.findFirst({
       where: {
-        AND: [
-          { userId: userFound.id },
-          { cedula: userData.cedula },
-        ],
+        AND: [{ userId: userFound.id }, { cedula: userData.cedula }],
       },
     });
 
@@ -41,16 +38,16 @@ export default async function torneoHandler(req, res) {
 
     if (!profileFound) {
       userData.userId = userFound.id;
-      
+
       const newProfile = await db.profile.create({
         data: userData,
       });
       console.log("New profile created:", newProfile);
       profileId = newProfile.id;
-      participante= newProfile;
+      participante = newProfile;
     } else {
       profileId = profileFound.id;
-      participante= profileFound;
+      participante = profileFound;
     }
 
     // Log relevant information for debugging
@@ -60,25 +57,31 @@ export default async function torneoHandler(req, res) {
       programacionId: req.body.programacionid,
       pagado: true,
       promocionId: req.body.promocionid || null,
-      pagopluxId: req.body.pagoplux || null,
+      pagopluxId: parseInt(req.body.pagoplux) || null,
       fecharegistro: String(moment.tz("America/Guayaquil").format()),
       profileId: profileId,
-     };
+    };
 
     const newTorneo = await db.registro.create({
       data: programacionData,
     });
-    console.log("torneo resgistrado");
-    console.log(newTorneo);
+
+    let montoFactura = null;
+    if (req.body.porcentajepromo) {
+      montoFactura = String(req.body.porcentajepromo);
+    } else {
+      montoFactura = String(req.body.precio);
+    }
+
     const facturacionData = {
-      monto: String(req.body.precio),
+      monto: montoFactura,
       referencia: `Factura de participante ${req.body.nombres} ${req.body.apellidos} - ${req.body.actividad} - ${req.body.programacion}`,
       nombres: req.body.nombrefactura,
       ruc: req.body.rucfactura,
       direccion: req.body.direccionfactura,
       correo: req.body.mailfactura,
-      registroId: newTorneo.id
-    }
+      registroId: newTorneo.id,
+    };
 
     const newFactura = await db.facturacion.create({
       data: facturacionData,
@@ -87,6 +90,8 @@ export default async function torneoHandler(req, res) {
     return res.status(200).json({ message: "success", newTorneo });
   } catch (error) {
     console.error("Backend error:", error);
-    return res.status(500).json({ error: { message: error.message, stack: error.stack } });
+    return res
+      .status(500)
+      .json({ error: { message: error.message, stack: error.stack } });
   }
 }

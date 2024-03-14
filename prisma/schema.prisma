@@ -113,7 +113,7 @@ model Facturacion {
   direccion String
   correo    String
   monto     String
-  registroId String?
+  registroId Int?
   createdAt DateTime @default(now())
   defaultAt DateTime @default(now())
 }
