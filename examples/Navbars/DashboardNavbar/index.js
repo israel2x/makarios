@@ -28,11 +28,13 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
 
+import MDTypography from "/components/MDTypography";
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
 import MDInput from "/components/MDInput";
 import MDBadge from "/components/MDBadge";
 
+import { signOut } from "next-auth/react";
 // NextJS Material Dashboard 2 PRO examples
 import Breadcrumbs from "/examples/Breadcrumbs";
 import NotificationItem from "/examples/Items/NotificationItem";
@@ -208,14 +210,18 @@ function DashboardNavbar({ absolute, light, isMini }) {
             {/* <MDBox pr={1}>
               <MDInput label="Search here" />
             </MDBox> */}
-            <MDBox color={light ? "white" : "inherit"}>
+            <MDBox color={light ? "white" : "inherit"}> 
+            
               <Link
                 // href="/authentication/sign-in/basic"
                 href="/auth/login"
                 passHref
                 legacyBehavior
-              >
-                <IconButton sx={navbarIconButton} size="small" disableRipple>
+              > 
+                <IconButton 
+                 onClick={signOut}
+                sx={navbarIconButton} size="small" disableRipple>
+                   <span>Hola! </span>
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
               </Link>
