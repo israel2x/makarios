@@ -23,7 +23,7 @@ import Swal from "sweetalert2";
 import PageLayout from "/examples/LayoutContainers/PageLayout";
 
 import { MakariosProvider } from "/contextMakarios";
-
+import { signOut } from "next-auth/react";
 // @mui material components
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -111,19 +111,14 @@ function NewUser() {
     PayboxCobroPrueba: false,
     onAuthorize: async (response) => {
       if (response.status === "succeeded") {
-        console.log(response);
-
         await setPagado(true);
         await setResponsePagoPlux(response);
-        console.log("pagado:", pagado);
-        console.log("dentro de data, despues de success");
       }
     },
   };
 
   const [dataPagoCita, setDataPagoCita] = useState(dataPagos);
 
-  
   const submitForm = (values, actions) => {
     sleep(1500).then(async () => {
       await handleResetForm(actions);
@@ -132,21 +127,20 @@ function NewUser() {
 
   const handleResetForm = async (actions) => {
     setActiveStep(0);
-    await actions.resetForm();
-    await window.location.reload();
+    if (pagado) {
+      await signOut();
+      window.location.href = "https://makarios.club/";
+    } else {
+      await actions.resetForm();
+      await window.location.reload();
+    }
   };
 
   const onPayPagoPluxCreate = async (data) => {
     try {
-      console.log("data");
-
       const response = await axios.post("/api/pagoplux/", data);
-      // console.log(" antes del response");
-      console.log("response event PagoPlux");
-      console.log(response);
 
       if (response.statusText === "OK" || response.status === 200) {
-        // setPagoplux(response.data.id);
         await Swal.fire({
           icon: "success",
           title: "Pago exitoso!",
@@ -172,23 +166,13 @@ function NewUser() {
 
   const onSubmitCreate = async (data) => {
     try {
-      console.log("data on submit  Create");
-      console.log(data);
-      console.log(pagado);
       if (pagado) {
         // procede a guardar la informacion de pagoplux response
         const responseCard = await onPayPagoPluxCreate(responsePagoPlux.detail);
-        console.log("responseCard");
-        console.log(responseCard);
-        data.pagoplux =  responseCard;
+        data.pagoplux = responseCard;
         const response = await axios.post("/api/torneo/", data);
-        // console.log(" antes del response");
-        console.log("response event Torneo");
-        console.log(response);
 
         if (response.statusText === "OK" || response.status === 200) {
-          console.log("response");
-          console.log("guardado el registro OK");
           await Swal.fire({
             icon: "success",
             title: "Registro exitoso!",
@@ -242,15 +226,13 @@ function NewUser() {
 
   const handleNextStep = async (values, actions) => {
     const session = await getSession(values);
-    // setPagado(false);
+
     setPrecio(values.precio);
     setEmailUser(session.user.email);
 
     setActiveStep(activeStep + 1);
     actions.setTouched({});
     actions.setSubmitting(false);
-    console.log("activeStep");
-    console.log(activeStep);
   };
 
   const handleFinalStep = async (values, actions) => {
@@ -270,7 +252,6 @@ function NewUser() {
       buttonSave.click();
     }
   }, [responsePagoPlux]);
-
 
   return (
     // <DashboardLayout>
