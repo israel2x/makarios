@@ -25,14 +25,13 @@ const authOptions = {
                 const matchPassword = await bcrypt.compare(credentials.password, userFound.password);
         
                 if (!matchPassword) throw new Error('Wrong password');
-
-                return {
+                const user = {
                     id: userFound.id,
-                    firstname: userFound.firstname,
-                    lastname: userFound.lastname,
+                    name: userFound.firstname,
                     email: userFound.email,
-                    role:userFound.role
-                }
+                  } 
+              
+                return user;
             }
         })
     ],
