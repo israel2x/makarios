@@ -8,7 +8,7 @@ export default async function cuposHanler(req, res) {
     console.info(req.query);
     const programacionId = parseInt(req.query.cupos, 10);
 
-      const programacion = await prisma.programacion.findUnique({
+      const programacion = await db.programacion.findUnique({
         where: {
           id: programacionId // El ID de la programación específica que deseas consultar
         },
