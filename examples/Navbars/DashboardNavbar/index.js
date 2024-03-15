@@ -27,13 +27,13 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Icon from "@mui/material/Icon";
-
+import { getSession } from "next-auth/react";
 import MDTypography from "/components/MDTypography";
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
 import MDInput from "/components/MDInput";
 import MDBadge from "/components/MDBadge";
-
+import axios from "axios";
 import { signOut } from "next-auth/react";
 // NextJS Material Dashboard 2 PRO examples
 import Breadcrumbs from "/examples/Breadcrumbs";
@@ -69,8 +69,31 @@ function DashboardNavbar({ absolute, light, isMini }) {
   } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useRouter().pathname.split("/").slice(1);
+  const [nameSession, setNameSession] = useState('');
+
+  const getNameSession = async() =>{
+    const session = await getSession();
+
+    try {
+      const response = await axios.get("/api/namesession/", {
+        params: { email: session.user.email },
+      });
+
+      if (response.statusText === "OK" || response.status === 200) {
+        setNameSession(response.data.name);
+      } 
+    } catch (error) {
+      console.log("error en el servidor");
+      console.log(error);
+    }
+  }
+
+ 
 
   useEffect(() => {
+    getNameSession();
+    
+    
     // Setting the navbar type
     if (fixedNavbar) {
       setNavbarType("sticky");
@@ -130,31 +153,30 @@ function DashboardNavbar({ absolute, light, isMini }) {
     </Menu>
   );
 
-
-    // Render the notifications menu
-    const renderMenuProfile = () => (
-      <Menu
-        anchorEl={openMenu}
-        anchorReference={null}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        open={Boolean(openMenu)}
-        onClose={handleCloseMenu}
-        sx={{ mt: 2 }}
-      >
-        <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
-        <NotificationItem
-          icon={<Icon>podcasts</Icon>}
-          title="Manage Podcast sessions"
-        />
-        <NotificationItem
-          icon={<Icon>shopping_cart</Icon>}
-          title="Payment successfully completed"
-        />
-      </Menu>
-    );
+  // Render the notifications menu
+  const renderMenuProfile = () => (
+    <Menu
+      anchorEl={openMenu}
+      anchorReference={null}
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+      open={Boolean(openMenu)}
+      onClose={handleCloseMenu}
+      sx={{ mt: 2 }}
+    >
+      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
+      <NotificationItem
+        icon={<Icon>podcasts</Icon>}
+        title="Manage Podcast sessions"
+      />
+      <NotificationItem
+        icon={<Icon>shopping_cart</Icon>}
+        title="Payment successfully completed"
+      />
+    </Menu>
+  );
 
   // Styles for the navbar icons
   const iconsStyle = ({
@@ -186,7 +208,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
           mb={{ xs: 1, md: 0 }}
           sx={(theme) => navbarRow(theme, { isMini })}
         >
-
           <IconButton
             sx={navbarDesktopMenu}
             onClick={handleMiniSidenav}
@@ -197,7 +218,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               {miniSidenav ? "menu_open" : "menu"}
             </Icon>
           </IconButton>
-          
+
           <Breadcrumbs
             icon="home"
             title={route[route.length - 1]}
@@ -210,20 +231,35 @@ function DashboardNavbar({ absolute, light, isMini }) {
             {/* <MDBox pr={1}>
               <MDInput label="Search here" />
             </MDBox> */}
-            <MDBox color={light ? "white" : "inherit"}> 
-            
+            <MDBox color={light ? "white" : "inherit"}>
               <Link
                 // href="/authentication/sign-in/basic"
                 href="/auth/login"
                 passHref
                 legacyBehavior
-              > 
-                <IconButton 
-                 onClick={signOut}
-                sx={navbarIconButton} size="small" disableRipple>
-                   <span>Hola! </span>
-                  <Icon sx={iconsStyle}>account_circle</Icon>
-                </IconButton>
+              >
+                <MDBox mb={1} lineHeight={0}>
+                <MDTypography variant="button" fontWeight="regular" color="text">
+              Hola!&nbsp;&nbsp;
+              <MDTypography
+                variant="button"
+                fontWeight="bold"
+                textTransform="capitalize"
+                color="info"
+              >
+               {nameSession}
+              </MDTypography>
+                    <IconButton
+                      onClick={signOut}
+                      sx={navbarIconButton}
+                      size="small"
+                      disableRipple
+                    >
+                      
+                      <Icon sx={iconsStyle}>account_circle</Icon>
+                    </IconButton>
+                  </MDTypography>
+                </MDBox>
               </Link>
               <IconButton
                 size="small"
