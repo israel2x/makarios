@@ -15,9 +15,9 @@ Coded by www.creative-tim.com
 // "use client";
 
 import Link from "next/link";
-import axios from 'axios';
+import axios from "axios";
 import { useForm } from "react-hook-form";
-import MDAlert from "/components/MDAlert";
+
 import { useRouter } from "next/router";
 // @mui material components
 import Card from "@mui/material/Card";
@@ -29,7 +29,14 @@ import MDTypography from "/components/MDTypography";
 import MDInput from "/components/MDInput";
 import MDButton from "/components/MDButton";
 import MDSnackbar from "/components/MDSnackbar";
-import moment from "moment";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Input from "@mui/material/Input";
+import FormControl from "@mui/material/FormControl";
+import IconButton from "@mui/material/IconButton";
+
+import InputLabel from "@mui/material/InputLabel";
 // Authentication layout components
 import CoverLayout from "/pagesComponents/authentication/components/CoverLayout";
 
@@ -38,20 +45,25 @@ import CircularProgress from "@mui/material/CircularProgress";
 import bgImage from "/assets/images/fondo_registrar.avif";
 
 function Cover() {
-
-
   const [loading, setLoading] = useState(false);
   const [errorSB, setErrorSB] = useState(false);
   const openErrorSB = () => setErrorSB(true);
   const closeErrorSB = () => setErrorSB(false);
   const [errorEmail, setErrorEmail] = useState(false);
-  const  router  = useRouter();
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
 
   const renderErrorSB = (
     <MDSnackbar
@@ -67,13 +79,13 @@ function Cover() {
     />
   );
 
-  const onSubmit = handleSubmit(async(data) => {
+  const onSubmit = handleSubmit(async (data) => {
     try {
       console.log("data");
-      data.role='participante';
+      data.role = "participante";
       await setLoading(true);
       // console.log(data.role);
-      const response = await axios.post('/api/auth/register/', data);
+      const response = await axios.post("/api/auth/register/", data);
       // console.log(" antes del response");
       console.log("response login");
       console.log(response);
@@ -82,40 +94,32 @@ function Cover() {
       console.log(router);
       await setTimeout(() => {
         setLoading(false);
-        
 
-      if(response.statusText === "OK" || response.status===200) {
-        router.push('/auth/login');
-
-      }else{
-        
-        console.log("ess");
-        setErrorEmail(true);
+        if (response.statusText === "OK" || response.status === 200) {
+          router.push("/auth/login");
+        } else {
+          console.log("ess");
+          setErrorEmail(true);
+        }
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+      await openErrorSB();
+      if (error.response.status === 409) {
+        // alert("Usuario o contraseña incorrectos");
       }
-    }, 2000);
-  } catch (error) {
-    
-    console.log(error);
-    await openErrorSB();
-    if(error.response.status === 409 ){
-      // alert("Usuario o contraseña incorrectos");
-    }
-  
+
       console.log("error");
       console.log(error);
-
-  }
-
-
+    }
   });
 
   return (
     <CoverLayout image={bgImage}>
-       {/* {errorEmail === true && (
+      {/* {errorEmail === true && (
                          <MDAlert color="error" dismissible>This is a dismissible alert!</MDAlert>
                           ) } */}
-           
-      
+
       <Card>
         <MDBox
           variant="gradient"
@@ -132,7 +136,7 @@ function Cover() {
             Registrar
           </MDTypography>
           <MDTypography display="block" variant="button" color="white" my={1}>
-            Ingresa tu email and password 
+            Ingresa tu email and password
           </MDTypography>
         </MDBox>
         <MDBox pt={4} pb={3} px={3}>
@@ -149,9 +153,7 @@ function Cover() {
                 })}
                 variant="standard"
                 fullWidth
-                
               />
-     
             </MDBox>
             <MDBox mb={2}>
               <MDInput
@@ -165,9 +167,7 @@ function Cover() {
                 })}
                 variant="standard"
                 fullWidth
-                
               />
-     
             </MDBox>
             <MDBox mb={2}>
               <MDInput
@@ -179,13 +179,31 @@ function Cover() {
               />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput
-                type="password"
-                label="Password"
-                {...register("password", { required: true })}
-                variant="standard"
-                fullWidth
-              />
+              {/* <MDInput */}
+              <FormControl sx={{ s: 1, width: "100%" }} variant="standard">
+                <InputLabel htmlFor="standard-adornment-password">
+                  Password
+                </InputLabel>
+                <Input
+                  // type="password"
+                  label="Password"
+                  {...register("password", { required: true })}
+                  variant="standard"
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  // fullWidth
+                />
+              </FormControl>
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Checkbox />
@@ -209,15 +227,15 @@ function Cover() {
               </MDTypography>
             </MDBox>
             {loading && (
-            <MDBox textAlign="center">
-              <CircularProgress color="info" />
-            </MDBox>
-          )}
+              <MDBox textAlign="center">
+                <CircularProgress color="info" />
+              </MDBox>
+            )}
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"
                 onClick={() => {
-                 onSubmit()
+                  onSubmit();
                 }}
                 color="info"
                 fullWidth

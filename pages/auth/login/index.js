@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { getSession } from 'next-auth/react';
+import { getSession } from "next-auth/react";
 
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
@@ -33,6 +33,7 @@ import Swal from "sweetalert2";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
+import TextField from "@mui/material/TextField";
 
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
@@ -41,6 +42,10 @@ import MDInput from "/components/MDInput";
 import MDButton from "/components/MDButton";
 import CircularProgress from "@mui/material/CircularProgress";
 
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
 // Authentication layout components
 import BasicLayout from "/pagesComponents/authentication/components/BasicLayout";
 
@@ -57,7 +62,7 @@ const { transparent, gradients, socialMediaColors, badgeColors } = colors;
 import { useRouter } from "next/router";
 
 function Basic() {
-  
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   // const { dispatch } = useContext(UserCitaContext);
   const router = useRouter();
@@ -66,6 +71,17 @@ function Basic() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+  const handlePasswordChange = (prop) => (event) => {
+    setShowPassword(event.target.value);
+  };
 
   const [rememberMe, setRememberMe] = useState(false);
 
@@ -85,24 +101,22 @@ function Basic() {
       });
       await setTimeout(() => {
         setLoading(false);
-        
+
         if (res.error) {
           // alert("Usuario o contraseña incorrectos");
           Swal.fire({
             icon: "error",
             text: "Usuario o contraseña incorrectos!",
             showConfirmButton: false,
-            timer: 1500
+            timer: 1500,
           });
         } else {
-
           // console.log('Usuario:', session.user);
           // console.log('Rol:', session.user.firstname);
           // dispatch({ type: "SET_USER_EMAIL", payload: res.Email });
           router.push("/registrarTorneo");
         }
       }, 2000);
-      
     } catch (error) {}
   });
 
@@ -120,7 +134,6 @@ function Basic() {
           mb={1}
           textAlign="center"
         >
-          
           <MDTypography variant="h4" fontWeight="medium" color="white" mt={1}>
             Iniciar Sesión
           </MDTypography>
@@ -165,7 +178,18 @@ function Basic() {
         <MDBox pt={4} pb={3} px={3}>
           <MDBox component="form" role="form">
             <MDBox mb={2}>
-              <MDInput
+              {/* <MDInput
+                type="email"
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "email is required",
+                  },
+                })}
+                label="Email"
+                fullWidth
+              /> */}
+              <TextField
                 type="email"
                 {...register("email", {
                   required: {
@@ -178,8 +202,36 @@ function Basic() {
               />
             </MDBox>
             <MDBox mb={2}>
-              <MDInput
-                type="password"
+              <TextField
+                type={showPassword ? "text" : "password"}
+                {...register("password", {
+                  required: {
+                    value: true,
+                    message: "password is required",
+                  },
+                })}
+                label="Password"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                fullWidth
+              />
+              {/* <MDInput
+                type={showPassword ? "text" : "password"}
                 {...register("password", {
                   required: {
                     value: true,
@@ -188,7 +240,11 @@ function Basic() {
                 })}
                 label="Password"
                 fullWidth
-              />
+                onChange={handlePasswordChange("password")}
+                endAdornment={
+                 
+                }
+              /> */}
             </MDBox>
             <MDBox display="flex" alignItems="center" ml={-1}>
               <Switch checked={rememberMe} onChange={handleSetRememberMe} />
@@ -203,10 +259,10 @@ function Basic() {
               </MDTypography>
             </MDBox>
             {loading && (
-            <MDBox textAlign="center">
-              <CircularProgress color="info" />
-            </MDBox>
-          )}
+              <MDBox textAlign="center">
+                <CircularProgress color="info" />
+              </MDBox>
+            )}
             <MDBox mt={4} mb={1}>
               <MDButton
                 variant="gradient"

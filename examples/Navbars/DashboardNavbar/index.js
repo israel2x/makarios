@@ -234,7 +234,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
             <MDBox color={light ? "white" : "inherit"}>
               <Link
                 // href="/authentication/sign-in/basic"
-                href="/auth/login"
+                href="#"
                 passHref
                 legacyBehavior
               >
@@ -245,7 +245,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 variant="button"
                 fontWeight="bold"
                 textTransform="capitalize"
-                color="info"
+                color="dark"
               >
                {nameSession}
               </MDTypography>
