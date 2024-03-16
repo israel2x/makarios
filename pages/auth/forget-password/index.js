@@ -166,6 +166,21 @@ function Cover() {
                 recuperar contraseña
               </MDButton>
             </MDBox>
+            <MDBox mt={3} mb={1} textAlign="center">
+              <MDTypography variant="button" color="text">
+                Ya tienes un usuario?{" "}
+                <Link href="/auth/login">
+                  <MDTypography
+                    variant="button"
+                    color="info"
+                    fontWeight="medium"
+                    textGradient
+                  >
+                    Inicia sesión
+                  </MDTypography>
+                </Link>
+              </MDTypography>
+            </MDBox>
           </MDBox>
         </MDBox>
       </Card>
