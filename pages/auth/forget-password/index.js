@@ -28,7 +28,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 // Authentication layout components
 import CoverLayout from "/pagesComponents/authentication/components/CoverLayout";
-
+import Link from "next/link";
 import CircularProgress from "@mui/material/CircularProgress";
 
 // Images
