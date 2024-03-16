@@ -31,7 +31,7 @@ export default async function forgetpasswordHanler(req, res) {
       });
       
 
-    const forgetUrl = `http://localhost:3000/auth/change-password?token=${token}`;
+    const forgetUrl = `http://51.79.49.107:3000/auth/change-password?token=${token}`;
 
     
     await resend.emails.send({
