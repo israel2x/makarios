@@ -22,6 +22,7 @@ import { useForm } from "react-hook-form";
 
 import { signIn } from "next-auth/react";
 
+
 // @mui material components
 import Card from "@mui/material/Card";
 import Switch from "@mui/material/Switch";
@@ -33,7 +34,7 @@ import Swal from "sweetalert2";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GoogleIcon from "@mui/icons-material/Google";
-import TextField from "@mui/material/TextField";
+
 
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
@@ -41,13 +42,14 @@ import MDTypography from "/components/MDTypography";
 import MDInput from "/components/MDInput";
 import MDButton from "/components/MDButton";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import TextField from "@mui/material/TextField";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 // Authentication layout components
 import BasicLayout from "/pagesComponents/authentication/components/BasicLayout";
+
 
 // Images
 import bgImage from "/assets/images/tiro-con-arco-2022.jpeg";
@@ -65,12 +67,15 @@ function Basic() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   // const { dispatch } = useContext(UserCitaContext);
+
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+
+
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -99,7 +104,7 @@ function Basic() {
         password: data.password,
         redirect: false,
       });
-      await setTimeout(() => {
+      await setTimeout(async() => {
         setLoading(false);
 
         if (res.error) {
@@ -114,6 +119,7 @@ function Basic() {
           // console.log('Usuario:', session.user);
           // console.log('Rol:', session.user.firstname);
           // dispatch({ type: "SET_USER_EMAIL", payload: res.Email });
+          
           router.push("/registrarTorneo");
         }
       }, 2000);
@@ -122,6 +128,7 @@ function Basic() {
 
   return (
     <BasicLayout image={bgImage}>
+   
       <Card>
         <MDBox
           variant="gradient"
@@ -271,14 +278,31 @@ function Basic() {
                 onClick={() => {
                   onSubmit();
                 }}
+                disabled={loading}
               >
                 ingresar
               </MDButton>
             </MDBox>
-            <MDBox mt={3} mb={1} textAlign="center">
+            <MDBox mt={1} mb={1} textAlign="center">
+              <MDTypography variant="button" color="text">
+              ¿Olvidaste tu {" "}
+                <Link href="forget-password">
+                  <MDTypography
+                    variant="button"
+                    color="info"
+                    fontWeight="medium"
+                    textGradient
+                  >
+                      contraseña?
+                  </MDTypography>
+                </Link>
+              </MDTypography>
+            </MDBox>
+       
+            <MDBox mt={1} mb={1} textAlign="center">
               <MDTypography variant="button" color="text">
                 {/* Don&apos;t have an account?{" "}  */}
-                No tienes una cuenta?
+                No tienes una cuenta?{" "}
                 <Link href="/auth/register">
                   <MDTypography
                     variant="button"

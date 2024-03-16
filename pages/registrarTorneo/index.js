@@ -51,6 +51,8 @@ import Pago from "/pagesComponents/pages/users/new-user/components/Pago";
 import validations from "/pagesComponents/pages/users/new-user/schemas/validationsMakarios";
 import form from "/pagesComponents/pages/users/new-user/schemas/formMakarios";
 import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialMakariosValues";
+import  { messages } from "/utils/mesagges";
+import MDSnackbar from "/components/MDSnackbar";
 
 function getSteps() {
   return ["Participante", "Actividad", "Confirmación", "Pago"];
@@ -68,6 +70,10 @@ function getStepContent(stepIndex, formData, dataPagos) {
 
 function NewUser() {
   const [activeStep, setActiveStep] = useState(0);
+
+  const [notificationSB, setNotificationSBSB] = useState(false);
+  const openNotificationSB = () => setNotificationSBSB(true);
+  const closeNotificationSB = () => setNotificationSBSB(false);
 
   const [pagoPlux, setPagoplux] = useState(null);
   const [precio, setPrecio] = useState(null);
@@ -116,6 +122,20 @@ function NewUser() {
       }
     },
   };
+
+  const renderNotificationSB = (
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="Bienvenido"
+      content={messages.success.userLogged} 
+      dateTime="ahora"
+      open={notificationSB}
+      onClose={closeNotificationSB}
+      close={closeNotificationSB}
+      bgWhite
+    />
+  );
 
   const [dataPagoCita, setDataPagoCita] = useState(dataPagos);
 
@@ -246,7 +266,8 @@ function NewUser() {
       : await handleNextStep(values, actions);
   };
 
-  useEffect(() => {
+  useEffect( () => {
+     openNotificationSB();
     if (isLastStep) {
       const buttonSave = document.getElementById("btnGuardar");
       buttonSave.click();
@@ -258,6 +279,7 @@ function NewUser() {
     // <MakariosProvider>
     <PageLayout>
       <DashboardNavbar />
+      {renderNotificationSB}
       <MDBox py={1} mb={10} height="25vh">
         <Grid
           container

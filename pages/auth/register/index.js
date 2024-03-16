@@ -239,6 +239,7 @@ function Cover() {
                 }}
                 color="info"
                 fullWidth
+                disabled={loading}
               >
                 Registrar
               </MDButton>

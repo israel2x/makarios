@@ -67,9 +67,9 @@ function MDSnackbar({
   return (
     <Snackbar
       TransitionComponent={Fade}
-      autoHideDuration={5000}
+      autoHideDuration={3000}
       anchorOrigin={{
-        vertical: "bottom",
+        vertical: "top",
         horizontal: "right",
       }}
       {...rest}
