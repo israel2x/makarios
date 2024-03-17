@@ -16,7 +16,15 @@ const EmailTemplate = ({ buttonUrl }) => (
       href: buttonUrl,
       style: { margin: '10px auto' }
     },
-      React.createElement("button", null, "Cambiar contrase\xF1a")
+      React.createElement("button", {
+        style: {
+          padding: '10px 20px',
+          backgroundColor: '#125688',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer'
+        }}, "Cambiar contrase\xF1a")
     )
   )
 );
