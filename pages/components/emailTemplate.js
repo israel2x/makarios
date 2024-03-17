@@ -24,7 +24,7 @@ const EmailTemplate = ({ buttonUrl }) => (
           border: 'none',
           borderRadius: '5px',
           cursor: 'pointer'
-        }}, "Cambiar contrase\xF1a")
+        }}, "Cambiar Contrase\xF1a")
     )
   )
 );
