@@ -1,7 +1,7 @@
 const { NextResponse } = require("next/server");
 import db from "../../../../libs/db";
 import bcrypt from "bcrypt";
-
+import  { messages } from "/utils/mesagges";
 export default async function registerHanler(req, res) {
   try {
     const userFound = await db.user.findUnique({
@@ -20,7 +20,7 @@ export default async function registerHanler(req, res) {
     });
 
     const { password: _, ...user } = newUser;
-    return res.status(200).json({ message: "sucess register", user });
+    return res.status(200).json({ message: messages.success.userCreated , user });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
