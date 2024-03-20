@@ -63,7 +63,8 @@ function OrderList() {
           product: item.programacion.actividad.descripcion,
           revenue:  "$"+(item.programacion.actividad.precio),
         }));
-
+        setDataActividad({ rows: response.data.actividadFound });
+        dataTableData.rows = dataActividad;
         console.log("array registro");
         console.log(infoRegistro);
         setDatostabla(infoRegistro);
