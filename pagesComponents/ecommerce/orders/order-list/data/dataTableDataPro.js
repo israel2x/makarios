@@ -1,3 +1,18 @@
+/**
+=========================================================
+* NextJS Material Dashboard 2 PRO - v2.2.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/nextjs-material-dashboard-pro
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+
+Coded by www.creative-tim.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*/
+
 /* eslint-disable react/prop-types */
 // ProductsList page components
 import IdCell from "/pagesComponents/ecommerce/orders/order-list/components/IdCell";
@@ -13,7 +28,7 @@ import team4 from "/assets/images/team-4.jpg";
 import team5 from "/assets/images/team-5.jpg";
 import ivana from "/assets/images/ivana-squares.jpg";
 
-const dataTableData = {
+const dataTableDataPro = {
   columns: [
     {
       Header: "id",
@@ -21,17 +36,12 @@ const dataTableData = {
       Cell: ({ value }) => <IdCell id={value} />,
     },
     {
-      Header: "descripción",
+      Header: "date",
       accessor: "date",
       Cell: ({ value }) => <DefaultCell value={value} />,
     },
     {
-      Header: "precio",
-      accessor: "revenue",
-      Cell: ({ value }) => <DefaultCell value={value} />,
-    },
-    {
-      Header: "Estado",
+      Header: "status",
       accessor: "status",
       Cell: ({ value }) => {
         let status;
@@ -43,12 +53,38 @@ const dataTableData = {
         } else {
           status = <StatusCell icon="close" color="error" status="Canceled" />;
         }
+
         return status;
       },
     },
     {
-      Header: "fecha de creación",
-      accessor: "date2",
+      Header: "customer",
+      accessor: "customer",
+      Cell: ({ value: [name, data] }) => (
+        <CustomerCell
+          image={data.image}
+          color={data.color || "dark"}
+          name={name}
+        />
+      ),
+    },
+    {
+      Header: "product",
+      accessor: "product",
+      Cell: ({ value }) => {
+        const [name, data] = value;
+
+        return (
+          <DefaultCell
+            value={typeof value === "string" ? value : name}
+            suffix={data.suffix || false}
+          />
+        );
+      },
+    },
+    {
+      Header: "revenue",
+      accessor: "revenue",
       Cell: ({ value }) => <DefaultCell value={value} />,
     },
   ],
@@ -58,7 +94,6 @@ const dataTableData = {
       id: "#10421",
       date: "1 Nov, 10:20 AM",
       status: "paid",
-      date2: "1 Nov, 10:20 AM",
       customer: ["Orlando Imieto", { image: team2 }],
       product: "Nike Sport V2",
       revenue: "$140,20",
@@ -154,4 +189,4 @@ const dataTableData = {
   ],
 };
 
-export default dataTableData;
+export default dataTableDataPro;
