@@ -246,6 +246,8 @@ function NewUser() {
 
   const handleNextStep = async (values, actions) => {
     const session = await getSession(values);
+    console.log("session");
+    console.log(session);
 
     setPrecio(values.precio);
     setEmailUser(session.user.email);

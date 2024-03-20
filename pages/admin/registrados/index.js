@@ -1,18 +1,3 @@
-/**
-=========================================================
-* NextJS Material Dashboard 2 PRO - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/nextjs-material-dashboard-pro
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import axios from "axios";
 // @mui material components
 import Card from "@mui/material/Card";
@@ -26,6 +11,8 @@ import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
 import MDButton from "/components/MDButton";
 
+import team1 from "/assets/images/team-1.jpg";
+
 // NextJS Material Dashboard 2 PRO examples
 import DashboardLayout from "/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
@@ -37,7 +24,7 @@ import dataTableData from "/pagesComponents/ecommerce/orders/order-list/data/dat
 
 function OrderList() {
   const [menu, setMenu] = useState(null);
-
+  const [datosTabla, setDatostabla] = useState(null);
   const openMenu = (event) => setMenu(event.currentTarget);
   const closeMenu = () => setMenu(null);
 
@@ -62,29 +49,43 @@ function OrderList() {
     </Menu>
   );
 
-const loadRegistrados = (async()=>{
-  try {
+  const loadRegistrados = async () => {
+    try {
+      const response = await axios.get("/api/registro");
+      console.log("response infodata");
+      console.log(response);
+      if (response.statusText === "OK" || response.status === 200) {
+        const infoRegistro = response.data.registroFound.map((item) =>({
+          id: item.id,
+          date: item.fecharegistro,
+          status: "Paid",
+          customer:[item.profile.apellidos +' '+item.profile.nombres,{image: team1}],
+          product: item.programacion.actividad.descripcion,
+          revenue:  "$"+(item.programacion.actividad.precio),
+        }));
 
-    const response = await axios.get("/api/registro");
-    console.log("response infodata");
-    console.log(response);
-    if (response.statusText === "OK" || response.status === 200) {
-      const infoRegistro = response.data.registroFound.map((item)=>{
-        
-      });
+        console.log("array registro");
+        console.log(infoRegistro);
+        setDatostabla(infoRegistro);
+        dataTableData.row=infoRegistro;
 
-      
-      console.log("array registro");
-      console.log(infoRegistro);
-    } else {
+      } else {
+      }
+    } catch (error) {
+      console.log("error info registro");
+      console.log(error);
     }
-  } catch (error) {
-    console.log("error info registro");
-    console.log(error);
-  }
+  };
 
-
-});
+  // rows: [
+  //   {
+  //     id: "#10421",
+  //     date: "1 Nov, 10:20 AM",
+  //     status: "paid",
+  //     customer: ["Orlando Imieto", { image: team2 }],
+  //     product: "Nike Sport V2",
+  //     revenue: "$140,20",
+  //   },
 
   useEffect(() => {
     loadRegistrados();

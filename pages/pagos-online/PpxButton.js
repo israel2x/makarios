@@ -1,16 +1,15 @@
-
 import { iniciarDatos } from "../../funciones-pagos/pagos-functions";
 import MDBox from "/components/MDBox";
 import CircularProgress from "@mui/material/CircularProgress";
 
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 const PpxButton = ({ data }) => {
   const estiloBoton = {
     display: "none",
     backgroundColor: "#FAFAFA",
     right: "80px",
     backgroundImage:
-    "url(https://sandbox-paybox.pagoplux.com/img/pagar.png?v1)",
+      "url(https://sandbox-paybox.pagoplux.com/img/pagar.png?v1)",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     height: "96px",
@@ -23,38 +22,31 @@ const PpxButton = ({ data }) => {
   };
 
   const [loading, setLoading] = useState(false);
-  
-  const handleButtonClick = async () => {
-    console.log("en el boton");
-    setLoading(true);
-    await iniciarDatos(data);
-    await setLoading(false);
-  };
-  useEffect(() => {
 
+  useEffect(() => {
     console.log("iniciar datos");
     setLoading(true);
-    setTimeout(async() => {
-     await iniciarDatos(data);
-     await setLoading(false);
-    }, 1000);
-    
+    setTimeout(async () => {
+      await iniciarDatos(data);
+      await setLoading(false);
+    }, 2000);
   }, [data]);
 
-
   return (
-    <> 
-    <div align={"center"}>
-    {loading && (
-            <MDBox textAlign="center">
-              <CircularProgress color="info" />
-              </MDBox>
-           )}
-         <div id="modalPaybox"></div>
-      <button style={estiloBoton} id="pay" type="button" onClick={iniciarDatos}></button>
-   
-  
-      {/* <button style={estiloBoton} id="pay" type="submit"></button> */}
+    <>
+      <div align={"center"}>
+        {loading && (
+          <MDBox textAlign="center">
+            <CircularProgress color="info" />
+          </MDBox>
+        )}
+        <div id="modalPaybox"></div>
+        <button
+          style={estiloBoton}
+          id="pay"
+          type="button"
+          onClick={iniciarDatos}
+        ></button>
       </div>
     </>
   );

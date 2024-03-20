@@ -106,6 +106,7 @@ const form = {
       actividad: {
         name: "actividad",
         type: "text",
+        label: "Actividad",
       },
       programacionid: {
         name: "programacionid",
