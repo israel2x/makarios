@@ -1,16 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 // formik components
-<<<<<<< HEAD:pages/admin/actividad/index.js
-import { Formik, Form } from "formik";
-import $ from "jquery";
-import Swal from "sweetalert2";
-
-import PageLayout from "/examples/LayoutContainers/PageLayout";
-=======
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
->>>>>>> fd204f124760061dc03a7b642a51c7304f8a4298:pages/actividad/index.js
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -49,57 +40,10 @@ import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
 import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 
-<<<<<<< HEAD:pages/admin/actividad/index.js
-// NewUser page components
-import UserInfo from "/pagesComponents/pages/users/new-user/components/UserInfo";
-import Address from "/pagesComponents/pages/users/new-user/components/Address";
-import Confirmacion from "/pagesComponents/pages/users/new-user/components/Confirmacion";
-import Pago from "/pagesComponents/pages/users/new-user/components/Pago";
-
-// NewUser layout schemas for form and form feilds
-import validations from "/pagesComponents/pages/users/new-user/schemas/validationsMakarios";
-import form from "/pagesComponents/pages/users/new-user/schemas/formMakarios";
-import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialMakariosValues";
-
-import PpxButton from "/pages/pagos-online/PpxButton";
-
-function Actividad() {
-  const [activeStep, setActiveStep] = useState(0);
-  //maneja el valor de la cita
-
-  return (
-    <>
-      <DashboardLayout>
-        <DashboardNavbar />
-        <MDBox my={3}>
-          <MDBox
-            display="flex"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            mb={2}
-          >
-            <MDButton variant="gradient" color="dark">
-              new order
-            </MDButton>
-            <MDBox display="flex"></MDBox>
-          </MDBox>
-          <Card>
-            <MDBox>
-              <h2>tabla actividad</h2>
-            </MDBox>
-          </Card>
-        </MDBox>
-        <Footer />
-      </DashboardLayout>
-  
-    </>
-=======
 // Data
 import dataTableData from "/pagesComponents/ecommerce/orders/order-list/data/dataTableData";
-import { useEffect } from "react";
-import CircularProgress from "@mui/material/CircularProgress";
 
-function Actividad() {
+function Programacion() {
   const [menu, setMenu] = useState(null);
   const [open, setOpen] = useState(false); //modal
   const [loading, setLoading] = useState(false);
@@ -112,52 +56,9 @@ function Actividad() {
   const openMenu = (event) => setMenu(event.currentTarget);
   const closeMenu = () => setMenu(null);
 
-  //load data table
-  const [responseActividad, setResponseActividad] = useState();
-  const [dataActividad, setDataActividad] = useState();
-  const [loadingTable, setloadingTable] = useState(false);
-  const [dataActividadTable, setDataActividadTable] = useState(dataTableData);
-
-  useEffect(() => {
-    buscarActividadesData();
-  }, []);
-
-  const buscarActividadesData = async () => {
-    //add  loading
-    setloadingTable(true);
-    await axios
-      .get("/api/actividad/")
-      .then((response) => {
-        console.log(response);
-        //setResponseActividad(response);
-        setDataActividad({ rows: response.data.actividadFound });
-        dataTableData.rows = dataActividad;
-        setDataActividadTable(
-          (dataTableData.rows = response.data.actividadFound)
-        );
-        console.log(dataTableData);
-      })
-      .catch((error) => console.log(error));
-    /* 
-    if (
-      responseActividad.statusText === "OK" ||
-      responseActividad.status === 200
-    ) {
-      setDataActividad(responseActividad.data.actividadFound);
-    } else {
-      console.log("Error al traer actividades");
-    } */
-
-    // off loading
-    setloadingTable(false);
-  };
-
   //modal
   const handleClickOpen = () => {
     setOpen(true);
-    console.log(dataActividad);
-    console.log(dataTableData);
-    console.log(dataActividadTable);
   };
   const handleClose = () => {
     setOpen(false);
@@ -186,13 +87,13 @@ function Actividad() {
       onClose={closeMenu}
       keepMounted
     >
-      <MenuItem onClick={closeMenu}>Stado: Activo</MenuItem>
-      <MenuItem onClick={closeMenu}>Stado: Inactivo</MenuItem>
-      <MenuItem onClick={closeMenu}>Stado: Canceled</MenuItem>
+      <MenuItem onClick={closeMenu}>Status: Paid</MenuItem>
+      <MenuItem onClick={closeMenu}>Status: Refunded</MenuItem>
+      <MenuItem onClick={closeMenu}>Status: Canceled</MenuItem>
       <Divider sx={{ margin: "0.5rem 0" }} />
       <MenuItem onClick={closeMenu}>
         <MDTypography variant="button" color="error" fontWeight="regular">
-          Remover Filtro
+          Remove Filter
         </MDTypography>
       </MenuItem>
     </Menu>
@@ -271,7 +172,7 @@ function Actividad() {
           mb={2}
         >
           <MDButton variant="gradient" color="dark" onClick={handleClickOpen}>
-            nueva actividad
+            nueva programación
           </MDButton>
           <MDBox display="flex">
             <MDButton
@@ -292,19 +193,12 @@ function Actividad() {
           </MDBox>
         </MDBox>
         <Card>
-          {loadingTable ? (
-            <DataTable table={dataTableData} entriesPerPage={false} canSearch />
-          ) : (
-            <MDBox textAlign="center">
-              <CircularProgress color="info" />
-            </MDBox>
-          )}
+          <DataTable table={dataTableData} entriesPerPage={false} canSearch />
         </Card>
       </MDBox>
       <Footer />
     </DashboardLayout>
->>>>>>> fd204f124760061dc03a7b642a51c7304f8a4298:pages/actividad/index.js
   );
 }
 
-export default Actividad;
+export default Programacion;
