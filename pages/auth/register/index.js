@@ -108,7 +108,7 @@ function Cover() {
       if (error.response.status === 409) {
         // alert("Usuario o contraseña incorrectos");
       }
-
+      setLoading(false);
       console.log("error");
       console.log(error);
     }

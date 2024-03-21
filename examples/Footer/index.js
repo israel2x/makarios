@@ -62,7 +62,7 @@ function Footer({ company, links }) {
       >
         &copy; {new Date().getFullYear()}, made with
         <MDBox fontSize={size.md} color="text" mb={-0.5} mx={0.25}>
-          <Icon color="inherit" fontSize="inherit">
+          <Icon color="success" fontSize="inherit">
             favorite
           </Icon>
         </MDBox>
@@ -99,7 +99,8 @@ function Footer({ company, links }) {
 
 // Setting default values for the props of Footer
 Footer.defaultProps = {
-  company: { href: "https://www.creative-tim.com/", name: "Creative Tim" },
+  // company: { href: "https://www.creative-tim.com/", name: "Makarios Club" },
+  company: { href: "https://makarios.club/", name: "Makarios Club" },
   links: [
     { href: "https://www.creative-tim.com/", name: "Creative Tim" },
     { href: "https://www.creative-tim.com/presentation", name: "About Us" },

@@ -104,6 +104,7 @@ function Basic() {
         password: data.password,
         redirect: false,
       });
+
       await setTimeout(async() => {
         setLoading(false);
 
@@ -116,10 +117,7 @@ function Basic() {
             timer: 1500,
           });
         } else {
-          // console.log('Usuario:', session.user);
-          // console.log('Rol:', session.user.firstname);
-          // dispatch({ type: "SET_USER_EMAIL", payload: res.Email });
-          
+
           router.push("/registrarTorneo");
         }
       }, 2000);

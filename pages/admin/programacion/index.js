@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 // formik components
+
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -42,15 +43,18 @@ import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 
 // Data
-import dataTableData from "/pagesComponents/ecommerce/orders/order-list/data/dataTableData";
+import dataTableData from "./dataTableData";
 import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
-function Actividad() {
+function Programacion() {
   const [menu, setMenu] = useState(null);
   const [open, setOpen] = useState(false); //modal
   const [loading, setLoading] = useState(false);
-
+  const [dataTableData2, setDataTableData2] = useState({
+    columns: [],
+    rows: []
+});
   const [age, setAge] = useState(""); //select
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -72,17 +76,41 @@ function Actividad() {
   const buscarActividadesData = async () => {
     //add  loading
     setloadingTable(true);
+    setLoading(true);
     await axios
-      .get("/api/actividad/")
+      .get("/api/admin/programacion/")
       .then((response) => {
+        console.log("response programacion");
         console.log(response);
-        //setResponseActividad(response);
-        setDataActividad({ rows: response.data.actividadFound });
-        dataTableData.rows = dataActividad;
-        setDataActividadTable(
-          (dataTableData.rows = response.data.actividadFound)
-        );
-        console.log(dataTableData);
+
+        const infoProgramacion = response.data.programacionFound.map((item) =>({
+          id: item.id,
+          actividad: item.actividad.descripcion,
+          detalle: item.detalle,
+          fechadesde: item.vigenciaDesde,
+          fechahasta: item.vigenciaHasta,
+          fechatope: item.fechatope,
+          cupo:item.cupo,
+          estado: item.estado,
+        }));
+
+        const columns = dataTableData.columns; // Object.keys(response.data.actividadFound[0]); // Suponiendo que la primera fila del arreglo contiene los nombres de las columnas
+        setDataTableData2(prevState => ({
+            ...prevState,
+            columns: columns
+        }));
+
+        // Actualizar las filas
+        setDataTableData2(prevState => ({
+            ...prevState,
+            rows: infoProgramacion
+        }));
+
+
+        setloadingTable(false);
+        setLoading(false);
+        console.log(loadingTable);
+        console.log(loading);
       })
       .catch((error) => console.log(error));
     /* 
@@ -135,7 +163,7 @@ function Actividad() {
     >
       <MenuItem onClick={closeMenu}>Stado: Activo</MenuItem>
       <MenuItem onClick={closeMenu}>Stado: Inactivo</MenuItem>
-      <MenuItem onClick={closeMenu}>Stado: Canceled</MenuItem>
+      {/* <MenuItem onClick={closeMenu}>Stado: Canceled</MenuItem> */}
       <Divider sx={{ margin: "0.5rem 0" }} />
       <MenuItem onClick={closeMenu}>
         <MDTypography variant="button" color="error" fontWeight="regular">
@@ -155,18 +183,18 @@ function Actividad() {
           onSubmit={handleSubmit}
         >
           <Form>
-            <DialogTitle>Crear Actividad</DialogTitle>
+            <DialogTitle>Crear Programación</DialogTitle>
             <DialogContent>
               <MDBox pt={1} pb={2} px={2}>
                 <MDBox>
-                  <MDBox mb={2}>
+                  <MDBox mb={2} px={0}>
                     <FormField
                       type="text"
                       name="description"
                       label="Descripción"
                     />
                   </MDBox>
-                  <MDBox mb={2}>
+                  <MDBox mb={2} px={0}>
                     <FormField type="number" name="price" label="Precio" />
                   </MDBox>
                   <MDBox mb={0}>
@@ -203,7 +231,7 @@ function Actividad() {
               <MDButton color="dark" onClick={handleClose}>
                 Cancelar
               </MDButton>
-              <MDButton type="submit" color="dark">
+              <MDButton type="submit" color="info">
                 Guardar
               </MDButton>
             </DialogActions>
@@ -217,8 +245,8 @@ function Actividad() {
           alignItems="flex-start"
           mb={2}
         >
-          <MDButton variant="gradient" color="dark" onClick={handleClickOpen}>
-            nueva actividad
+          <MDButton variant="gradient" color="info" onClick={handleClickOpen}>
+            nueva programación
           </MDButton>
           <MDBox display="flex">
             <MDButton
@@ -239,13 +267,19 @@ function Actividad() {
           </MDBox>
         </MDBox>
         <Card>
-          {loadingTable ? (
-            <DataTable table={dataTableData} entriesPerPage={false} canSearch />
+          {/* {loadingTable ? (
           ) : (
             <MDBox textAlign="center">
               <CircularProgress color="info" />
             </MDBox>
+          )} */}
+            {loadingTable && ( 
+            <MDBox textAlign="center">
+              <CircularProgress color="info" />
+            </MDBox>
           )}
+            <DataTable table={dataTableData2} entriesPerPage={false} canSearch />
+
         </Card>
       </MDBox>
       <Footer />
@@ -253,4 +287,4 @@ function Actividad() {
   );
 }
 
-export default Actividad;
+export default Programacion;

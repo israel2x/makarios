@@ -1,14 +1,15 @@
 const { NextResponse } = require("next/server");
-import db from "../../../libs/db";
+import db from "../../../../libs/db";
 
 export default async function actividadHanler(req, res) {
   try {
-    const actividadFound = await db.actividad.findMany({
+    const actividadFound = await db.actividad.findMany(
+    {
       where: {
-        estado: "ACTIVO",
+        estado: "A",
       },
-    });
-
+    }
+    );
     if (!actividadFound) {
       return res.status(409).send("Actividad not found");
     }

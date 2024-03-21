@@ -53,7 +53,7 @@ const pageRoutes = [
           },
           {
             name: "registrados",
-            route: "/registrados",
+            route: "/admin/registrados",
           },
         ],
       },

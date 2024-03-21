@@ -11,14 +11,37 @@ export default async function registrosHanler(req, res) {
     // }
 
     const registroFound = await db.registro.findMany({
-      include: {
+      select: {
+        id:true,
         programacion: {
-            include: {
-              actividad: true
-            }
+          select: {
+            actividad: {
+              select:{
+                descripcion:true
+              }
+            },
+            detalle:true
           },
-        profile: true
-      },
+        },
+        profile: {
+          select: {
+            nombres:true,
+            apellidos:true
+          }
+        },
+        pagoplux: {
+          select: {
+              amount:true
+          }
+        },
+        fecharegistro:true,
+        detallepromo:true,
+        
+          },
+          orderBy: {
+            fecharegistro: 'desc',
+          },
+      
     });
 
     if (!registroFound) {

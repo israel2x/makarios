@@ -128,10 +128,9 @@ CREATE TABLE "Facturacion" (
 CREATE TABLE "Registro" (
     "id" SERIAL NOT NULL,
     "fecharegistro" TEXT NOT NULL,
-    "pagado" BOOLEAN NOT NULL DEFAULT false,
     "promocionId" INTEGER,
-    "preciopromocion" DECIMAL(65,30),
-    "pagopluxId" INTEGER,
+    "detallepromo" TEXT,
+    "pagopluxId" INTEGER NOT NULL,
     "programacionId" INTEGER NOT NULL,
     "profileId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -154,3 +153,6 @@ ALTER TABLE "Registro" ADD CONSTRAINT "Registro_profileId_fkey" FOREIGN KEY ("pr
 
 -- AddForeignKey
 ALTER TABLE "Registro" ADD CONSTRAINT "Registro_programacionId_fkey" FOREIGN KEY ("programacionId") REFERENCES "Programacion"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Registro" ADD CONSTRAINT "Registro_pagopluxId_fkey" FOREIGN KEY ("pagopluxId") REFERENCES "Pagoplux"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

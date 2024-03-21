@@ -25,15 +25,12 @@ import MDTypography from "/components/MDTypography";
 import axios from "axios";
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
-import Autocomplete from "@mui/material/Autocomplete";
 import selectData from "/pagesComponents/pages/account/settings/components/BasicInfo/data/selectData";
 import MDButton from "/components/MDButton";
 import PpxButton from "/pages/pagos-online/PpxButton";
 import PagoTarjeta from "/pagesComponents/pages/users/new-user/components/PagoTarjeta";
 function Pago({ formData, pagos }) {
-  
-
-  const [detallepromo, setDetallepromo] = useState("");
+  const [detallepromocion, setDetallepromocion] = useState("");
 
   const [botonDesactivado, setBotonDesactivado] = useState(false);
   const { formField, values, errors, touched, setFieldValue } = formData;
@@ -51,9 +48,10 @@ function Pago({ formData, pagos }) {
     direccionfactura,
     mailfactura,
     actividad,
-    programacion,
+    detallepromo,
     precio,
     promocion,
+    programacion,
   } = formField;
   // const {
   //   firstName: firstNameV,
@@ -75,6 +73,7 @@ function Pago({ formData, pagos }) {
     direccionfactura: direccionfacturaV,
     mailfactura: mailfacturaV,
     actividad: actividadV,
+    detallepromo: detallepromoV,
     programacion: programacionV,
     precio: precioV,
     promocion: promocionV,
@@ -87,9 +86,9 @@ function Pago({ formData, pagos }) {
     if (dataPromo[0]) {
       const porcentaje = dataPromo[0].porcentaje;
       console.log(porcentaje);
-      setDetallepromo(dataPromo[0].descripcion);
+      setDetallepromocion(dataPromo[0].descripcion);
       setFieldValue("promocionid", dataPromo[0].id);
-      // setFieldValue("porcentajepromo", porcentaje);
+      setFieldValue("detallepromo", dataPromo[0].descripcion);
       let newPrecio = parseFloat(precioV) * (1 - parseFloat(porcentaje) / 100);
       console.log("newPrecio");
       console.log(dataPromo);
@@ -112,7 +111,7 @@ function Pago({ formData, pagos }) {
     // setFieldValue("precio", session.user.email);
     console.log(data);
     try {
-      const response = await axios.get("/api/promocion", {
+      const response = await axios.get("/api/torneos/promocion", {
         params: { codigo: data },
       });
       console.log("response promociones");
@@ -135,7 +134,6 @@ function Pago({ formData, pagos }) {
     }
   };
   // setFieldValue("promocion", "");
-
 
   const onChangeNumberCelular = (e) => {
     const re = /^[0-9\b]+$/; //rules
@@ -240,7 +238,7 @@ function Pago({ formData, pagos }) {
               <PpxButton data={dataPago} />
             </Grid>
             <br />
-            <MDTypography variant="overline">{detallepromo}</MDTypography>
+            <MDTypography variant="overline">{detallepromocion}</MDTypography>
             <Grid container spacing={4}>
               <Grid item xs={12} sm={6}>
                 <FormField
