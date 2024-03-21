@@ -3,7 +3,7 @@ import { Resend } from "resend";
 import bcrypt from "bcrypt";
 import db from "/libs/db";
 import jwt from "jsonwebtoken";
-import EmailTemplate from "/pages/components/emailTemplate"
+import EmailTemplate from "/pages/components/emailTemplate";
 const resend = new Resend(process.env.RESEND_APIKEY);
 
 export default async function forgetpasswordHanler(req, res) {
