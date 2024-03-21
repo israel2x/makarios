@@ -101,7 +101,7 @@ function Address({ formData }) {
     const session = await getSession(data);
     setFieldValue("email", session.user.email);
     try {
-      const response = await axios.get("/api/actividad", data);
+      const response = await axios.get("/api/torneos/actividad", data);
       console.log("response actividad");
       console.log(response);
       if (response.statusText === "OK" || response.status === 200) {
@@ -127,7 +127,7 @@ function Address({ formData }) {
 
   const loadProgramacion = async (actividadId) => {
     try {
-      const response = await axios.get("/api/programacion", {
+      const response = await axios.get("/api/torneos/programacion", {
         params: { actividad: actividadId },
       });
       console.log("response programacion");
@@ -153,7 +153,7 @@ function Address({ formData }) {
 
   const loadCupos = async (programacion) => {
     try {
-      const response = await axios.get("/api/cupos", {
+      const response = await axios.get("/api/torneos/cupos", {
         params: { cupos: programacion },
       });
       console.log("cupos response");

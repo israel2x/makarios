@@ -55,9 +55,9 @@ export default async function torneoHandler(req, res) {
 
     const programacionData = {
       programacionId: req.body.programacionid,
-      pagado: true,
+      // pagado: true,
       promocionId: req.body.promocionid || null,
-
+      detallepromo: req.body.detallepromo || null,
       pagopluxId: parseInt(req.body.pagoplux) || null,
       fecharegistro: String(moment.tz("America/Guayaquil").format()),
       profileId: profileId,

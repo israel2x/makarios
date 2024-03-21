@@ -1,16 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 // formik components
-<<<<<<< HEAD:pages/admin/actividad/index.js
-import { Formik, Form } from "formik";
-import $ from "jquery";
-import Swal from "sweetalert2";
 
-import PageLayout from "/examples/LayoutContainers/PageLayout";
-=======
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
->>>>>>> fd204f124760061dc03a7b642a51c7304f8a4298:pages/actividad/index.js
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -49,53 +42,8 @@ import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
 import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 
-<<<<<<< HEAD:pages/admin/actividad/index.js
-// NewUser page components
-import UserInfo from "/pagesComponents/pages/users/new-user/components/UserInfo";
-import Address from "/pagesComponents/pages/users/new-user/components/Address";
-import Confirmacion from "/pagesComponents/pages/users/new-user/components/Confirmacion";
-import Pago from "/pagesComponents/pages/users/new-user/components/Pago";
-
-// NewUser layout schemas for form and form feilds
-import validations from "/pagesComponents/pages/users/new-user/schemas/validationsMakarios";
-import form from "/pagesComponents/pages/users/new-user/schemas/formMakarios";
-import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialMakariosValues";
-
-import PpxButton from "/pages/pagos-online/PpxButton";
-
-function Actividad() {
-  const [activeStep, setActiveStep] = useState(0);
-  //maneja el valor de la cita
-
-  return (
-    <>
-      <DashboardLayout>
-        <DashboardNavbar />
-        <MDBox my={3}>
-          <MDBox
-            display="flex"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            mb={2}
-          >
-            <MDButton variant="gradient" color="dark">
-              new order
-            </MDButton>
-            <MDBox display="flex"></MDBox>
-          </MDBox>
-          <Card>
-            <MDBox>
-              <h2>tabla actividad</h2>
-            </MDBox>
-          </Card>
-        </MDBox>
-        <Footer />
-      </DashboardLayout>
-  
-    </>
-=======
 // Data
-import dataTableData from "/pagesComponents/ecommerce/orders/order-list/data/dataTableData";
+import dataTableData from "./dataTableData";
 import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -103,7 +51,10 @@ function Actividad() {
   const [menu, setMenu] = useState(null);
   const [open, setOpen] = useState(false); //modal
   const [loading, setLoading] = useState(false);
-
+  const [dataTableData2, setDataTableData2] = useState({
+    columns: [],
+    rows: []
+});
   const [age, setAge] = useState(""); //select
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -125,17 +76,35 @@ function Actividad() {
   const buscarActividadesData = async () => {
     //add  loading
     setloadingTable(true);
+    setLoading(true);
     await axios
-      .get("/api/actividad/")
+      .get("/api/admin/actividad/")
       .then((response) => {
-        console.log(response);
-        //setResponseActividad(response);
+        const columns = dataTableData.columns; 
+        setDataTableData2(prevState => ({
+            ...prevState,
+            columns: columns
+        }));
+
+        // Actualizar las filas
+        setDataTableData2(prevState => ({
+            ...prevState,
+            rows: response.data.actividadFound
+        }));
+
         setDataActividad({ rows: response.data.actividadFound });
-        dataTableData.rows = dataActividad;
-        setDataActividadTable(
-          (dataTableData.rows = response.data.actividadFound)
-        );
+        dataTableData.rows = response.data.actividadFound;
+
+        // 3. Si es necesario, actualizar otro estado con los nuevos datos de 'dataTableData'
+        setDataActividadTable({ ...dataTableData });
+        
+        console.log(dataActividad);
+        console.log(dataActividadTable);
         console.log(dataTableData);
+        setloadingTable(false);
+        setLoading(false);
+        console.log(loadingTable);
+        console.log(loading);
       })
       .catch((error) => console.log(error));
     /* 
@@ -188,7 +157,7 @@ function Actividad() {
     >
       <MenuItem onClick={closeMenu}>Stado: Activo</MenuItem>
       <MenuItem onClick={closeMenu}>Stado: Inactivo</MenuItem>
-      <MenuItem onClick={closeMenu}>Stado: Canceled</MenuItem>
+      {/* <MenuItem onClick={closeMenu}>Stado: Canceled</MenuItem> */}
       <Divider sx={{ margin: "0.5rem 0" }} />
       <MenuItem onClick={closeMenu}>
         <MDTypography variant="button" color="error" fontWeight="regular">
@@ -212,14 +181,14 @@ function Actividad() {
             <DialogContent>
               <MDBox pt={1} pb={2} px={2}>
                 <MDBox>
-                  <MDBox mb={2}>
+                  <MDBox mb={2} px={0}>
                     <FormField
                       type="text"
                       name="description"
                       label="Descripción"
                     />
                   </MDBox>
-                  <MDBox mb={2}>
+                  <MDBox mb={2} px={0}>
                     <FormField type="number" name="price" label="Precio" />
                   </MDBox>
                   <MDBox mb={0}>
@@ -256,7 +225,7 @@ function Actividad() {
               <MDButton color="dark" onClick={handleClose}>
                 Cancelar
               </MDButton>
-              <MDButton type="submit" color="dark">
+              <MDButton type="submit" color="info">
                 Guardar
               </MDButton>
             </DialogActions>
@@ -270,7 +239,7 @@ function Actividad() {
           alignItems="flex-start"
           mb={2}
         >
-          <MDButton variant="gradient" color="dark" onClick={handleClickOpen}>
+          <MDButton variant="gradient" color="info" onClick={handleClickOpen}>
             nueva actividad
           </MDButton>
           <MDBox display="flex">
@@ -292,18 +261,23 @@ function Actividad() {
           </MDBox>
         </MDBox>
         <Card>
-          {loadingTable ? (
-            <DataTable table={dataTableData} entriesPerPage={false} canSearch />
+          {/* {loadingTable ? (
           ) : (
             <MDBox textAlign="center">
               <CircularProgress color="info" />
             </MDBox>
+          )} */}
+            {loadingTable && ( 
+            <MDBox textAlign="center">
+              <CircularProgress color="info" />
+            </MDBox>
           )}
+            <DataTable table={dataTableData2} entriesPerPage={false} canSearch />
+
         </Card>
       </MDBox>
       <Footer />
     </DashboardLayout>
->>>>>>> fd204f124760061dc03a7b642a51c7304f8a4298:pages/actividad/index.js
   );
 }
 

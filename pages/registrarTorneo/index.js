@@ -158,7 +158,7 @@ function NewUser() {
 
   const onPayPagoPluxCreate = async (data) => {
     try {
-      const response = await axios.post("/api/pagoplux/", data);
+      const response = await axios.post("/api/torneos/pagoplux/", data);
 
       if (response.statusText === "OK" || response.status === 200) {
         await Swal.fire({
@@ -190,7 +190,7 @@ function NewUser() {
         // procede a guardar la informacion de pagoplux response
         const responseCard = await onPayPagoPluxCreate(responsePagoPlux.detail);
         data.pagoplux = responseCard;
-        const response = await axios.post("/api/torneo/", data);
+        const response = await axios.post("/api/torneos/torneo/", data);
 
         if (response.statusText === "OK" || response.status === 200) {
           await Swal.fire({

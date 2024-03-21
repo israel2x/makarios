@@ -11,7 +11,7 @@ import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
 import MDButton from "/components/MDButton";
 
-import team1 from "/assets/images/team-1.jpg";
+import team1 from "/assets/images/team-3.jpg";
 
 // NextJS Material Dashboard 2 PRO examples
 import DashboardLayout from "/examples/LayoutContainers/DashboardLayout";
@@ -20,14 +20,17 @@ import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 import { useState, useEffect } from "react";
 // Data
-import dataTableData from "/pagesComponents/ecommerce/orders/order-list/data/dataTableData";
+import dataTableData from "./dataTableData";
 
 function OrderList() {
   const [menu, setMenu] = useState(null);
   const [datosTabla, setDatostabla] = useState(null);
   const openMenu = (event) => setMenu(event.currentTarget);
   const closeMenu = () => setMenu(null);
-
+  const [dataTableData2, setDataTableData2] = useState({
+    columns: [],
+    rows: []
+});
   const renderMenu = (
     <Menu
       anchorEl={menu}
@@ -51,24 +54,31 @@ function OrderList() {
 
   const loadRegistrados = async () => {
     try {
-      const response = await axios.get("/api/registro");
+      const response = await axios.get("/api/admin/registro");
       console.log("response infodata");
       console.log(response);
       if (response.statusText === "OK" || response.status === 200) {
         const infoRegistro = response.data.registroFound.map((item) =>({
           id: item.id,
           date: item.fecharegistro,
-          status: "Paid",
-          customer:[item.profile.apellidos +' '+item.profile.nombres,{image: team1}],
+          program: item.programacion.detalle,
+          customer:[item.profile.apellidos +' '+item.profile.nombres,{image: item.profile.apellidos[0]}],
           product: item.programacion.actividad.descripcion,
-          revenue:  "$"+(item.programacion.actividad.precio),
+          promocion:item.detallepromo,
+          revenue:  "$ "+(item.pagoplux.amount),
         }));
-        setDataActividad({ rows: response.data.actividadFound });
-        dataTableData.rows = dataActividad;
-        console.log("array registro");
-        console.log(infoRegistro);
-        setDatostabla(infoRegistro);
-        dataTableData.row=infoRegistro;
+
+        const columns = dataTableData.columns; // Object.keys(response.data.actividadFound[0]); // Suponiendo que la primera fila del arreglo contiene los nombres de las columnas
+        setDataTableData2(prevState => ({
+            ...prevState,
+            columns: columns
+        }));
+
+        // Actualizar las filas
+        setDataTableData2(prevState => ({
+            ...prevState,
+            rows: infoRegistro
+        }));
 
       } else {
       }
@@ -124,7 +134,7 @@ function OrderList() {
           </MDBox>
         </MDBox>
         <Card>
-          <DataTable table={dataTableData} entriesPerPage={false} canSearch />
+          <DataTable table={dataTableData2} entriesPerPage={false} canSearch />
         </Card>
       </MDBox>
       <Footer />

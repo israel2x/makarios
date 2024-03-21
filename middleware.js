@@ -21,14 +21,6 @@ export async function middleware(request) {
         return NextResponse.redirect(new URL("/admin/registrados", request.url));
     }
     break;
-    // if (
-    //   !request.nextUrl.pathname.startsWith("/admin/actividad") &&
-    //   !request.nextUrl.pathname.startsWith("/admin/programacion") &&
-    //   !request.nextUrl.pathname.startsWith("/admin/registrados")
-    // ) {
-    //   return NextResponse.redirect(new URL("/admin/registrados", request.url));
-    // }
-    // break;
     case "participante":
       // Add the paths that the nurse can access here
       if (!request.nextUrl.pathname.startsWith("/registrarTorneo")) {
@@ -44,6 +36,17 @@ export async function middleware(request) {
 export const config = {
   matcher: [
     // Match all routes except the ones that start with /login and api and the static folder
-    "/((?!api|_next/static|_next/image|favicon.ico|auth/login).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|auth/login|auth/register|auth/change-password|auth/forget-password).*)",
   ],
 };
+
+
+
+  // if (
+    //   !request.nextUrl.pathname.startsWith("/admin/actividad") &&
+    //   !request.nextUrl.pathname.startsWith("/admin/programacion") &&
+    //   !request.nextUrl.pathname.startsWith("/admin/registrados")
+    // ) {
+    //   return NextResponse.redirect(new URL("/admin/registrados", request.url));
+    // }
+    // break;

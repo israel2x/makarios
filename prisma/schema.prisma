@@ -66,7 +66,7 @@ model Actividad {
 }
 
 model Pagoplux {
-  id               Int      @id @default(autoincrement())
+  id               Int        @id @default(autoincrement())
   idtransaccion    String
   description      String
   token            String
@@ -89,8 +89,9 @@ model Pagoplux {
   discountRate     Float?
   extras           String?
   tipoPago         String
-  createdAt        DateTime @default(now())
-  defaultAt        DateTime @default(now())
+  createdAt        DateTime   @default(now())
+  defaultAt        DateTime   @default(now())
+  registro         Registro[]
 }
 
 model Promocion {
@@ -106,29 +107,29 @@ model Promocion {
 }
 
 model Facturacion {
-  id        Int      @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   referencia String
-  ruc       String
-  nombres   String
-  direccion String
-  correo    String
-  monto     String
+  ruc        String
+  nombres    String
+  direccion  String
+  correo     String
+  monto      String
   registroId Int?
-  createdAt DateTime @default(now())
-  defaultAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  defaultAt  DateTime @default(now())
 }
 
 model Registro {
   id             Int          @id @default(autoincrement())
   fecharegistro  String
-  pagado         Boolean      @default(false)
   promocionId    Int?
-  preciopromocion Decimal?
-  pagopluxId     Int?
+  detallepromo   String?
+  pagopluxId     Int
   programacionId Int
   profileId      Int
   createdAt      DateTime     @default(now())
   defaultAt      DateTime     @default(now())
   profile        Profile      @relation(fields: [profileId], references: [id])
   programacion   Programacion @relation(fields: [programacionId], references: [id])
+  pagoplux       Pagoplux     @relation(fields: [pagopluxId], references: [id])
 }

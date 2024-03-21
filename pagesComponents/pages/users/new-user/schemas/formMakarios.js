@@ -149,8 +149,8 @@ const form = {
         type:"text",
         
       },
-      porcentajepromo:{
-        name: "porcentajepromo",
+      detallepromo:{
+        name: "detallepromo",
         type:"text",
       },
       promocion:{
