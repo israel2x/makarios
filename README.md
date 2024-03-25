@@ -2,7 +2,7 @@
 
 ![version](https://img.shields.io/badge/version-1.1.0-blue.svg) ![license](https://img.shields.io/badge/license-MIT-blue.svg) 
 
-![Product Image](./images/homemakarios.png)
+![Product Image](./assets/images/homemakarios.png)
 
 NextJS Material Dashboard is a free Material-UI, NextJS and React Admin with a fresh, new design inspired by Google's Material Design. We are very excited to introduce our take on the material concepts through an easy to use and beautiful set of components. NextJS Material Dashboard was built over the popular Material-UI, NextJS and React frameworks.
 
