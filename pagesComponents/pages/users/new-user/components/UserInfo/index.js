@@ -215,7 +215,7 @@ const onChangeNumberCelular =((e)=>{
                   name={genero.name}
                   value={generoV}
                   error={errors.genero && touched.genero}
-                  success={generoV.length > 0 && !errors.genero}
+                  success={(generoV || '').length > 0 && !errors.genero}
                 />
               )}
             />
@@ -239,7 +239,7 @@ const onChangeNumberCelular =((e)=>{
                   value={condicionV}
                   // placeholder={condicion.placeholder}
                   error={errors.condicion && touched.condicion}
-                  success={condicionV.length > 0 && !errors.condicion}
+                  success={(condicionV || '').length > 0 && !errors.condicion}
                 />
               )}
             />
@@ -279,7 +279,7 @@ const onChangeNumberCelular =((e)=>{
                       value={diaV}
                       placeholder={dia.placeholder}
                       error={errors.dia && touched.dia}
-                      success={diaV.length > 0 && !errors.dia}
+                      success={ (diaV || '').length > 0 && !errors.dia}
 
                       // InputLabelProps={{ shrink: true }}
                     />
@@ -306,7 +306,7 @@ const onChangeNumberCelular =((e)=>{
                       value={mesV}
                       placeholder={mes.placeholder}
                       error={errors.mes && touched.mes}
-                      success={mesV.length > 0 && !errors.mes}
+                      success={(mesV || '').length > 0 && !errors.mes}
                     />
                   )}
                 />
@@ -331,7 +331,7 @@ const onChangeNumberCelular =((e)=>{
                       value={anioV}
                       placeholder={anio.placeholder}
                       error={errors.anio && touched.anio}
-                      success={anioV.length > 0 && !errors.anio}
+                      success={(anioV || '').length > 0 && !errors.anio}
                     />
                   )}
                 />

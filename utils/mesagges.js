@@ -16,5 +16,6 @@ export const messages = {
       emailSent: "Correo enviado correctamente",
       passwordChanged: "Contraseña cambiada correctamente",
       authorized: "Autorizado",
+      responseSuccess: "Resultado  obtenido exitosamente"
     },
   };
