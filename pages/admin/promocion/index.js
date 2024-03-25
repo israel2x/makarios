@@ -43,11 +43,11 @@ import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 
 // Data
-import dataTableData from "./dataTableData";
+import dataTableData from "/libs/promocion/dataTableData";
 import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
-function Programacion() {
+function Promocion() {
   const [menu, setMenu] = useState(null);
   const [open, setOpen] = useState(false); //modal
   const [loading, setLoading] = useState(false);
@@ -287,4 +287,4 @@ function Programacion() {
   );
 }
 
-export default Programacion;
+export default Promocion;

@@ -20,7 +20,7 @@ import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 import { useState, useEffect } from "react";
 // Data
-import dataTableData from "./dataTableData";
+import dataTableData from "/libs/registros/dataTableData";
 
 function OrderList() {
   const [menu, setMenu] = useState(null);

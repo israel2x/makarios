@@ -43,7 +43,7 @@ import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 
 // Data
-import dataTableData from "./dataTableData";
+import dataTableData from "/libs/programacion/dataTableData";
 import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
