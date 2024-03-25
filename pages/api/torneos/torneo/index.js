@@ -23,10 +23,6 @@ export default async function torneoHandler(req, res) {
       },
     });
 
-    // Log relevant information for debugging
-    console.log("user found:", userFound.id, typeof userFound.id);
-    console.log("userData cedula:", userData.cedula, typeof userData.cedula);
-
     const profileFound = await db.profile.findFirst({
       where: {
         AND: [{ userId: userFound.id }, { cedula: userData.cedula }],
@@ -42,7 +38,7 @@ export default async function torneoHandler(req, res) {
       const newProfile = await db.profile.create({
         data: userData,
       });
-      console.log("New profile created:", newProfile);
+
       profileId = newProfile.id;
       participante = newProfile;
     } else {

@@ -19,7 +19,7 @@ import { getSession } from "next-auth/react";
 import { Formik, Form } from "formik";
 
 import Swal from "sweetalert2";
-
+import Image from "next/image";
 import PageLayout from "/examples/LayoutContainers/PageLayout";
 
 import { MakariosProvider } from "/contextMakarios";
@@ -54,9 +54,13 @@ import initialValues from "/pagesComponents/pages/users/new-user/schemas/initial
 import  { messages } from "/utils/mesagges";
 import MDSnackbar from "/components/MDSnackbar";
 
+
+import bgImage from "/assets/images/BF-Makarios.jpg";
+
 function getSteps() {
   return ["Participante", "Actividad", "Confirmación", "Pago"];
 }
+
 
 function getStepContent(stepIndex, formData, dataPagos) {
   const components = [UserInfo, Address, Confirmacion, Pago];
@@ -69,6 +73,7 @@ function getStepContent(stepIndex, formData, dataPagos) {
 }
 
 function NewUser() {
+
   const [activeStep, setActiveStep] = useState(0);
 
   const [notificationSB, setNotificationSBSB] = useState(false);
@@ -93,6 +98,9 @@ function NewUser() {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleBack = () => setActiveStep(activeStep - 1);
+
+
+  
 
   let dataPagos = {
     PayboxRemail: "pagos@makarios.club",
@@ -124,18 +132,19 @@ function NewUser() {
   };
 
   const renderNotificationSB = (
-    <MDSnackbar
-      color="success"
-      icon="check"
-      title="Bienvenido"
-      content={messages.success.userLogged} 
-      dateTime="ahora"
-      open={notificationSB}
-      onClose={closeNotificationSB}
-      close={closeNotificationSB}
-      bgWhite
-    />
-  );
+      <MDSnackbar
+        color="success"
+        icon="check"
+        title="Bienvenido"
+        content={messages.success.userLogged} 
+        dateTime="ahora"
+        open={notificationSB}
+        onClose={closeNotificationSB}
+        close={closeNotificationSB}
+        bgWhite
+      />
+    );
+
 
   const [dataPagoCita, setDataPagoCita] = useState(dataPagos);
 
@@ -148,6 +157,7 @@ function NewUser() {
   const handleResetForm = async (actions) => {
     setActiveStep(0);
     if (pagado) {
+      await actions.setSubmitting(true);
       await signOut();
       window.location.href = "https://makarios.club/";
     } else {
@@ -269,7 +279,8 @@ function NewUser() {
   };
 
   useEffect( () => {
-     openNotificationSB();
+    
+    openNotificationSB();
     if (isLastStep) {
       const buttonSave = document.getElementById("btnGuardar");
       buttonSave.click();
@@ -282,6 +293,7 @@ function NewUser() {
     <PageLayout>
       <DashboardNavbar />
       {renderNotificationSB}
+
       <MDBox py={1} mb={10} height="25vh">
         <Grid
           container
@@ -339,7 +351,7 @@ function NewUser() {
                             </MDButton>
                           )}
                           <MDButton
-                            // disabled={isSubmitting}
+                            disabled={isSubmitting}
                             type="Submit"
                             variant="gradient"
                             color="info"
@@ -357,7 +369,9 @@ function NewUser() {
             </Formik>
           </Grid>
         </Grid>
+        
       </MDBox>
+
       {/* <Footer /> */}
       {/* </DashboardLayout> */}
     </PageLayout>

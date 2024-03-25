@@ -1,17 +1,3 @@
-/**
-=========================================================
-* NextJS Material Dashboard 2 PRO - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/nextjs-material-dashboard-pro
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
 
 // prop-type is a library for typechecking of props
 import PropTypes from "prop-types";
@@ -38,40 +24,19 @@ function Pago({ formData, pagos }) {
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
   const {
-    nombres,
-    apellidos,
-    direccion,
-    cedula,
-    email,
     nombrefactura,
     rucfactura,
     direccionfactura,
     mailfactura,
-    actividad,
-    detallepromo,
-    precio,
     promocion,
-    programacion,
   } = formField;
-  // const {
-  //   firstName: firstNameV,
-  //   lastName: lastNameV,
-  //   company: companyV,
-  //   email: emailV,
-  //   password: passwordV,
-  //   repeatPassword: repeatPasswordV,
-  // } = values;
 
   const {
-    nombres: nombresV,
-    apellidos: apellidosV,
-    direccion: direccionV,
-    cedula: cedulaV,
-    email: emailV,
     nombrefactura: nombrefacturaV,
     rucfactura: rucfacturaV,
     direccionfactura: direccionfacturaV,
     mailfactura: mailfacturaV,
+    actividadid: actividadidV,
     actividad: actividadV,
     detallepromo: detallepromoV,
     programacion: programacionV,
@@ -82,18 +47,18 @@ function Pago({ formData, pagos }) {
   const [precioState, setPrecioState] = useState(precioV);
 
   const validarPromo = async () => {
-    const dataPromo = await loadPromo(promocionV);
-    if (dataPromo[0]) {
-      const porcentaje = dataPromo[0].porcentaje;
-      console.log(porcentaje);
-      setDetallepromocion(dataPromo[0].descripcion);
-      setFieldValue("promocionid", dataPromo[0].id);
-      setFieldValue("detallepromo", dataPromo[0].descripcion);
+    const data = {
+      codigo: promocionV,
+      actividad: actividadidV,
+    };
+    const dataPromo = await loadPromo(data);
+
+    if (dataPromo && dataPromo.length > 0) {
+      const { porcentaje, descripcion, id } = dataPromo[0];
+      setDetallepromocion(descripcion);
+      setFieldValue("promocionid", id);
+      setFieldValue("detallepromo", descripcion);
       let newPrecio = parseFloat(precioV) * (1 - parseFloat(porcentaje) / 100);
-      console.log("newPrecio");
-      console.log(dataPromo);
-      console.log(parseFloat(precioV));
-      console.log(newPrecio);
       setPrecioState(newPrecio);
       setFieldValue("porcentajepromo", newPrecio);
       // aqui va el context del precio
@@ -112,25 +77,20 @@ function Pago({ formData, pagos }) {
     console.log(data);
     try {
       const response = await axios.get("/api/torneos/promocion", {
-        params: { codigo: data },
+        params: { codigo: data.codigo, actividad: data.actividad },
       });
-      console.log("response promociones");
-      console.log(response);
+
       if (response.statusText === "OK" || response.status === 200) {
-        const dataPromo = response.data.promocionFound.map((item) => ({
+        return response.data.promocionFound.map((item) => ({
           id: item.id,
           descripcion: item.descripcion,
           codigo: item.codigo,
           porcentaje: item.porcentaje,
         }));
-
-        console.log("pagos paglplux MONTO ");
-        // console.log(pagos);
-        return dataPromo;
       }
     } catch (error) {
-      console.log("error promocion");
-      console.log(error);
+      console.error("Error al cargar la promoción:", error);
+      return [];
     }
   };
   // setFieldValue("promocion", "");

@@ -63,6 +63,7 @@ model Actividad {
   createdAt    DateTime       @default(now())
   defaultAt    DateTime       @default(now())
   programacion Programacion[]
+  promocion    Promocion[]
 }
 
 model Pagoplux {
@@ -95,15 +96,17 @@ model Pagoplux {
 }
 
 model Promocion {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   descripcion String?
   codigo      String
   porcentaje  String
   fechainicio String
   fechafin    String
   estado      String
-  createdAt   DateTime @default(now())
-  defaultAt   DateTime @default(now())
+  actividadId Int
+  createdAt   DateTime  @default(now())
+  defaultAt   DateTime  @default(now())
+  actividad   Actividad @relation(fields: [actividadId], references: [id])
 }
 
 model Facturacion {
