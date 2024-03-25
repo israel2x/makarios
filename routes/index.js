@@ -484,6 +484,14 @@ const routes = [
     icon: <Icon fontSize="medium">event</Icon>,
     noCollapse: true,
   },
+  {
+    type: "collapse",
+    name: "Promoción",
+    key: "promocion",
+    route: "/admin/promocion",
+    icon: <Icon fontSize="medium">discount</Icon>,
+    noCollapse: true,
+  },
   // {
   //   type: "collapse",
   //   name: "Change Log",

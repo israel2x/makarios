@@ -9,6 +9,7 @@ export const messages = {
       incorrectPassword: "Contraseña incorrecta",
       notAuthorized: "No autorizado",
       tokenNotValid: "Token no valido",
+      noFoundRecord: "No se encontro registros",
     },
     success: {
       userCreated: "Usuario creado correctamente",
@@ -16,6 +17,7 @@ export const messages = {
       emailSent: "Correo enviado correctamente",
       passwordChanged: "Contraseña cambiada correctamente",
       authorized: "Autorizado",
-      responseSuccess: "Resultado  obtenido exitosamente"
+      responseSuccess: "Resultado  obtenido exitosamente",
+      
     },
   };
