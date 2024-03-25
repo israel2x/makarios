@@ -35,7 +35,7 @@ export default async function forgetpasswordHanler(req, res) {
 
     
     await resend.emails.send({
-        from: "Makarios club <onboarding@resend.dev>",
+        from: "Makarios club <noreply@makarios.club>",
         to: email,
         subject: "Cambio de Contraseña",
         react: EmailTemplate({ buttonUrl: forgetUrl }),
