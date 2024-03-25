@@ -18,9 +18,8 @@ export default async function actividadHanler(req, res) {
         ],
       },
     });
-
-    if (!promocionFound) {
-      return res.status(409).send("Promocion not found");
+    if (!promocionFound || promocionFound.length === 0) {
+      return res.status(409).send(messages.error.noFoundRecord);
     }
     return res
       .status(200)

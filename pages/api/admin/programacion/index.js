@@ -4,21 +4,27 @@ import db from "/libs/db";
 export default async function programacionHanler(req, res) {
   try {
     const programacionFound = await db.programacion.findMany({
-      select:{
-        id:true,
-        actividad:{
-          select:{
-            descripcion:true
-          }
+      select: {
+        id: true,
+        actividad: {
+          select: {
+            descripcion: true,
+          },
         },
-        detalle:true,
-        vigenciaDesde:true,
-        vigenciaHasta:true,
-        fechatope:true,
-        cupo:true,
-        estado:true,
+        detalle: true,
+        vigenciaDesde: true,
+        vigenciaHasta: true,
+        fechatope: true,
+        cupo: true,
+        estado: true,
+
+        registro: {
+          select: {
+            id: true,
+          },
+        },
         // createdAt:true
-      }
+      },
     });
     if (!programacionFound) {
       return res.status(409).send("Programacion not found");

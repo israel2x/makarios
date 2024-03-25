@@ -18,7 +18,7 @@ const dataTableData = {
     {
       Header: "id",
       accessor: "id",
-      Cell: ({ value, checked }) => <IdCell id={value} checked={checked} />,
+      Cell: ({ value }) => <IdCell id={value} />,
     },
     {
       Header: "Actividad",
@@ -30,19 +30,24 @@ const dataTableData = {
         accessor: "detalle",
         Cell: ({ value }) => <DefaultCell value={value} />,
       },
+    {
+      Header: "fecha Inicio",
+      accessor: "fechadesde",
+      Cell: ({ value }) => <DefaultCell value={ value.split('T')[0]} />,
+    },
+    {
+        Header: "fecha Fin",
+        accessor: "fechahasta",
+        Cell: ({ value }) => <DefaultCell value={value.split('T')[0]} />,
+      },
       {
         Header: "fecha tope",
         accessor: "fechatope",
         Cell: ({ value }) => <DefaultCell value={value.split('T')[0]} />,
       },
       {
-        Header: "Cupos habilitados",
+        Header: "Cupos",
         accessor: "cupo",
-        Cell: ({ value }) => <DefaultCell value={value} />,
-      },
-      {
-        Header: "Registrados",
-        accessor: "registrados",
         Cell: ({ value }) => <DefaultCell value={value} />,
       },
     {

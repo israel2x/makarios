@@ -91,6 +91,7 @@ function Programacion() {
           fechahasta: item.vigenciaHasta,
           fechatope: item.fechatope,
           cupo:item.cupo,
+          registrados:item.registro.length,
           estado: item.estado,
         }));
 
