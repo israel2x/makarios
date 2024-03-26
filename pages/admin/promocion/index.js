@@ -78,19 +78,19 @@ function Promocion() {
     setloadingTable(true);
     setLoading(true);
     await axios
-      .get("/api/admin/programacion/")
+      .get("/api/admin/promocion/")
       .then((response) => {
-        console.log("response programacion");
+        console.log("response pr0mocion");
         console.log(response);
 
-        const infoProgramacion = response.data.programacionFound.map((item) =>({
+        const infoProgramacion = response.data.promocionFound.map((item) =>({
           id: item.id,
           actividad: item.actividad.descripcion,
-          detalle: item.detalle,
-          fechadesde: item.vigenciaDesde,
-          fechahasta: item.vigenciaHasta,
-          fechatope: item.fechatope,
-          cupo:item.cupo,
+          detalle: item.descripcion,
+          codigo: item.codigo,
+          porcentaje: String(item.porcentaje),
+          fechainicio: item.fechainicio,
+          fechafin: item.fechafin,
           estado: item.estado,
         }));
 
@@ -183,7 +183,7 @@ function Promocion() {
           onSubmit={handleSubmit}
         >
           <Form>
-            <DialogTitle>Crear Programación</DialogTitle>
+            <DialogTitle>Crear Promoción</DialogTitle>
             <DialogContent>
               <MDBox pt={1} pb={2} px={2}>
                 <MDBox>
@@ -246,7 +246,7 @@ function Promocion() {
           mb={2}
         >
           <MDButton variant="gradient" color="info" onClick={handleClickOpen}>
-            nueva programación
+            nueva promoción
           </MDButton>
           <MDBox display="flex">
             <MDButton

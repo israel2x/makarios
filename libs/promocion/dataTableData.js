@@ -4,7 +4,7 @@ import IdCell from "/pagesComponents/ecommerce/orders/order-list/components/IdCe
 import DefaultCell from "/pagesComponents/ecommerce/orders/order-list/components/DefaultCell";
 import StatusCell from "/pagesComponents/ecommerce/orders/order-list/components/StatusCell";
 import CustomerCell from "/pagesComponents/ecommerce/orders/order-list/components/CustomerCell";
-
+import MDBadge from "/components/MDBadge";
 // Images
 import team1 from "/assets/images/team-1.jpg";
 import team2 from "/assets/images/team-2.jpg";
@@ -20,36 +20,38 @@ const dataTableData = {
       accessor: "id",
       Cell: ({ value }) => <IdCell id={value} />,
     },
-    {
-      Header: "Actividad",
-      accessor: "actividad",
-      Cell: ({ value }) => <DefaultCell value={value} />,
-    },
+
     {
         Header: "Detalle",
         accessor: "detalle",
         Cell: ({ value }) => <DefaultCell value={value} />,
       },
     {
-      Header: "fecha Inicio",
-      accessor: "fechadesde",
-      Cell: ({ value }) => <DefaultCell value={ value.split('T')[0]} />,
+      Header: "Codigo",
+      accessor: "codigo",
+      Cell: ({ value }) => <DefaultCell value={value} />,
     },
     {
-        Header: "fecha Fin",
-        accessor: "fechahasta",
+      Header: "Porcentaje",
+      accessor: "porcentaje",
+      Cell: ({ value }) => <DefaultCell value={value+ ' %'} />,
+    },
+    {
+      Header: "Actividad",
+      accessor: "actividad",
+      Cell: ({ value }) => <DefaultCell value={value} />,
+    },
+    {
+        Header: "fecha Inicio",
+        accessor: "fechainicio",
         Cell: ({ value }) => <DefaultCell value={value.split('T')[0]} />,
       },
       {
-        Header: "fecha tope",
-        accessor: "fechatope",
+        Header: "fecha fin",
+        accessor: "fechafin",
         Cell: ({ value }) => <DefaultCell value={value.split('T')[0]} />,
       },
-      {
-        Header: "Cupos",
-        accessor: "cupo",
-        Cell: ({ value }) => <DefaultCell value={value} />,
-      },
+
     {
       Header: "Estado",
       accessor: "estado",
@@ -57,10 +59,11 @@ const dataTableData = {
         let status;
 
         if (value === "A") {
-          status = <StatusCell icon="done" color="success" status={value} />;
-        } else if (value === "I") {
-          status = <StatusCell icon="close" color="dark" status={value} />;
-        } else {
+          status = <MDBadge badgeContent="Activo" size="xs" color="success" container />
+           // status = <StatusCell icon="done" color="success" status={value} />;
+         } else if (value === "I") {
+           status = <MDBadge badgeContent="Inactivo" size="xs" color="light" container />
+        }  else {
           status = <StatusCell icon="close" color="error" status="Canceled" />;
         }
         return status;
