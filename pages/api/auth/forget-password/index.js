@@ -39,7 +39,7 @@ export default async function forgetpasswordHanler(req, res) {
         to: email,
         subject: "Cambio de Contraseña",
         react: EmailTemplate({ buttonUrl: forgetUrl }),
-      });
+      }); 
 
 
     return res
@@ -51,3 +51,4 @@ export default async function forgetpasswordHanler(req, res) {
     return res.status(500).json({ message: messages.error.default, error });
   }
 }
+ 

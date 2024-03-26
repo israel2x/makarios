@@ -112,10 +112,10 @@ function OrderList() {
           alignItems="flex-start"
           mb={2}
         >
-          <MDButton variant="gradient" color="dark">
+          {/* <MDButton variant="gradient" color="info">
             new order
-          </MDButton>
-          <MDBox display="flex">
+          </MDButton> */}
+          {/* <MDBox display="flex">
             <MDButton
               variant={menu ? "contained" : "outlined"}
               color="dark"
@@ -131,7 +131,7 @@ function OrderList() {
                 &nbsp;export csv
               </MDButton>
             </MDBox>
-          </MDBox>
+          </MDBox> */}
         </MDBox>
         <Card>
           <DataTable table={dataTableData2} entriesPerPage={false} canSearch />

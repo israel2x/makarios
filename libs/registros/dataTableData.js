@@ -71,7 +71,7 @@ const dataTableData = {
     {
       Header: "Valor",
       accessor: "revenue",
-      Cell: ({ value }) => <DefaultCell value={value} />,
+      Cell: ({ value }) => <DefaultCell value={value} money={false} />,
     },
     // {
     //   Header: "fecha de creación",

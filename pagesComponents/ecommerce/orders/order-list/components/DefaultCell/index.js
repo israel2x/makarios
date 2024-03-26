@@ -19,9 +19,9 @@ import PropTypes from "prop-types";
 // NextJS Material Dashboard 2 PRO components
 import MDTypography from "/components/MDTypography";
 
-function DefaultCell({ value, suffix }) {
+function DefaultCell({ value, suffix, money }) {
   return (
-    <MDTypography variant="caption" fontWeight="medium" color="text">
+    <MDTypography variant="caption" fontWeight="medium" color={money ?  "text" : "success"}>
       {value}
       {suffix && (
         <MDTypography variant="caption" fontWeight="medium" color="secondary">
@@ -35,6 +35,7 @@ function DefaultCell({ value, suffix }) {
 // Setting default values for the props of DefaultCell
 DefaultCell.defaultProps = {
   suffix: "",
+  money: true,
 };
 
 // Typechecking props for the DefaultCell

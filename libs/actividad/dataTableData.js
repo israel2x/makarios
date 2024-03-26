@@ -12,6 +12,8 @@ import team3 from "/assets/images/team-3.jpg";
 import team4 from "/assets/images/team-4.jpg";
 import team5 from "/assets/images/team-5.jpg";
 import ivana from "/assets/images/ivana-squares.jpg";
+import MDBadge from "/components/MDBadge";
+
 
 const dataTableData = {
   columns: [
@@ -28,7 +30,7 @@ const dataTableData = {
     {
       Header: "precio",
       accessor: "precio",
-      Cell: ({ value }) => <DefaultCell value={"$ " + value} />,
+      Cell: ({ value }) => <DefaultCell value={"$ " + value}/>,
     },
     {
       Header: "Estado",
@@ -37,9 +39,12 @@ const dataTableData = {
         let status;
 
         if (value === "A") {
-          status = <StatusCell icon="done" color="success" status={value} />;
+         status = <MDBadge badgeContent="Activo" size="xs" color="success" container />
+          // status = <StatusCell icon="done" color="success" status={value} />;
         } else if (value === "I") {
-          status = <StatusCell icon="close" color="dark" status={value} />;
+          status = <MDBadge badgeContent="Inactivo" size="xs" color="light" container />
+        
+          // status = <StatusCell icon="close" color="dark" status={value} />;
         } else {
           status = <StatusCell icon="close" color="error" status="Canceled" />;
         }

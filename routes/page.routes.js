@@ -114,7 +114,7 @@ const pageRoutes = [
         ],
       },
       {
-        name: "profile",
+        name: "admin",
         icon: <Icon>badge</Icon>,
         collapse: [
           {
@@ -125,6 +125,12 @@ const pageRoutes = [
             name: "all projects",
             route: "/pages/profile/all-projects",
           },
+          {
+            name: "registrados",
+            route: "/admin/registrados",
+          },
+
+          
         ],
       },
     ],
