@@ -21,6 +21,7 @@ import DataTable from "/examples/Tables/DataTable";
 import { useState, useEffect } from "react";
 // Data
 import dataTableData from "/libs/registros/dataTableData";
+import { exportToExcel } from "/utils/exportExcel.js";
 
 function OrderList() {
   const [menu, setMenu] = useState(null);
@@ -29,8 +30,8 @@ function OrderList() {
   const closeMenu = () => setMenu(null);
   const [dataTableData2, setDataTableData2] = useState({
     columns: [],
-    rows: []
-});
+    rows: [],
+  });
   const renderMenu = (
     <Menu
       anchorEl={menu}
@@ -40,15 +41,15 @@ function OrderList() {
       onClose={closeMenu}
       keepMounted
     >
-      <MenuItem onClick={closeMenu}>Status: Paid</MenuItem>
+      {/* <MenuItem onClick={closeMenu}>Status: Paid</MenuItem>
       <MenuItem onClick={closeMenu}>Status: Refunded</MenuItem>
-      <MenuItem onClick={closeMenu}>Status: Canceled</MenuItem>
-      <Divider sx={{ margin: "0.5rem 0" }} />
+      <MenuItem onClick={closeMenu}>Status: Canceled</MenuItem> */}
+      {/* <Divider sx={{ margin: "0.5rem 0" }} />
       <MenuItem onClick={closeMenu}>
         <MDTypography variant="button" color="error" fontWeight="regular">
           Remove Filter
         </MDTypography>
-      </MenuItem>
+      </MenuItem> */}
     </Menu>
   );
 
@@ -58,28 +59,31 @@ function OrderList() {
       console.log("response infodata");
       console.log(response);
       if (response.statusText === "OK" || response.status === 200) {
-        const infoRegistro = response.data.registroFound.map((item) =>({
+        const infoRegistro = response.data.registroFound.map((item) => ({
           id: item.id,
           date: item.fecharegistro,
           program: item.programacion.detalle,
-          customer:[item.profile.apellidos +' '+item.profile.nombres,{image: item.profile.apellidos[0]}],
+          participante: item.profile.apellidos + " " + item.profile.nombres,
+          customer: [
+            item.profile.apellidos + " " + item.profile.nombres,
+            { image: item.profile.apellidos[0] },
+          ],
           product: item.programacion.actividad.descripcion,
-          promocion:item.detallepromo,
-          revenue:  "$ "+(item.pagoplux.amount),
+          promocion: item.detallepromo,
+          revenue: "$ " + item.pagoplux.amount,
         }));
 
         const columns = dataTableData.columns; // Object.keys(response.data.actividadFound[0]); // Suponiendo que la primera fila del arreglo contiene los nombres de las columnas
-        setDataTableData2(prevState => ({
-            ...prevState,
-            columns: columns
+        setDataTableData2((prevState) => ({
+          ...prevState,
+          columns: columns,
         }));
 
         // Actualizar las filas
-        setDataTableData2(prevState => ({
-            ...prevState,
-            rows: infoRegistro
+        setDataTableData2((prevState) => ({
+          ...prevState,
+          rows: infoRegistro,
         }));
-
       } else {
       }
     } catch (error) {
@@ -98,6 +102,24 @@ function OrderList() {
   //     revenue: "$140,20",
   //   },
 
+  const handleExportToExcel = () => {
+    const arreglo = [];
+    // Agregar columnas al arreglo
+    arreglo.push(dataTableData2.columns.map((columna) => columna.Header));
+    dataTableData2.rows.forEach((fila) => {
+      const filaArreglo = [];
+      dataTableData2.columns.forEach((columna) => {
+        if (columna.accessor === "customer") {
+          filaArreglo.push(fila["participante"]);
+        } else {
+          filaArreglo.push(fila[columna.accessor]);
+        }
+      });
+      arreglo.push(filaArreglo);
+    });
+    exportToExcel(arreglo, "registradosMakarios"); // 'datos' es el nombre del archivo Excel que se generará
+  };
+
   useEffect(() => {
     loadRegistrados();
   }, []);
@@ -112,26 +134,30 @@ function OrderList() {
           alignItems="flex-start"
           mb={2}
         >
-          {/* <MDButton variant="gradient" color="info">
-            new order
-          </MDButton> */}
-          {/* <MDBox display="flex">
+          <MDButton variant="gradient" color="info">
+            nuevo registro
+          </MDButton>
+          <MDBox display="flex">
             <MDButton
               variant={menu ? "contained" : "outlined"}
               color="dark"
               onClick={openMenu}
             >
-              filters&nbsp;
+              Filtro&nbsp;
               <Icon>keyboard_arrow_down</Icon>
             </MDButton>
             {renderMenu}
             <MDBox ml={1}>
-              <MDButton variant="outlined" color="dark">
+              <MDButton
+                variant="outlined"
+                onClick={handleExportToExcel}
+                color="dark"
+              >
                 <Icon>description</Icon>
-                &nbsp;export csv
+                &nbsp;export excel
               </MDButton>
             </MDBox>
-          </MDBox> */}
+          </MDBox>
         </MDBox>
         <Card>
           <DataTable table={dataTableData2} entriesPerPage={false} canSearch />

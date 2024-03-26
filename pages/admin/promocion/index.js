@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 // formik components
-
+import * as XLSX from 'xlsx';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -42,6 +42,9 @@ import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
 import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 
+ import  {exportToExcel} from '/utils/exportExcel';
+ 
+
 // Data
 import dataTableData from "/libs/promocion/dataTableData";
 import { useEffect } from "react";
@@ -72,6 +75,15 @@ function Promocion() {
   useEffect(() => {
     buscarActividadesData();
   }, []);
+
+  // const exportToExcel = (data, fileName) => {
+  //   console.log("XLSX");
+  //   console.log(XLSX);
+  //   const worksheet = XLSX.utils.json_to_sheet(data);
+  //   const workbook = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  //   XLSX.writeFile(workbook, `${fileName}.xlsx`);
+  // };
 
   const buscarActividadesData = async () => {
     //add  loading
@@ -150,6 +162,25 @@ function Promocion() {
     console.log(values);
     setSubmitting(false);
     handleClose();
+  };
+
+  const handleExportToExcel = () => {
+    const arreglo = [];
+  
+    // Agregar columnas al arreglo
+    arreglo.push(dataTableData2.columns.map(columna => columna.Header));
+    
+    // Agregar filas al arreglo
+    dataTableData2.rows.forEach(fila => {
+      const filaArreglo = [];
+      dataTableData2.columns.forEach(columna => {
+        filaArreglo.push(fila[columna.accessor]);
+      });
+      arreglo.push(filaArreglo);
+    });
+    console.log("arreglo");
+    console.log(arreglo);
+    exportToExcel( arreglo, 'promociones'); // 'datos' es el nombre del archivo Excel que se generará
   };
 
   const renderMenu = (
@@ -259,9 +290,9 @@ function Promocion() {
             </MDButton>
             {renderMenu}
             <MDBox ml={1}>
-              <MDButton variant="outlined" color="dark">
+              <MDButton variant="outlined" onClick={handleExportToExcel} color="dark">
                 <Icon>description</Icon>
-                &nbsp;export csv
+                &nbsp;export excel
               </MDButton>
             </MDBox>
           </MDBox>
