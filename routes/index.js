@@ -41,12 +41,12 @@ import Link from "next/link";
 import Icon from "@mui/material/Icon";
 
 // Images
-import profilePicture from "/assets/images/team-3.jpg";
+import profilePicture from "/assets/images/bg-sign-in-cover.jpeg";
 
 const routes = [
   {
     type: "collapse",
-    name: "Brooklyn Alice",
+    name: "Makarios Club",
     key: "brooklyn-alice",
     icon: <MDAvatar src={profilePicture.src} alt="Brooklyn Alice" size="sm" />,
     collapse: [
