@@ -46,6 +46,9 @@ import DataTable from "/examples/Tables/DataTable";
 import dataTableData from "/libs/programacion/dataTableData";
 import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
+import  {exportToExcel} from '/utils/exportExcel';
+ 
+
 
 function Programacion() {
   const [menu, setMenu] = useState(null);
@@ -174,6 +177,25 @@ function Programacion() {
     </Menu>
   );
 
+  const handleExportToExcel = () => {
+    const arreglo = [];
+  
+    // Agregar columnas al arreglo
+    arreglo.push(dataTableData2.columns.map(columna => columna.Header));
+    
+    // Agregar filas al arreglo
+    dataTableData2.rows.forEach(fila => {
+      const filaArreglo = [];
+      dataTableData2.columns.forEach(columna => {
+        filaArreglo.push(fila[columna.accessor]);
+      });
+      arreglo.push(filaArreglo);
+    });
+    console.log("arreglo");
+    console.log(arreglo);
+    exportToExcel( arreglo, 'Programacion'); // 'datos' es el nombre del archivo Excel que se generará
+  };
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -260,9 +282,9 @@ function Programacion() {
             </MDButton>
             {renderMenu}
             <MDBox ml={1}>
-              <MDButton variant="outlined" color="dark">
+              <MDButton variant="outlined" onClick={handleExportToExcel} color="dark">
                 <Icon>description</Icon>
-                &nbsp;export csv
+                &nbsp;export excel
               </MDButton>
             </MDBox>
           </MDBox>
