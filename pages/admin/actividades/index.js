@@ -21,6 +21,8 @@ import NativeSelect from "@mui/material/NativeSelect";
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 import Autocomplete from "@mui/material/Autocomplete";
 
+import { useForm } from "react-hook-form";
+
 //@mui components for modal-dialog
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -48,17 +50,19 @@ import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
 function Actividad() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const [menu, setMenu] = useState(null);
   const [open, setOpen] = useState(false); //modal
   const [loading, setLoading] = useState(false);
   const [dataTableData2, setDataTableData2] = useState({
     columns: [],
-    rows: []
-});
-  const [age, setAge] = useState(""); //select
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
+    rows: [],
+  });
 
   const openMenu = (event) => setMenu(event.currentTarget);
   const closeMenu = () => setMenu(null);
@@ -70,39 +74,39 @@ function Actividad() {
   const [dataActividadTable, setDataActividadTable] = useState(dataTableData);
 
   useEffect(() => {
-    buscarActividadesData();
+    //buscarActividadesData();
   }, []);
 
   const buscarActividadesData = async () => {
     //add  loading
     setloadingTable(true);
-    setLoading(true);
+    //setLoading(true);
     await axios
       .get("/api/admin/actividad/")
       .then((response) => {
-        const columns = dataTableData.columns; 
-        setDataTableData2(prevState => ({
-            ...prevState,
-            columns: columns
+        const columns = dataTableData.columns;
+        setDataTableData2((prevState) => ({
+          ...prevState,
+          columns: columns,
         }));
 
         // Actualizar las filas
-        setDataTableData2(prevState => ({
-            ...prevState,
-            rows: response.data.actividadFound
+        setDataTableData2((prevState) => ({
+          ...prevState,
+          rows: response.data.actividadFound,
         }));
 
-        setDataActividad({ rows: response.data.actividadFound });
+        /*  setDataActividad({ rows: response.data.actividadFound });
         dataTableData.rows = response.data.actividadFound;
 
         // 3. Si es necesario, actualizar otro estado con los nuevos datos de 'dataTableData'
-        setDataActividadTable({ ...dataTableData });
-        
+        setDataActividadTable({ ...dataTableData }); */
+
         console.log(dataActividad);
         console.log(dataActividadTable);
         console.log(dataTableData);
         setloadingTable(false);
-        setLoading(false);
+        //setLoading(false);
         console.log(loadingTable);
         console.log(loading);
       })
@@ -124,26 +128,29 @@ function Actividad() {
   //modal
   const handleClickOpen = () => {
     setOpen(true);
-    console.log(dataActividad);
-    console.log(dataTableData);
-    console.log(dataActividadTable);
   };
   const handleClose = () => {
     setOpen(false);
   };
 
   //form actividad
+  const onSubmit = async (data) => {
+    console.log(data);
+    const parsePrecio = parseInt(data.precio, 10);
+    console.log({
+      ...data,
+      precio: parsePrecio,
+    });
 
-  const validationSchema = Yup.object({
-    description: Yup.string().required("Ingrese la descripción"),
-    price: Yup.number().required("Ingrese el precio"),
-    stateActivity: Yup.string().required("Seleccione"),
-  });
-
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log(values);
-    setSubmitting(false);
-    handleClose();
+    try {
+      const response = await axios.post("/api/admin/actividad/saveActividad/", {
+        ...data,
+        precio: parsePrecio,
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderMenu = (
@@ -171,66 +178,81 @@ function Actividad() {
     <DashboardLayout>
       <DashboardNavbar />
       <Dialog open={open} onClose={handleClose}>
-        <Formik
-          initialValues={{ description: "", price: "", stateActivity: "" }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          <Form>
-            <DialogTitle>Crear Actividad</DialogTitle>
-            <DialogContent>
-              <MDBox pt={1} pb={2} px={2}>
-                <MDBox>
-                  <MDBox mb={2} px={0}>
-                    <FormField
-                      type="text"
-                      name="description"
-                      label="Descripción"
-                    />
-                  </MDBox>
-                  <MDBox mb={2} px={0}>
-                    <FormField type="number" name="price" label="Precio" />
-                  </MDBox>
-                  <MDBox mb={0}>
-                    <InputLabel
-                      variant="standard"
-                      htmlFor="uncontrolled-native"
-                    >
-                      Estado
-                    </InputLabel>
-                    <NativeSelect
-                      defaultValue={1}
-                      inputProps={{
-                        name: "stateActivity",
-                        id: "uncontrolled-native",
-                      }}
-                      sx={{
-                        width: 250,
-                        height: 40,
-                      }}
-                    >
-                      <option value={1}>Activo</option>
-                      <option value={2}>Inactivo</option>
-                    </NativeSelect>
-                  </MDBox>
-                  {loading && (
-                    <MDBox textAlign="center">
-                      <CircularProgress color="info" />
-                    </MDBox>
-                  )}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogTitle>Crear Actividad</DialogTitle>
+          <DialogContent>
+            <MDBox pt={1} pb={2} px={2}>
+              <MDBox>
+                <MDBox mb={2} px={0}>
+                  <MDInput
+                    type="text"
+                    label="Descripción"
+                    {...register("descripcion", {
+                      required: {
+                        value: true,
+                        message: "Descripción is required",
+                      },
+                    })}
+                    variant="standard"
+                    fullWidth
+                  />
                 </MDBox>
+                <MDBox mb={2} px={0}>
+                  <MDInput
+                    type="number"
+                    label="Precio"
+                    {...register("precio", {
+                      required: {
+                        value: true,
+                        message: "Precio is required",
+                      },
+                    })}
+                    variant="standard"
+                    fullWidth
+                  />
+                </MDBox>
+                <MDBox mb={0}>
+                  <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                    Estado
+                  </InputLabel>
+                  <NativeSelect
+                    defaultValue={1}
+                    inputProps={{
+                      name: "estado",
+                      id: "uncontrolled-native",
+                    }}
+                    sx={{
+                      width: 250,
+                      height: 40,
+                    }}
+                    {...register("estado", {
+                      required: {
+                        value: true,
+                        message: "Estado is required",
+                      },
+                    })}
+                  >
+                    <option value={"A"}>Activo</option>
+                    <option value={"I"}>Inactivo</option>
+                  </NativeSelect>
+                </MDBox>
+                {loading && (
+                  <MDBox textAlign="center">
+                    <CircularProgress color="info" />
+                  </MDBox>
+                )}
               </MDBox>
-            </DialogContent>
-            <DialogActions>
-              <MDButton color="dark" onClick={handleClose}>
-                Cancelar
-              </MDButton>
-              <MDButton type="submit" color="info">
-                Guardar
-              </MDButton>
-            </DialogActions>
-          </Form>
-        </Formik>
+            </MDBox>
+          </DialogContent>
+          <DialogActions>
+            <MDButton color="dark" onClick={handleClose}>
+              Cancelar
+            </MDButton>
+            <MDButton type="submit" color="info">
+              Guardar
+            </MDButton>
+          </DialogActions>
+        </form>
       </Dialog>
       <MDBox my={3}>
         <MDBox
@@ -261,19 +283,12 @@ function Actividad() {
           </MDBox>
         </MDBox>
         <Card>
-          {/* {loadingTable ? (
-          ) : (
-            <MDBox textAlign="center">
-              <CircularProgress color="info" />
-            </MDBox>
-          )} */}
-            {loadingTable && ( 
+          {loadingTable && (
             <MDBox textAlign="center">
               <CircularProgress color="info" />
             </MDBox>
           )}
-            <DataTable table={dataTableData2} entriesPerPage={false} canSearch />
-
+          <DataTable table={dataTableData2} entriesPerPage={false} canSearch />
         </Card>
       </MDBox>
       <Footer />
