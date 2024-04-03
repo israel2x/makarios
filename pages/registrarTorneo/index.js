@@ -106,7 +106,7 @@ function NewUser() {
     PayboxRemail: "pagos@makarios.club",
     PayboxSendmail: emailUser,
     PayboxRename: "CLUB DEPORTIVO ESPECIALIZADO FORMATIVO MAKARIOS",
-    PayboxSendname: "juan carlos alcivar",
+    PayboxSendname: "makarios club",
     PayboxBase0: precio,
     PayboxBase12: "0",
     PayboxDescription: "Pago de TORNEO DEPORTIVO",
