@@ -45,7 +45,7 @@ import axios, {AxiosRequestConfig} from "axios";
 import { useForm } from "react-hook-form";
 
 // Images
-import bgImage from "/assets/images/bg-reset-cover.jpeg";
+import bgImage from "/assets/images/makarios3.jpg";
 
 function Cover() {
   const [showPassword, setShowPassword] = useState(false);

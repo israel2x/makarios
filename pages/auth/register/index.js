@@ -42,7 +42,7 @@ import CoverLayout from "/pagesComponents/authentication/components/CoverLayout"
 
 import CircularProgress from "@mui/material/CircularProgress";
 // Images
-import bgImage from "/assets/images/fondo_registrar.avif";
+import bgImage from "/assets/images/makarios1.jpg";
 
 function Cover() {
   const [loading, setLoading] = useState(false);
