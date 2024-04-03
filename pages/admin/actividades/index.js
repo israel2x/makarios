@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 // formik components
 
@@ -46,7 +46,6 @@ import DataTable from "/examples/Tables/DataTable";
 
 // Data
 import dataTableData from "/libs/actividad/dataTableData";
-import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 
 function Actividad() {
@@ -74,54 +73,23 @@ function Actividad() {
   const [dataActividadTable, setDataActividadTable] = useState(dataTableData);
 
   useEffect(() => {
-    //buscarActividadesData();
+    buscarActividadesData();
   }, []);
 
   const buscarActividadesData = async () => {
     //add  loading
     setloadingTable(true);
-    //setLoading(true);
-    await axios
-      .get("/api/admin/actividad/")
-      .then((response) => {
-        const columns = dataTableData.columns;
-        setDataTableData2((prevState) => ({
-          ...prevState,
-          columns: columns,
-        }));
 
-        // Actualizar las filas
-        setDataTableData2((prevState) => ({
-          ...prevState,
-          rows: response.data.actividadFound,
-        }));
-
-        /*  setDataActividad({ rows: response.data.actividadFound });
-        dataTableData.rows = response.data.actividadFound;
-
-        // 3. Si es necesario, actualizar otro estado con los nuevos datos de 'dataTableData'
-        setDataActividadTable({ ...dataTableData }); */
-
-        console.log(dataActividad);
-        console.log(dataActividadTable);
-        console.log(dataTableData);
-        setloadingTable(false);
-        //setLoading(false);
-        console.log(loadingTable);
-        console.log(loading);
-      })
-      .catch((error) => console.log(error));
-    /* 
-    if (
-      responseActividad.statusText === "OK" ||
-      responseActividad.status === 200
-    ) {
-      setDataActividad(responseActividad.data.actividadFound);
-    } else {
-      console.log("Error al traer actividades");
-    } */
-
-    // off loading
+    try {
+      const response = await axios.get("/api/admin/actividad/");
+      const columns = dataTableData.columns;
+      setDataTableData2({
+        columns: columns,
+        rows: response.data.actividadFound,
+      });
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    }
     setloadingTable(false);
   };
 
