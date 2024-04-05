@@ -25,7 +25,7 @@ const PpxButton = ({ data }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    console.log("iniciar datos");
+    
     setLoading(true);
     setTimeout(async () => {
       await iniciarDatos(data);
@@ -34,12 +34,11 @@ const PpxButton = ({ data }) => {
   }, [data]);
 
   const handleMouseEnter = async () => {
-    console.log("mouse entered");
-    console.log(count);
+
     await setCount(count + 1);
     if (count < 1) {
       //  alert(JSON.stringify(count));
-      console.log("SOLO PUEDE ESTAR UNA SOLA VEZ");
+      
     }
   };
 
@@ -53,9 +52,9 @@ const PpxButton = ({ data }) => {
         )}
         <div
           id="modalPaybox"
-          onMouseEnter={() => {
-            handleMouseEnter();
-          }}
+          // onMouseEnter={() => {
+          //   handleMouseEnter();
+          // }}
         ></div>
         <button
           style={estiloBoton}

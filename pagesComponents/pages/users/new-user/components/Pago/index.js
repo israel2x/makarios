@@ -68,13 +68,12 @@ function Pago({ formData, pagos }) {
       }));
       setBotonDesactivado(true);
     }
-    console.log("data promo");
-    console.log(dataPromo);
+
   };
 
   const loadPromo = async (data) => {
     // setFieldValue("precio", session.user.email);
-    console.log(data);
+
     try {
       const response = await axios.get("/api/torneos/promocion", {
         params: { codigo: data.codigo, actividad: data.actividad },
@@ -89,18 +88,21 @@ function Pago({ formData, pagos }) {
         }));
       }
     } catch (error) {
-      console.error("Error al cargar la promoción:", error);
+      
       return [];
     }
   };
   // setFieldValue("promocion", "");
 
-  const onChangeNumberCelular = (e) => {
+
+
+  const onChangeRuc =((e)=>{
     const re = /^[0-9\b]+$/; //rules
     if (e.target.value === "" || re.test(e.target.value)) {
-      setFieldValue("rucfactura ", e.target.value);
+      setFieldValue("rucfactura", e.target.value);
+      
     }
-  };
+})
   return (
     <MDBox>
       <MDBox lineHeight={0}>
@@ -149,7 +151,7 @@ function Pago({ formData, pagos }) {
                 label={rucfactura.label}
                 name={rucfactura.name}
                 value={rucfacturaV}
-                onChange={onChangeNumberCelular}
+                onChange={onChangeRuc}
                 placeholder={rucfactura.placeholder}
                 // error={errors.nombres && touched.nombres}
                 // success={nombresV.length > 0 && !errors.nombres}
@@ -200,7 +202,7 @@ function Pago({ formData, pagos }) {
             <br />
             <MDTypography variant="overline">{detallepromocion}</MDTypography>
             <Grid container spacing={4}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={8} sm={6}>
                 <FormField
                   type={promocion.type}
                   label={promocion.label}
@@ -210,7 +212,7 @@ function Pago({ formData, pagos }) {
                   disabled={botonDesactivado}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={4} sm={6}>
                 <MDButton
                   variant="gradient"
                   disabled={botonDesactivado}

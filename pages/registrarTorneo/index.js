@@ -184,13 +184,13 @@ function NewUser() {
         setErrorEmail(true);
       }
     } catch (error) {
-      console.log(error);
+   
 
       if (error.response.status === 409) {
         // alert("Usuario o contraseña incorrectos");
       }
 
-      console.log("error create event");
+ 
     }
   };
 
@@ -211,7 +211,7 @@ function NewUser() {
             timer: 2000,
           });
         } else {
-          console.log("ess");
+         
           setErrorEmail(true);
         }
       } else {
@@ -224,13 +224,12 @@ function NewUser() {
         });
       }
     } catch (error) {
-      console.log(error);
-
+      
       if (error.response.status === 409) {
         // alert("Usuario o contraseña incorrectos");
       }
 
-      console.log("error create event");
+     
     }
   };
 
@@ -256,8 +255,7 @@ function NewUser() {
 
   const handleNextStep = async (values, actions) => {
     const session = await getSession(values);
-    console.log("session");
-    console.log(session);
+    
 
     setPrecio(values.precio);
     setEmailUser(session.user.email);
