@@ -310,9 +310,12 @@ function Address({ formData }) {
                 </MDTypography>
                 <MDTypography variant="h5" color={"success"}>
                   {disponible}
-                  <MDTypography variant="h7" color={"secondary"}>
-                    /{cupoTotal}
-                  </MDTypography>
+                  {cupoTotal && (
+          <MDTypography variant="h7" color={"secondary"}>
+          /{cupoTotal}
+        </MDTypography>
+        )}
+                 
                 </MDTypography>
               </MDBox>
             </MDBox>
