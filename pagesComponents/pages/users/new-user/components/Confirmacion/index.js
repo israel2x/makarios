@@ -153,10 +153,10 @@ function Confirmacion({ formData }) {
             <MDTypography variant="h4">Datos de Participante</MDTypography>
           </Grid>
           <Grid item xs={6} sm={2}>&nbsp;</Grid>
-          <Grid item xs={6} sm={4}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="body1">Nombre Completo</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={4}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="subtitle1">
               {/* Marina Belen Casares Tesky */}
               {nombresV + " " + apellidosV}
@@ -164,26 +164,26 @@ function Confirmacion({ formData }) {
           </Grid>
           <Grid item xs={6} sm={2}>&nbsp;</Grid>
           <Grid item xs={6} sm={2}>&nbsp;</Grid>
-          <Grid item xs={6} sm={4}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="body1">Edad</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={4}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="subtitle1">{edad} años</MDTypography>
           </Grid>
           <Grid item xs={6} sm={2}>&nbsp;</Grid>
           <Grid item xs={6} sm={2}>&nbsp;</Grid>
-          <Grid item xs={6} sm={4}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="body1">Categoria</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={4}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="subtitle1">{categoria}.</MDTypography>
           </Grid>
           <Grid item xs={6} sm={2}>&nbsp;</Grid>
           <Grid item xs={6} sm={2}>&nbsp;</Grid>
-          <Grid item xs={6} sm={4}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="body1">Total a pagar</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={4}>
+          <Grid item xs={12} sm={4}>
             <MDTypography variant="subtitle1">$ {precioV} USD</MDTypography>
           </Grid>
           <Grid item xs={6} sm={2}>&nbsp;</Grid>

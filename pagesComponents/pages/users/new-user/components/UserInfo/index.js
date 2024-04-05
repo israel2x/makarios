@@ -90,12 +90,11 @@ function UserInfo({ formData }) {
   const loadDataProfile = async (data) => {
     try {
       const session = await getSession();
-      console.log(session);
+ 
       const response = await axios.get("/api/user", {
         params: { cedula: data },
       });
-      console.log("response infodata");
-      console.log(response);
+
       if (response.statusText === "OK" || response.status === 200) {
         const infoProfile = response.data.newUser;
         // = await response.data.newUser.find((item) => ({
@@ -115,15 +114,14 @@ function UserInfo({ formData }) {
         setFieldValue("pais", infoProfile.pais);
         setFieldValue("direccion", infoProfile.direccion);
 
-        console.log("array profile");
-        console.log(infoProfile);
+
         // const arrayConDuplicados = dataFechas.map((item) => item.from);
         // await setFechasProgramacion([...new Set(arrayConDuplicados)]);
       } else {
       }
     } catch (error) {
       console.log("error info profile");
-      console.log(error);
+
     }
   };
 
