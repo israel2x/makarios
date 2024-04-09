@@ -35,7 +35,7 @@ function UserInfo({ formData }) {
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
 
-  const isMdScreen = useMediaQuery("(min-width: 768px)");
+  const isMdScreen = useMediaQuery("(min-width: 580px)");
   const {
     email,
     nombres,
@@ -265,7 +265,7 @@ function UserInfo({ formData }) {
             <Grid container spacing={2}>
             {!isMdScreen && (
             <Grid item xs={12} sm={12}>
-                <MDTypography item xs={12} variant="button">
+                <MDTypography variant="button">
                     Fecha nacimiento
                   </MDTypography>
              </Grid>
