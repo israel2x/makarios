@@ -112,12 +112,9 @@ function Address({ formData }) {
           (item) => item.descripcion
         );
         setActividadesNombre(data_Actividad);
-
       } else {
       }
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   const loadProgramacion = async (actividadId) => {
@@ -140,7 +137,6 @@ function Address({ formData }) {
       }
     } catch (error) {
       console.log("error programacion");
-
     }
   };
 
@@ -149,7 +145,6 @@ function Address({ formData }) {
       const response = await axios.get("/api/torneos/cupos", {
         params: { cupos: programacion },
       });
-
 
       if (response.statusText === "OK" || response.status === 200) {
         const cupo = response.data.resultCupos.cupo;
@@ -168,7 +163,6 @@ function Address({ formData }) {
       }
     } catch (error) {
       console.log("error cupos");
- 
     }
   };
 
@@ -187,10 +181,7 @@ function Address({ formData }) {
       );
       const fechaFormateada = fechaNacimientoP.format("YYYY-MM-DD");
       setFieldValue("fechanacimiento", fechaFormateada);
-
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   // const loadHora = async (e, data) => {
@@ -311,11 +302,10 @@ function Address({ formData }) {
                 <MDTypography variant="h5" color={"success"}>
                   {disponible}
                   {cupoTotal && (
-          <MDTypography variant="h7" color={"secondary"}>
-          /{cupoTotal}
-        </MDTypography>
-        )}
-                 
+                    <MDTypography variant="h7" color={"secondary"}>
+                      /{cupoTotal}
+                    </MDTypography>
+                  )}
                 </MDTypography>
               </MDBox>
             </MDBox>
