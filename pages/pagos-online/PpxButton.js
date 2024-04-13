@@ -25,20 +25,20 @@ const PpxButton = ({ data }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    
     setLoading(true);
     setTimeout(async () => {
       await iniciarDatos(data);
       await setLoading(false);
-    }, 2000);
+    }, 4500);
+
+  
+
   }, [data]);
 
   const handleMouseEnter = async () => {
-
     await setCount(count + 1);
     if (count < 1) {
       //  alert(JSON.stringify(count));
-      
     }
   };
 
@@ -50,12 +50,8 @@ const PpxButton = ({ data }) => {
             <CircularProgress color="info" />
           </MDBox>
         )}
-        <div
-          id="modalPaybox"
-          // onMouseEnter={() => {
-          //   handleMouseEnter();
-          // }}
-        ></div>
+        <div id="modalPaybox"></div>
+
         <button
           style={estiloBoton}
           id="pay"
