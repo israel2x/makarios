@@ -249,7 +249,7 @@ function NewUser() {
 
     await setActiveStep(activeStep + 1);
     await actions.setTouched({});
-   
+
     await actions.setSubmitting(false);
   };
 
@@ -273,9 +273,10 @@ function NewUser() {
   }, [responsePagoPlux]);
 
   useEffect(() => {
- 
-    if (activeStep===3) {
+    if (activeStep === 3) {
       setButtonDisabled(true);
+    } else {
+      setButtonDisabled(false);
     }
   }, [activeStep]);
 
