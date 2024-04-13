@@ -197,7 +197,10 @@ function Pago({ formData, pagos }) {
               </MDTypography>
             </Grid>
             <Grid item xs={12} sm={12}>
+
               <PpxButton data={dataPago} />
+
+              
             </Grid>
             <br />
             <MDTypography variant="overline">{detallepromocion}</MDTypography>

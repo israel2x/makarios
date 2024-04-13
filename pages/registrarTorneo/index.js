@@ -51,16 +51,14 @@ import Pago from "/pagesComponents/pages/users/new-user/components/Pago";
 import validations from "/pagesComponents/pages/users/new-user/schemas/validationsMakarios";
 import form from "/pagesComponents/pages/users/new-user/schemas/formMakarios";
 import initialValues from "/pagesComponents/pages/users/new-user/schemas/initialMakariosValues";
-import  { messages } from "/utils/mesagges";
+import { messages } from "/utils/mesagges";
 import MDSnackbar from "/components/MDSnackbar";
-
 
 import bgImage from "/assets/images/BF-Makarios.jpg";
 
 function getSteps() {
   return ["Participante", "Actividad", "Confirmación", "Pago"];
 }
-
 
 function getStepContent(stepIndex, formData, dataPagos) {
   const components = [UserInfo, Address, Confirmacion, Pago];
@@ -73,8 +71,9 @@ function getStepContent(stepIndex, formData, dataPagos) {
 }
 
 function NewUser() {
-
   const [activeStep, setActiveStep] = useState(0);
+
+  const [buttonDisabled, setButtonDisabled] = useState(false);
 
   const [notificationSB, setNotificationSBSB] = useState(false);
   const openNotificationSB = () => setNotificationSBSB(true);
@@ -98,9 +97,6 @@ function NewUser() {
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const handleBack = () => setActiveStep(activeStep - 1);
-
-
-  
 
   let dataPagos = {
     PayboxRemail: "pagos@makarios.club",
@@ -126,25 +122,25 @@ function NewUser() {
     onAuthorize: async (response) => {
       if (response.status === "succeeded") {
         await setPagado(true);
+        await setButtonDisabled(false);
         await setResponsePagoPlux(response);
       }
     },
   };
 
   const renderNotificationSB = (
-      <MDSnackbar
-        color="success"
-        icon="check"
-        title="Bienvenido"
-        content={messages.success.userLogged} 
-        dateTime="ahora"
-        open={notificationSB}
-        onClose={closeNotificationSB}
-        close={closeNotificationSB}
-        bgWhite
-      />
-    );
-
+    <MDSnackbar
+      color="success"
+      icon="check"
+      title="Bienvenido"
+      content={messages.success.userLogged}
+      dateTime="ahora"
+      open={notificationSB}
+      onClose={closeNotificationSB}
+      close={closeNotificationSB}
+      bgWhite
+    />
+  );
 
   const [dataPagoCita, setDataPagoCita] = useState(dataPagos);
 
@@ -184,13 +180,9 @@ function NewUser() {
         setErrorEmail(true);
       }
     } catch (error) {
-   
-
       if (error.response.status === 409) {
         // alert("Usuario o contraseña incorrectos");
       }
-
- 
     }
   };
 
@@ -211,7 +203,6 @@ function NewUser() {
             timer: 2000,
           });
         } else {
-         
           setErrorEmail(true);
         }
       } else {
@@ -224,12 +215,9 @@ function NewUser() {
         });
       }
     } catch (error) {
-      
       if (error.response.status === 409) {
         // alert("Usuario o contraseña incorrectos");
       }
-
-     
     }
   };
 
@@ -255,14 +243,14 @@ function NewUser() {
 
   const handleNextStep = async (values, actions) => {
     const session = await getSession(values);
-    
 
-    setPrecio(values.precio);
-    setEmailUser(session.user.email);
+    await setPrecio(values.precio);
+    await setEmailUser(session.user.email);
 
-    setActiveStep(activeStep + 1);
-    actions.setTouched({});
-    actions.setSubmitting(false);
+    await setActiveStep(activeStep + 1);
+    await actions.setTouched({});
+   
+    await actions.setSubmitting(false);
   };
 
   const handleFinalStep = async (values, actions) => {
@@ -276,14 +264,20 @@ function NewUser() {
       : await handleNextStep(values, actions);
   };
 
-  useEffect( () => {
-    
+  useEffect(() => {
     openNotificationSB();
     if (isLastStep) {
       const buttonSave = document.getElementById("btnGuardar");
       buttonSave.click();
     }
   }, [responsePagoPlux]);
+
+  useEffect(() => {
+ 
+    if (activeStep===3) {
+      setButtonDisabled(true);
+    }
+  }, [activeStep]);
 
   return (
     // <DashboardLayout>
@@ -349,7 +343,7 @@ function NewUser() {
                             </MDButton>
                           )}
                           <MDButton
-                            disabled={isSubmitting}
+                            disabled={isSubmitting || buttonDisabled}
                             type="Submit"
                             variant="gradient"
                             color="info"
@@ -367,7 +361,6 @@ function NewUser() {
             </Formik>
           </Grid>
         </Grid>
-        
       </MDBox>
 
       {/* <Footer /> */}
