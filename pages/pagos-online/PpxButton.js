@@ -26,13 +26,10 @@ const PpxButton = ({ data }) => {
 
   useEffect(() => {
     setLoading(true);
+    iniciarDatos(data);
     setTimeout(async () => {
-      await iniciarDatos(data);
       await setLoading(false);
-    }, 4500);
-
-  
-
+    }, 2500);
   }, [data]);
 
   const handleMouseEnter = async () => {
