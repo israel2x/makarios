@@ -81,6 +81,7 @@ function NewUser() {
 
   const [pagoPlux, setPagoplux] = useState(null);
   const [precio, setPrecio] = useState(null);
+  const [detalleActividad, setDetalleActividad] = useState("Pago de TORNEO DEPORTIVO");
   const [pagado, setPagado] = useState(false);
   const [emailUser, setEmailUser] = useState(null);
   const [responsePagoPlux, setResponsePagoPlux] = useState(null);
@@ -105,7 +106,7 @@ function NewUser() {
     PayboxSendname: "makarios club",
     PayboxBase0: precio,
     PayboxBase12: "0",
-    PayboxDescription: "Pago de TORNEO DEPORTIVO",
+    PayboxDescription: detalleActividad,
     PayboxProduction: false,
     PayboxEnvironment: "sandbox",
     PayboxLanguage: "es",
@@ -246,7 +247,7 @@ function NewUser() {
 
     await setPrecio(values.precio);
     await setEmailUser(session.user.email);
-
+    await setDetalleActividad(values.actividad+' - '+values.programacion);
     await setActiveStep(activeStep + 1);
     await actions.setTouched({});
 
