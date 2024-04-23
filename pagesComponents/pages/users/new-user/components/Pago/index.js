@@ -65,7 +65,10 @@ function Pago({ formData, pagos }) {
       await setDataPago((prevdataPago) => ({
         ...prevdataPago,
         PayboxBase0: newPrecio,
+        PayboxDescription: actividadV +'-'+ programacionV,
+        PayboxSendname: nombrefacturaV
       }));
+ 
       setBotonDesactivado(true);
     }
 
