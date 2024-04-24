@@ -77,16 +77,13 @@ function Address({ formData }) {
 
   const handleChange = async (event) => {
     await setFieldValue("horario", "");
-    console.log("programacion id");
-    console.log(detalle);
+
     await loadCupos(event.target.value);
     const programacion = await detalle.find(
       (item) => event.target.value === item.id
     );
     // await setFieldValue("programacionid", event.target.value);
-    console.log(programacion);
-    console.log(programacionV);
-    console.log(event.target.value);
+
     await setFieldValue("programacionid", event.target.value);
     await setFieldValue("programacion", programacion.detalle);
     setFieldValue("rucfactura", cedulaV);
@@ -102,8 +99,7 @@ function Address({ formData }) {
     setFieldValue("email", session.user.email);
     try {
       const response = await axios.get("/api/torneos/actividad", data);
-      console.log("response actividad");
-      console.log(response);
+
       if (response.statusText === "OK" || response.status === 200) {
         const dataActividad = response.data.actividadFound.map((item) => ({
           id: item.id,
@@ -116,13 +112,9 @@ function Address({ formData }) {
           (item) => item.descripcion
         );
         setActividadesNombre(data_Actividad);
-        console.log(actividadesNombre);
       } else {
       }
-    } catch (error) {
-      console.log("error");
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   const loadProgramacion = async (actividadId) => {
@@ -130,8 +122,7 @@ function Address({ formData }) {
       const response = await axios.get("/api/torneos/programacion", {
         params: { actividad: actividadId },
       });
-      console.log("response programacion");
-      console.log(response);
+
       if (response.statusText === "OK" || response.status === 200) {
         const detalle = await response.data.programacionFound.map((item) => ({
           id: item.id,
@@ -139,15 +130,13 @@ function Address({ formData }) {
         }));
 
         setDetalle(detalle);
-        console.log("array detalle");
-        console.log(detalle);
+
         // const arrayConDuplicados = dataFechas.map((item) => item.from);
         // await setFechasProgramacion([...new Set(arrayConDuplicados)]);
       } else {
       }
     } catch (error) {
       console.log("error programacion");
-      console.log(error);
     }
   };
 
@@ -156,8 +145,7 @@ function Address({ formData }) {
       const response = await axios.get("/api/torneos/cupos", {
         params: { cupos: programacion },
       });
-      console.log("cupos response");
-      console.log(response);
+
       if (response.statusText === "OK" || response.status === 200) {
         const cupo = response.data.resultCupos.cupo;
         const ocupado = response.data.resultCupos.ocupado;
@@ -174,8 +162,7 @@ function Address({ formData }) {
       } else {
       }
     } catch (error) {
-      console.log("error programacion");
-      console.log(error);
+      console.log("error cupos");
     }
   };
 
@@ -194,13 +181,7 @@ function Address({ formData }) {
       );
       const fechaFormateada = fechaNacimientoP.format("YYYY-MM-DD");
       setFieldValue("fechanacimiento", fechaFormateada);
-      console.log("programacion");
-      console.log(resultado);
-      console.log(precioV);
-    } catch (error) {
-      console.log("error");
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   // const loadHora = async (e, data) => {
@@ -320,9 +301,11 @@ function Address({ formData }) {
                 </MDTypography>
                 <MDTypography variant="h5" color={"success"}>
                   {disponible}
-                  <MDTypography variant="h7" color={"secondary"}>
-                    /{cupoTotal}
-                  </MDTypography>
+                  {cupoTotal && (
+                    <MDTypography variant="h7" color={"secondary"}>
+                      /{cupoTotal}
+                    </MDTypography>
+                  )}
                 </MDTypography>
               </MDBox>
             </MDBox>

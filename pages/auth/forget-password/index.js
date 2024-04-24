@@ -32,7 +32,7 @@ import Link from "next/link";
 import CircularProgress from "@mui/material/CircularProgress";
 
 // Images
-import bgImage from "/assets/images/fondo_registrar.jpeg";
+import bgImage from "/assets/images/makarios2.jpg";
 
 function Cover() {
   const {

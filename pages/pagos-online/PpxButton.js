@@ -25,25 +25,20 @@ const PpxButton = ({ data }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    console.log("iniciar datos");
     setLoading(true);
+    iniciarDatos(data);
     setTimeout(async () => {
-      await iniciarDatos(data);
       await setLoading(false);
-    }, 2000);
+    }, 2500);
   }, [data]);
 
- 
-    const handleMouseEnter = async() =>{
-      console.log("mouse entered");
-      console.log(count);
-      await setCount(count +1);
-      if(count < 1){
-        //  alert(JSON.stringify(count));
-        console.log("SOLO PUEDE ESTAR UNA SOLA VEZ");
-      }
+  const handleMouseEnter = async () => {
+    await setCount(count + 1);
+    if (count < 1) {
+      //  alert(JSON.stringify(count));
     }
-  
+  };
+
   return (
     <>
       <div align={"center"}>
@@ -52,13 +47,13 @@ const PpxButton = ({ data }) => {
             <CircularProgress color="info" />
           </MDBox>
         )}
-        <div id="modalPaybox" onMouseEnter={()=>{handleMouseEnter()}}></div>
+        <div id="modalPaybox"></div>
+
         <button
           style={estiloBoton}
           id="pay"
           type="button"
           onClick={iniciarDatos}
-          
         ></button>
       </div>
     </>

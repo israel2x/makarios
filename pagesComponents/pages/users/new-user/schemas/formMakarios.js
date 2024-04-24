@@ -43,16 +43,16 @@ const form = {
       },
       genero: {
         name: "genero",
-        label: "Genero",
+        label: "Sexo",
         type: "text",
-        errorMsg: "Genero is obligatorio.",
+        errorMsg: "Sexo es obligatorio.",
 
       },
       condicion: {
         name: "condicion",
         label: "Condición especial",
         type: "text",
-        errorMsg: "Condición is obligatorio.",
+        errorMsg: "Condición es obligatorio.",
         
       },
       celular: {
@@ -83,15 +83,15 @@ const form = {
       },
       pais: {
         name: "pais",
-        label: "Pais",
+        label: "País",
         type: "text",
-        errorMsg: "Pais es obligatorio",
+        errorMsg: "País es obligatorio",
       },
       ciudad: {
         name: "ciudad",
         label: "Ciudad",
         type: "text",
-        errorMsg: "Ciudad is obligatorio.",
+        errorMsg: "Ciudad es obligatorio.",
       },
       direccion: {
         name: "direccion",
@@ -156,7 +156,7 @@ const form = {
       promocion:{
         name: "promocion",
         type:"text",
-        label: "Tienes un código promocional?"
+        label: "¿Tienes un código promocional?"
       },
       pagoplux:{
         name: "pagoplux",

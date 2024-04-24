@@ -26,8 +26,7 @@ import moment from "moment";
 // NewUser page components
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 import Autocomplete from "@mui/material/Autocomplete";
-
-
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { getSession } from "next-auth/react";
 // Data
 import selectData from "/pagesComponents/pages/users/new-user/components/UserInfo/data/selectData";
@@ -35,6 +34,8 @@ function UserInfo({ formData }) {
   const { formField, values, errors, touched, setFieldValue } = formData;
   // const { firstName, lastName, company, email, password, repeatPassword } =
   //   formField;
+
+  const isMdScreen = useMediaQuery("(min-width: 580px)");
   const {
     email,
     nombres,
@@ -90,12 +91,11 @@ function UserInfo({ formData }) {
   const loadDataProfile = async (data) => {
     try {
       const session = await getSession();
-      console.log(session);
+
       const response = await axios.get("/api/user", {
         params: { cedula: data },
       });
-      console.log("response infodata");
-      console.log(response);
+
       if (response.statusText === "OK" || response.status === 200) {
         const infoProfile = response.data.newUser;
         // = await response.data.newUser.find((item) => ({
@@ -104,10 +104,19 @@ function UserInfo({ formData }) {
         setFieldValue("nombres", infoProfile.nombres);
         setFieldValue("apellidos", infoProfile.apellidos);
         setFieldValue("cedula", infoProfile.cedula);
-        setFieldValue('genero',infoProfile.genero);
-        setFieldValue("anio", String(moment(infoProfile.fechaNacimiento, "YYYY-MM-DD").year()));
-        setFieldValue("dia", String(moment(infoProfile.fechaNacimiento, "YYYY-MM-DD").day()));
-        setFieldValue("mes", moment(infoProfile.fechaNacimiento).format("MMMM"));
+        setFieldValue("genero", infoProfile.genero);
+        setFieldValue(
+          "anio",
+          String(moment(infoProfile.fechaNacimiento, "YYYY-MM-DD").year())
+        );
+        setFieldValue(
+          "dia",
+          String(moment(infoProfile.fechaNacimiento, "YYYY-MM-DD").day())
+        );
+        setFieldValue(
+          "mes",
+          moment(infoProfile.fechaNacimiento).format("MMMM")
+        );
         setFieldValue("cedula", infoProfile.cedula);
         setFieldValue("celular", infoProfile.celular);
         setFieldValue("condicion", infoProfile.condicion);
@@ -115,38 +124,33 @@ function UserInfo({ formData }) {
         setFieldValue("pais", infoProfile.pais);
         setFieldValue("direccion", infoProfile.direccion);
 
-        console.log("array profile");
-        console.log(infoProfile);
         // const arrayConDuplicados = dataFechas.map((item) => item.from);
         // await setFechasProgramacion([...new Set(arrayConDuplicados)]);
       } else {
       }
     } catch (error) {
       console.log("error info profile");
-      console.log(error);
     }
   };
 
-  const onChange =((e)=>{
+  const onChange = (e) => {
     const re = /^[0-9\b]+$/; //rules
     if (e.target.value === "" || re.test(e.target.value)) {
       setFieldValue("cedula", e.target.value);
-      
     }
-})
+  };
 
-const onChangeNumberCelular =((e)=>{
-  const re = /^[0-9\b]+$/; //rules
-  if (e.target.value === "" || re.test(e.target.value)) {
-    setFieldValue("celular", e.target.value);
-  }
-});
+  const onChangeNumberCelular = (e) => {
+    const re = /^[0-9\b]+$/; //rules
+    if (e.target.value === "" || re.test(e.target.value)) {
+      setFieldValue("celular", e.target.value);
+    }
+  };
 
   useEffect(() => {
     // loadDataProfile();
-
   }, []);
- 
+
   // selectData.gender.map((item) => console.log(`Fecha Nacimiento ${item}`));
 
   return (
@@ -215,7 +219,7 @@ const onChangeNumberCelular =((e)=>{
                   name={genero.name}
                   value={generoV}
                   error={errors.genero && touched.genero}
-                  success={(generoV || '').length > 0 && !errors.genero}
+                  success={(generoV || "").length > 0 && !errors.genero}
                 />
               )}
             />
@@ -239,7 +243,7 @@ const onChangeNumberCelular =((e)=>{
                   value={condicionV}
                   // placeholder={condicion.placeholder}
                   error={errors.condicion && touched.condicion}
-                  success={(condicionV || '').length > 0 && !errors.condicion}
+                  success={(condicionV || "").length > 0 && !errors.condicion}
                 />
               )}
             />
@@ -256,10 +260,18 @@ const onChangeNumberCelular =((e)=>{
               success={celularV.length > 0 && !errors.celular}
             />
           </Grid>
-
+     
           <Grid item xs={12} sm={6}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
+            {!isMdScreen && (
+            <Grid item xs={12} sm={12}>
+                <MDTypography variant="button">
+                    Fecha nacimiento
+                  </MDTypography>
+             </Grid>
+            )}
+              <Grid item xs={12} sm={4}> 
+             
                 <Autocomplete
                   options={selectData.days}
                   defaultValue="1"
@@ -279,7 +291,7 @@ const onChangeNumberCelular =((e)=>{
                       value={diaV}
                       placeholder={dia.placeholder}
                       error={errors.dia && touched.dia}
-                      success={ (diaV || '').length > 0 && !errors.dia}
+                      success={(diaV || "").length > 0 && !errors.dia}
 
                       // InputLabelProps={{ shrink: true }}
                     />
@@ -306,7 +318,7 @@ const onChangeNumberCelular =((e)=>{
                       value={mesV}
                       placeholder={mes.placeholder}
                       error={errors.mes && touched.mes}
-                      success={(mesV || '').length > 0 && !errors.mes}
+                      success={(mesV || "").length > 0 && !errors.mes}
                     />
                   )}
                 />
@@ -331,7 +343,7 @@ const onChangeNumberCelular =((e)=>{
                       value={anioV}
                       placeholder={anio.placeholder}
                       error={errors.anio && touched.anio}
-                      success={(anioV || '').length > 0 && !errors.anio}
+                      success={(anioV || "").length > 0 && !errors.anio}
                     />
                   )}
                 />

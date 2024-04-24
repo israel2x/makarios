@@ -52,7 +52,7 @@ import BasicLayout from "/pagesComponents/authentication/components/BasicLayout"
 
 
 // Images
-import bgImage from "/assets/images/tiro-con-arco-2022.jpeg";
+import bgImage from "/assets/images/makarios2.jpg";
 
 // import { handleLoginUser } from "../../../actions";
 import colors from "/assets/theme/base/colors";

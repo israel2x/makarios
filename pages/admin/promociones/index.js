@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 // formik components
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -42,8 +42,7 @@ import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
 import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 
- import  {exportToExcel} from '/utils/exportExcel';
- 
+import { exportToExcel } from "/utils/exportExcel";
 
 // Data
 import dataTableData from "/libs/promocion/dataTableData";
@@ -56,8 +55,8 @@ function Promocion() {
   const [loading, setLoading] = useState(false);
   const [dataTableData2, setDataTableData2] = useState({
     columns: [],
-    rows: []
-});
+    rows: [],
+  });
   const [age, setAge] = useState(""); //select
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -95,7 +94,7 @@ function Promocion() {
         console.log("response pr0mocion");
         console.log(response);
 
-        const infoProgramacion = response.data.promocionFound.map((item) =>({
+        const infoProgramacion = response.data.promocionFound.map((item) => ({
           id: item.id,
           actividad: item.actividad.descripcion,
           detalle: item.descripcion,
@@ -107,17 +106,16 @@ function Promocion() {
         }));
 
         const columns = dataTableData.columns; // Object.keys(response.data.actividadFound[0]); // Suponiendo que la primera fila del arreglo contiene los nombres de las columnas
-        setDataTableData2(prevState => ({
-            ...prevState,
-            columns: columns
+        setDataTableData2((prevState) => ({
+          ...prevState,
+          columns: columns,
         }));
 
         // Actualizar las filas
-        setDataTableData2(prevState => ({
-            ...prevState,
-            rows: infoProgramacion
+        setDataTableData2((prevState) => ({
+          ...prevState,
+          rows: infoProgramacion,
         }));
-
 
         setloadingTable(false);
         setLoading(false);
@@ -166,21 +164,21 @@ function Promocion() {
 
   const handleExportToExcel = () => {
     const arreglo = [];
-  
+
     // Agregar columnas al arreglo
-    arreglo.push(dataTableData2.columns.map(columna => columna.Header));
-    
+    arreglo.push(dataTableData2.columns.map((columna) => columna.Header));
+
     // Agregar filas al arreglo
-    dataTableData2.rows.forEach(fila => {
+    dataTableData2.rows.forEach((fila) => {
       const filaArreglo = [];
-      dataTableData2.columns.forEach(columna => {
+      dataTableData2.columns.forEach((columna) => {
         filaArreglo.push(fila[columna.accessor]);
       });
       arreglo.push(filaArreglo);
     });
     console.log("arreglo");
     console.log(arreglo);
-    exportToExcel( arreglo, 'promociones'); // 'datos' es el nombre del archivo Excel que se generará
+    exportToExcel(arreglo, "promociones"); // 'datos' es el nombre del archivo Excel que se generará
   };
 
   const renderMenu = (
@@ -290,7 +288,11 @@ function Promocion() {
             </MDButton>
             {renderMenu}
             <MDBox ml={1}>
-              <MDButton variant="outlined" onClick={handleExportToExcel} color="dark">
+              <MDButton
+                variant="outlined"
+                onClick={handleExportToExcel}
+                color="dark"
+              >
                 <Icon>description</Icon>
                 &nbsp;export excel
               </MDButton>
@@ -304,13 +306,12 @@ function Promocion() {
               <CircularProgress color="info" />
             </MDBox>
           )} */}
-            {loadingTable && ( 
+          {loadingTable && (
             <MDBox textAlign="center">
               <CircularProgress color="info" />
             </MDBox>
           )}
-            <DataTable table={dataTableData2} entriesPerPage={false} canSearch />
-
+          <DataTable table={dataTableData2} entriesPerPage={false} canSearch />
         </Card>
       </MDBox>
       <Footer />
