@@ -35,8 +35,8 @@ CREATE TABLE "Profile" (
 -- CreateTable
 CREATE TABLE "Programacion" (
     "id" SERIAL NOT NULL,
-    "vigenciaDesde" TIMESTAMP(3) NOT NULL,
-    "vigenciaHasta" TIMESTAMP(3) NOT NULL,
+    "vigenciaDesde" TEXT NOT NULL,
+    "vigenciaHasta" TEXT NOT NULL,
     "horaDesde" TEXT NOT NULL,
     "horaHasta" TEXT NOT NULL,
     "fechatope" TEXT NOT NULL,

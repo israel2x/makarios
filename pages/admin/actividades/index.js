@@ -116,6 +116,8 @@ function Actividad() {
         precio: parsePrecio,
       });
       console.log(response);
+      await handleClose();
+      await buscarActividadesData();
     } catch (error) {
       console.log(error);
     }

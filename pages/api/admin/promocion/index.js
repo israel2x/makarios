@@ -19,7 +19,13 @@ export default async function promocionHanler(req, res) {
         fechafin:true,
         estado:true,
         createdAt:true
-      }
+      },
+      orderBy: [
+        {
+          id: 'desc',
+        },
+       
+      ],
     });
     if (!promocionFound) {
       return res.status(409).send("Programacion not found");

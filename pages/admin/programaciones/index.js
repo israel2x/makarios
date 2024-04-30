@@ -31,6 +31,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import FormControl from "@mui/material/FormControl";
 
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
@@ -62,6 +63,7 @@ import "moment/locale/es"; // Imp
 const { DateTime } = require("luxon");
 
 function Programacion() {
+  const [actividades, setActividades] = useState([]);
   const [menu, setMenu] = useState(null);
   const [open, setOpen] = useState(false); //modal
   const [loading, setLoading] = useState(false);
@@ -106,7 +108,29 @@ function Programacion() {
 
   useEffect(() => {
     buscarProgramacionesData();
+    loadActividad();
   }, []);
+
+  const loadActividad = async (data) => {
+    try {
+      const response = await axios.get("/api/torneos/actividad", data);
+
+      if (response.statusText === "OK" || response.status === 200) {
+        const dataActividad = response.data.actividadFound.map((item) => ({
+          id: item.id,
+          descripcion: item.descripcion,
+          precio: item.precio,
+        }));
+        setActividades(dataActividad);
+        // carga los nombres para el list
+        // const data_Actividad = response.data.actividadFound.map(
+        //   (item) => item.descripcion
+        // );
+        // setActividadesNombre(data_Actividad);
+      } else {
+      }
+    } catch (error) {}
+  };
 
   const buscarProgramacionesData = async () => {
     //add  loading
@@ -174,14 +198,16 @@ function Programacion() {
     data.cupo = parseCupo;
 
     data.fechatope = data.fechatope[0];
-    data.vigenciaDesde = data.vigenciaDesde[0];
-    data.vigenciaHasta = data.vigenciaHasta[0];
+    data.vigenciadesde = data.vigenciadesde[0];
+    data.vigenciahasta = data.vigenciahasta[0];
 
-    console.log(data.fechatope);
+    const hora_uno = data.horaDesde[0].toString();
+    const hora_dos = data.horaHasta[0].toString();
+
+    data.horaDesde = hora_uno.split(" ")[4].substring(0, 5);
+    data.horaHasta = hora_dos.split(" ")[4].substring(0, 5);
 
     const fechax = moment.utc(data.fechatope);
-    console.log(fechax.toDate());
-    console.log(data);
 
     try {
       const response = await axios.post(
@@ -191,6 +217,8 @@ function Programacion() {
         }
       );
       console.log(response);
+      handleClose();
+      buscarProgramacionesData();
     } catch (error) {
       console.log(error);
     }
@@ -216,6 +244,12 @@ function Programacion() {
       </MenuItem>
     </Menu>
   );
+
+  const config_fecha = {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+  };
 
   const handleExportToExcel = () => {
     const arreglo = [];
@@ -252,247 +286,149 @@ function Programacion() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogTitle>Crear Programación</DialogTitle>
           <DialogContent>
-            <MDBox pt={1} pb={2} px={2}>
+            {/* <MDBox pt={2} pb={2} px={2}> */}
+            <MDBox mt={1.625}>
               <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={12}>
                   <MDBox mb={2} px={0}>
-                    <InputLabel
+                    <FormControl
                       variant="standard"
-                      htmlFor="uncontrolled-native"
+                      sx={{ m: 1, minWidth: 350, display: "flex" }}
                     >
-                      Actividad
-                    </InputLabel>
-                    <NativeSelect
-                      defaultValue={1}
-                      inputProps={{
-                        name: "actividadId",
-                        id: "uncontrolled-native",
-                      }}
-                      sx={{
-                        width: 250,
-                        height: 40,
-                      }}
-                      {...register("actividadId", {
-                        required: {
-                          value: true,
-                          message: "Actividad is required",
-                        },
-                      })}
-                    >
-                      <option value={1}>
-                        Campeonato Semi Senior Post 40 Clase A
-                      </option>
-                      <option value={2}>Campeonato Junior Clase A</option>
-                    </NativeSelect>
+                      <InputLabel id="programacion-label">Actividad</InputLabel>
+                      <Select
+                        labelId="programacion-label"
+                        id="programacion-select"
+                        defaultValue=""
+                        {...register("actividadId", {
+                          required: "Actividad is required",
+                        })}
+                      >
+                        <MenuItem value="">Seleccione una opción</MenuItem>
+                        {actividades.map((opcion, index) => (
+                          <MenuItem value={opcion.id} key={index}>
+                            {opcion.descripcion}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} sm={4}>
                   <MDBox mb={2} px={0}>
-                    <InputLabel
-                      variant="standard"
-                      htmlFor="uncontrolled-native"
-                    >
-                      Fecha Inicio
-                    </InputLabel>
-                    <LocalizationProvider
-                      dateAdapter={AdapterMoment}
-                      locale="es"
-                    >
-                      <Controller
-                        name="vigenciaDesde"
-                        control={control}
-                        defaultValue={null}
-                        render={({ field, datePickerRef }) => (
-                          <MDDatePicker
-                            {...field}
-                            ref={datePickerRef}
-                            input={{ placeholder: "Selecione una fecha" }}
-                            label="Fecha"
-                            value={field.value}
-                            onChange={(date) => field.onChange(date)}
-                            renderInput={(params) => <input {...params} />}
-                          />
-                        )}
-                      />
-                    </LocalizationProvider>
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <MDBox mb={0} px={0}>
-                    <InputLabel
-                      variant="standard"
-                      htmlFor="uncontrolled-native"
-                    >
-                      Fecha Fin
-                    </InputLabel>
+                    <InputLabel variant="standard">Fecha Inicio</InputLabel>
                     <Controller
-                      name="vigenciaHasta"
+                      name="vigenciadesde"
                       control={control}
                       defaultValue={null}
-                      render={({ field, secondDateRef }) => (
-                        <MDDatePicker
-                          {...field}
-                          ref={secondDateRef}
-                          input={{ placeholder: "Selecione una fecha" }}
-                          label="Fecha"
-                          value={field.value}
-                          onChange={(date) => field.onChange(date)}
-                          renderInput={(params) => <input {...params} />}
-                        />
+                      render={({ field }) => (
+                        <MDDatePicker {...field} label="Fecha" />
                       )}
                     />
                   </MDBox>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <MDBox>
-                    <InputLabel
-                      variant="standard"
-                      htmlFor="uncontrolled-native"
-                    >
-                      Fecha Tope
-                    </InputLabel>
+                <Grid item xs={12} sm={4}>
+                  <MDBox mb={2} px={0}>
+                    <InputLabel variant="standard">Fecha Fin</InputLabel>
+                    <Controller
+                      name="vigenciahasta"
+                      control={control}
+                      defaultValue={null}
+                      render={({ field }) => (
+                        <MDDatePicker {...field} label="Fecha" />
+                      )}
+                    />
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDBox mb={2} px={0}>
+                    <InputLabel variant="standard">Fecha Tope</InputLabel>
                     <Controller
                       name="fechatope"
                       control={control}
                       defaultValue={null}
-                      render={({ field, thirdDateRef }) => (
-                        <MDDatePicker
-                          {...field}
-                          ref={thirdDateRef}
-                          input={{ placeholder: "Selecione una fecha" }}
-                          label="Fecha"
-                          value={field.value}
-                          onChange={(date) => field.onChange(date)}
-                          renderInput={(params) => <input {...params} />}
-                        />
+                      render={({ field }) => (
+                        <MDDatePicker {...field} label="Fecha" />
                       )}
                     />
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <MDBox>
-                    <InputLabel
-                      variant="standard"
-                      htmlFor="uncontrolled-native"
-                    >
-                      Hora Inicio
-                    </InputLabel>
-                    <MDBox>
-                      <MDBox mb={0} px={0}>
-                        <Controller
-                          name="horaDesde"
-                          control={control}
-                          defaultValue={null}
-                          render={({ field, oneTimeRef }) => (
-                            <TimePicker
-                              {...field}
-                              ref={oneTimeRef}
-                              input={{ placeholder: "Selecciona una hora" }}
-                              label="Hora"
-                              value={field.value}
-                              onChange={(date) => field.onChange(date)}
-                              renderInput={(params) => <input {...params} />}
-                            />
-                          )}
-                        />
-                        {/*  <TimePicker
-                          onChange={onChangeHoraInicio}
-                          value={horaInicio}
-                        /> */}
-                      </MDBox>
-                    </MDBox>
-                  </MDBox>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <MDBox>
-                    <InputLabel
-                      variant="standard"
-                      htmlFor="uncontrolled-native"
-                    >
-                      Hora Fin
-                    </InputLabel>
-                    <MDBox mb={0} px={0}>
-                      <Controller
-                        name="horaHasta"
-                        control={control}
-                        defaultValue={null}
-                        render={({ field, secondTimeRef }) => (
-                          <TimePicker
-                            {...field}
-                            ref={secondTimeRef}
-                            input={{ placeholder: "Selecciona una hora" }}
-                            label="Hora"
-                            value={field.value}
-                            onChange={(date) => field.onChange(date)}
-                            renderInput={(params) => <input {...params} />}
-                          />
-                        )}
-                      />
-                      {/* <TimePicker onChange={onChangeHoraFin} value={timex} /> */}
-                    </MDBox>
                   </MDBox>
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
                   <MDBox mb={2} px={0}>
-                    <MDInput
-                      type="number"
-                      name="cupo"
-                      label="Cupo"
-                      {...register("cupo", {
-                        required: {
-                          value: true,
-                          message: "El Cupo is required",
-                        },
-                      })}
+                    <InputLabel variant="standard">Hora Inicio</InputLabel>
+                    <Controller
+                      name="horaDesde"
+                      control={control}
+                      defaultValue={null}
+                      render={({ field }) => (
+                        <MDDatePicker
+                          {...field}
+                          options={config_fecha}
+                          label="Hora"
+                        />
+                        // <TimePicker {...field} label="Hora" />
+                      )}
                     />
                   </MDBox>
                 </Grid>
-
                 <Grid item xs={12} sm={6}>
-                  <MDBox mb={0}>
-                    <InputLabel
-                      variant="standard"
-                      htmlFor="uncontrolled-native"
-                    >
-                      Estado
-                    </InputLabel>
-                    <NativeSelect
-                      defaultValue={1}
-                      inputProps={{
-                        name: "estado",
-                        id: "uncontrolled-native",
-                      }}
-                      sx={{
-                        width: 250,
-                        height: 40,
-                      }}
-                      {...register("estado", {
-                        required: {
-                          value: true,
-                          message: "Estado is required",
-                        },
-                      })}
-                    >
-                      <option value={"A"}>Activo</option>
-                      <option value={"I"}>Inactivo</option>
-                    </NativeSelect>
+                  <MDBox mb={2} px={0}>
+                    <InputLabel variant="standard">Hora Fin</InputLabel>
+                    <Controller
+                      name="horaHasta"
+                      control={control}
+                      defaultValue={null}
+                      render={({ field }) => (
+                        // <TimePicker {...field}  label="Hora" />
+                        <MDDatePicker
+                          {...field}
+                          options={config_fecha}
+                          label="Hora"
+                        />
+                      )}
+                    />
                   </MDBox>
                 </Grid>
-
                 <Grid item xs={12} sm={12}>
-                  <MDBox mb={0} px={0}>
+                  <MDBox mb={2} px={0}>
                     <MDInput
+                      variant="standard"
+                      sx={{ m: 1, minWidth: 350, display: "flex" }}
                       type="text"
-                      name="detalle"
                       label="Detalle"
                       {...register("detalle", {
-                        required: {
-                          value: true,
-                          message: "El Detalle is required",
-                        },
+                        required: "El detalle is required",
                       })}
                     />
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <MDBox mb={2} px={0}>
+                    <MDInput
+                      type="number"
+                      label="Cupo"
+                      variant="standard"
+                      sx={{ m: 1, display: "flex" }}
+                      {...register("cupo", { required: "El cupo is required" })}
+                    />
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <MDBox mb={2} px={0}>
+                    <InputLabel variant="standard">Estado</InputLabel>
+                    <NativeSelect
+                      defaultValue=""
+                      sx={{ m: 1, display: "flex" }}
+                      {...register("estado", {
+                        required: "Estado is required",
+                      })}
+                      inputProps={{ name: "estado", id: "estado-native" }}
+                    >
+                      <option value="">Seleccione</option>
+                      <option value="A">Activo</option>
+                      <option value="I">Inactivo</option>
+                    </NativeSelect>
                   </MDBox>
                 </Grid>
 
@@ -501,10 +437,8 @@ function Programacion() {
                     <CircularProgress color="info" />
                   </MDBox>
                 )}
-                {/* </MDBox> */}
               </Grid>
             </MDBox>
-            {/*  </LocalizationProvider> */}
           </DialogContent>
           <DialogActions>
             <MDButton color="dark" onClick={handleClose}>
