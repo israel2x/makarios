@@ -1,9 +1,6 @@
-import { useState } from "react";
+import React from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
-// formik components
-
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -11,6 +8,8 @@ import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Divider from "@mui/material/Divider";
+
+import Grid from "@mui/material/Grid";
 
 // @mui select
 import Select from "@mui/material/Select";
@@ -20,6 +19,9 @@ import NativeSelect from "@mui/material/NativeSelect";
 // form
 import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
 import Autocomplete from "@mui/material/Autocomplete";
+import MDDatePicker from "/components/MDDatePicker";
+
+import { useForm, Controller } from "react-hook-form";
 
 //@mui components for modal-dialog
 import Button from "@mui/material/Button";
@@ -29,6 +31,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import FormControl from "@mui/material/FormControl";
 
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
@@ -44,20 +47,30 @@ import DataTable from "/examples/Tables/DataTable";
 
 // Data
 import dataTableData from "/libs/programacion/dataTableData";
-import { useEffect } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import  {exportToExcel} from '/utils/exportExcel';
- 
+import { exportToExcel } from "/utils/exportExcel";
 
+import Flatpickr from "react-flatpickr";
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
+import "react-clock/dist/Clock.css";
+
+//import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import moment from "moment"; // Importa Moment.js
+import "moment/locale/es"; // Imp
+const { DateTime } = require("luxon");
 
 function Programacion() {
+  const [actividades, setActividades] = useState([]);
   const [menu, setMenu] = useState(null);
   const [open, setOpen] = useState(false); //modal
   const [loading, setLoading] = useState(false);
   const [dataTableData2, setDataTableData2] = useState({
     columns: [],
-    rows: []
-});
+    rows: [],
+  });
   const [age, setAge] = useState(""); //select
   const handleChange = (event) => {
     setAge(event.target.value);
@@ -72,11 +85,54 @@ function Programacion() {
   const [loadingTable, setloadingTable] = useState(false);
   const [dataActividadTable, setDataActividadTable] = useState(dataTableData);
 
+  const [locale, setLocale] = useState("es");
+  // Configura Moment.js con el idioma español
+  moment.locale("es");
+  // fechas horas programacion
+  const [horaInicio, setHoraInicio] = useState("11:00");
+
+  const datePickerRef = React.useRef(null);
+  const secondDateRef = React.useRef(null);
+  const thirdDateRef = React.useRef(null);
+
+  const oneTimeRef = React.useRef(null);
+  const secondTimeRef = React.useRef(null);
+
+  // form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm();
+
   useEffect(() => {
-    buscarActividadesData();
+    buscarProgramacionesData();
+    loadActividad();
   }, []);
 
-  const buscarActividadesData = async () => {
+  const loadActividad = async (data) => {
+    try {
+      const response = await axios.get("/api/torneos/actividad", data);
+
+      if (response.statusText === "OK" || response.status === 200) {
+        const dataActividad = response.data.actividadFound.map((item) => ({
+          id: item.id,
+          descripcion: item.descripcion,
+          precio: item.precio,
+        }));
+        setActividades(dataActividad);
+        // carga los nombres para el list
+        // const data_Actividad = response.data.actividadFound.map(
+        //   (item) => item.descripcion
+        // );
+        // setActividadesNombre(data_Actividad);
+      } else {
+      }
+    } catch (error) {}
+  };
+
+  const buscarProgramacionesData = async () => {
     //add  loading
     setloadingTable(true);
     setLoading(true);
@@ -86,30 +142,31 @@ function Programacion() {
         console.log("response programacion");
         console.log(response);
 
-        const infoProgramacion = response.data.programacionFound.map((item) =>({
-          id: item.id,
-          actividad: item.actividad.descripcion,
-          detalle: item.detalle,
-          fechadesde: item.vigenciaDesde,
-          fechahasta: item.vigenciaHasta,
-          fechatope: item.fechatope,
-          cupo:item.cupo,
-          registrados:item.registro.length,
-          estado: item.estado,
-        }));
+        const infoProgramacion = response.data.programacionFound.map(
+          (item) => ({
+            id: item.id,
+            actividad: item.actividad.descripcion,
+            detalle: item.detalle,
+            fechadesde: item.vigenciaDesde,
+            fechahasta: item.vigenciaHasta,
+            fechatope: item.fechatope,
+            cupo: item.cupo,
+            registrados: item.registro.length,
+            estado: item.estado,
+          })
+        );
 
         const columns = dataTableData.columns; // Object.keys(response.data.actividadFound[0]); // Suponiendo que la primera fila del arreglo contiene los nombres de las columnas
-        setDataTableData2(prevState => ({
-            ...prevState,
-            columns: columns
+        setDataTableData2((prevState) => ({
+          ...prevState,
+          columns: columns,
         }));
 
         // Actualizar las filas
-        setDataTableData2(prevState => ({
-            ...prevState,
-            rows: infoProgramacion
+        setDataTableData2((prevState) => ({
+          ...prevState,
+          rows: infoProgramacion,
         }));
-
 
         setloadingTable(false);
         setLoading(false);
@@ -117,15 +174,6 @@ function Programacion() {
         console.log(loading);
       })
       .catch((error) => console.log(error));
-    /* 
-    if (
-      responseActividad.statusText === "OK" ||
-      responseActividad.status === 200
-    ) {
-      setDataActividad(responseActividad.data.actividadFound);
-    } else {
-      console.log("Error al traer actividades");
-    } */
 
     // off loading
     setloadingTable(false);
@@ -134,26 +182,46 @@ function Programacion() {
   //modal
   const handleClickOpen = () => {
     setOpen(true);
-    console.log(dataActividad);
-    console.log(dataTableData);
-    console.log(dataActividadTable);
   };
   const handleClose = () => {
     setOpen(false);
   };
 
+  const convertirDate = (date) => date.toISOString();
+
   //form actividad
+  const onSubmit = async (data) => {
+    console.log(data);
 
-  const validationSchema = Yup.object({
-    description: Yup.string().required("Ingrese la descripción"),
-    price: Yup.number().required("Ingrese el precio"),
-    stateActivity: Yup.string().required("Seleccione"),
-  });
+    const parseCupo = parseInt(data.cupo, 10);
+    data.actividadId = parseInt(data.actividadId, 10);
+    data.cupo = parseCupo;
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log(values);
-    setSubmitting(false);
-    handleClose();
+    data.fechatope = data.fechatope[0];
+    data.vigenciadesde = data.vigenciadesde[0];
+    data.vigenciahasta = data.vigenciahasta[0];
+
+    const hora_uno = data.horaDesde[0].toString();
+    const hora_dos = data.horaHasta[0].toString();
+
+    data.horaDesde = hora_uno.split(" ")[4].substring(0, 5);
+    data.horaHasta = hora_dos.split(" ")[4].substring(0, 5);
+
+    const fechax = moment.utc(data.fechatope);
+
+    try {
+      const response = await axios.post(
+        "/api/admin/programacion/saveProgramacion/",
+        {
+          data,
+        }
+      );
+      console.log(response);
+      handleClose();
+      buscarProgramacionesData();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderMenu = (
@@ -177,89 +245,210 @@ function Programacion() {
     </Menu>
   );
 
+  const config_fecha = {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: "H:i",
+  };
+
   const handleExportToExcel = () => {
     const arreglo = [];
-  
+
     // Agregar columnas al arreglo
-    arreglo.push(dataTableData2.columns.map(columna => columna.Header));
-    
+    arreglo.push(dataTableData2.columns.map((columna) => columna.Header));
+
     // Agregar filas al arreglo
-    dataTableData2.rows.forEach(fila => {
+    dataTableData2.rows.forEach((fila) => {
       const filaArreglo = [];
-      dataTableData2.columns.forEach(columna => {
+      dataTableData2.columns.forEach((columna) => {
         filaArreglo.push(fila[columna.accessor]);
       });
       arreglo.push(filaArreglo);
     });
     console.log("arreglo");
     console.log(arreglo);
-    exportToExcel( arreglo, 'Programacion'); // 'datos' es el nombre del archivo Excel que se generará
+    exportToExcel(arreglo, "Programacion"); // 'datos' es el nombre del archivo Excel que se generará
+  };
+
+  //time inputs
+  const [timex, setTimex] = useState("10:00");
+  const onChangeHoraFin = (value) => {
+    setTimex(value);
+  };
+  const onChangeHoraInicio = (value) => {
+    setHoraInicio(value);
   };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <Dialog open={open} onClose={handleClose}>
-        <Formik
-          initialValues={{ description: "", price: "", stateActivity: "" }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          <Form>
-            <DialogTitle>Crear Programación</DialogTitle>
-            <DialogContent>
-              <MDBox pt={1} pb={2} px={2}>
-                <MDBox>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <DialogTitle>Crear Programación</DialogTitle>
+          <DialogContent>
+            {/* <MDBox pt={2} pb={2} px={2}> */}
+            <MDBox mt={1.625}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={12}>
                   <MDBox mb={2} px={0}>
-                    <FormField
-                      type="text"
-                      name="description"
-                      label="Descripción"
+                    <FormControl
+                      variant="standard"
+                      sx={{ m: 1, minWidth: 350, display: "flex" }}
+                    >
+                      <InputLabel id="programacion-label">Actividad</InputLabel>
+                      <Select
+                        labelId="programacion-label"
+                        id="programacion-select"
+                        defaultValue=""
+                        {...register("actividadId", {
+                          required: "Actividad is required",
+                        })}
+                      >
+                        <MenuItem value="">Seleccione una opción</MenuItem>
+                        {actividades.map((opcion, index) => (
+                          <MenuItem value={opcion.id} key={index}>
+                            {opcion.descripcion}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDBox mb={2} px={0}>
+                    <InputLabel variant="standard">Fecha Inicio</InputLabel>
+                    <Controller
+                      name="vigenciadesde"
+                      control={control}
+                      defaultValue={null}
+                      render={({ field }) => (
+                        <MDDatePicker {...field} label="Fecha" />
+                      )}
                     />
                   </MDBox>
+                </Grid>
+                <Grid item xs={12} sm={4}>
                   <MDBox mb={2} px={0}>
-                    <FormField type="number" name="price" label="Precio" />
+                    <InputLabel variant="standard">Fecha Fin</InputLabel>
+                    <Controller
+                      name="vigenciahasta"
+                      control={control}
+                      defaultValue={null}
+                      render={({ field }) => (
+                        <MDDatePicker {...field} label="Fecha" />
+                      )}
+                    />
                   </MDBox>
-                  <MDBox mb={0}>
-                    <InputLabel
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <MDBox mb={2} px={0}>
+                    <InputLabel variant="standard">Fecha Tope</InputLabel>
+                    <Controller
+                      name="fechatope"
+                      control={control}
+                      defaultValue={null}
+                      render={({ field }) => (
+                        <MDDatePicker {...field} label="Fecha" />
+                      )}
+                    />
+                  </MDBox>
+                </Grid>
+
+                <Grid item xs={12} sm={6}>
+                  <MDBox mb={2} px={0}>
+                    <InputLabel variant="standard">Hora Inicio</InputLabel>
+                    <Controller
+                      name="horaDesde"
+                      control={control}
+                      defaultValue={null}
+                      render={({ field }) => (
+                        <MDDatePicker
+                          {...field}
+                          options={config_fecha}
+                          label="Hora"
+                        />
+                        // <TimePicker {...field} label="Hora" />
+                      )}
+                    />
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <MDBox mb={2} px={0}>
+                    <InputLabel variant="standard">Hora Fin</InputLabel>
+                    <Controller
+                      name="horaHasta"
+                      control={control}
+                      defaultValue={null}
+                      render={({ field }) => (
+                        // <TimePicker {...field}  label="Hora" />
+                        <MDDatePicker
+                          {...field}
+                          options={config_fecha}
+                          label="Hora"
+                        />
+                      )}
+                    />
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  <MDBox mb={2} px={0}>
+                    <MDInput
                       variant="standard"
-                      htmlFor="uncontrolled-native"
-                    >
-                      Estado
-                    </InputLabel>
+                      sx={{ m: 1, minWidth: 350, display: "flex" }}
+                      type="text"
+                      label="Detalle"
+                      {...register("detalle", {
+                        required: "El detalle is required",
+                      })}
+                    />
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <MDBox mb={2} px={0}>
+                    <MDInput
+                      type="number"
+                      label="Cupo"
+                      variant="standard"
+                      sx={{ m: 1, display: "flex" }}
+                      {...register("cupo", { required: "El cupo is required" })}
+                    />
+                  </MDBox>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <MDBox mb={2} px={0}>
+                    <InputLabel variant="standard">Estado</InputLabel>
                     <NativeSelect
-                      defaultValue={1}
-                      inputProps={{
-                        name: "stateActivity",
-                        id: "uncontrolled-native",
-                      }}
-                      sx={{
-                        width: 250,
-                        height: 40,
-                      }}
+                      defaultValue=""
+                      sx={{ m: 1, display: "flex" }}
+                      {...register("estado", {
+                        required: "Estado is required",
+                      })}
+                      inputProps={{ name: "estado", id: "estado-native" }}
                     >
-                      <option value={1}>Activo</option>
-                      <option value={2}>Inactivo</option>
+                      <option value="">Seleccione</option>
+                      <option value="A">Activo</option>
+                      <option value="I">Inactivo</option>
                     </NativeSelect>
                   </MDBox>
-                  {loading && (
-                    <MDBox textAlign="center">
-                      <CircularProgress color="info" />
-                    </MDBox>
-                  )}
-                </MDBox>
-              </MDBox>
-            </DialogContent>
-            <DialogActions>
-              <MDButton color="dark" onClick={handleClose}>
-                Cancelar
-              </MDButton>
-              <MDButton type="submit" color="info">
-                Guardar
-              </MDButton>
-            </DialogActions>
-          </Form>
-        </Formik>
+                </Grid>
+
+                {loading && (
+                  <MDBox textAlign="center">
+                    <CircularProgress color="info" />
+                  </MDBox>
+                )}
+              </Grid>
+            </MDBox>
+          </DialogContent>
+          <DialogActions>
+            <MDButton color="dark" onClick={handleClose}>
+              Cancelar
+            </MDButton>
+            <MDButton type="submit" color="info">
+              Guardar
+            </MDButton>
+          </DialogActions>
+        </form>
       </Dialog>
       <MDBox my={3}>
         <MDBox
@@ -282,7 +471,11 @@ function Programacion() {
             </MDButton>
             {renderMenu}
             <MDBox ml={1}>
-              <MDButton variant="outlined" onClick={handleExportToExcel} color="dark">
+              <MDButton
+                variant="outlined"
+                onClick={handleExportToExcel}
+                color="dark"
+              >
                 <Icon>description</Icon>
                 &nbsp;export excel
               </MDButton>
@@ -296,13 +489,12 @@ function Programacion() {
               <CircularProgress color="info" />
             </MDBox>
           )} */}
-            {loadingTable && ( 
+          {loadingTable && (
             <MDBox textAlign="center">
               <CircularProgress color="info" />
             </MDBox>
           )}
-            <DataTable table={dataTableData2} entriesPerPage={false} canSearch />
-
+          <DataTable table={dataTableData2} entriesPerPage={false} canSearch />
         </Card>
       </MDBox>
       <Footer />

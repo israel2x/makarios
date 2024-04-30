@@ -25,6 +25,12 @@ export default async function programacionHanler(req, res) {
         },
         // createdAt:true
       },
+      orderBy: [
+        {
+          id: 'desc',
+        },
+       
+      ],
     });
     if (!programacionFound) {
       return res.status(409).send("Programacion not found");

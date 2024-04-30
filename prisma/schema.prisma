@@ -40,8 +40,8 @@ model Profile {
 
 model Programacion {
   id            Int        @id @default(autoincrement())
-  vigenciaDesde DateTime
-  vigenciaHasta DateTime
+  vigenciaDesde String
+  vigenciaHasta String
   horaDesde     String
   horaHasta     String
   fechatope     String
@@ -64,7 +64,7 @@ model Actividad {
   defaultAt    DateTime       @default(now())
   programacion Programacion[]
   promocion    Promocion[]
-}
+} 
 
 model Pagoplux {
   id               Int        @id @default(autoincrement())

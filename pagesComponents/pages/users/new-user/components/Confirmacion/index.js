@@ -20,14 +20,11 @@ import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 
 // NextJS Material Dashboard 2 PRO components
+import moment from "moment";
+import { useEffect, useState } from "react";
 import MDBox from "/components/MDBox";
 import MDTypography from "/components/MDTypography";
-import { useState, useEffect } from "react";
-import moment from "moment";
 // NewUser page components
-import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
-import Autocomplete from "@mui/material/Autocomplete";
-import selectData from "/pagesComponents/pages/account/settings/components/BasicInfo/data/selectData";
 
 function Confirmacion({ formData }) {
   const { formField, values, errors, touched, setFieldValue } = formData;
@@ -94,7 +91,12 @@ function Confirmacion({ formData }) {
     // Crea un objeto moment con la fecha de nacimiento
     const fechaNacimientoP = moment(`${anioV}-${mesV}-${diaV}`, "YYYY-MMMM-DD");
     // setFieldValue("fechaNacimiento", `${anioV}-${mesV}-${diaV}`);
-    const age = moment().diff(fechaNacimientoP, "years");
+    const actual = moment();
+    let age = actual.diff(fechaNacimientoP, "years");
+    // if (actual.month() < fechaNacimientoP.month()) {
+    //   age=age-1;
+    // }
+
     const isLegal = age >= 18;
     if (age >= 10 && age <= 14) {
       setCategoria("Infantil");
@@ -109,8 +111,6 @@ function Confirmacion({ formData }) {
     }
 
     setEdad(age);
-   
-
   });
 
   return (
@@ -134,7 +134,6 @@ function Confirmacion({ formData }) {
           justifyContent="center"
           alignItems="center"
         >
-       
           <MDTypography variant="subtitle2" color="text">
             Revisa los detalles del registro
           </MDTypography>
@@ -152,7 +151,9 @@ function Confirmacion({ formData }) {
           >
             <MDTypography variant="h4">Datos de Participante</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={2}>&nbsp;</Grid>
+          <Grid item xs={6} sm={2}>
+            &nbsp;
+          </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="body1">Nombre Completo</MDTypography>
           </Grid>
@@ -162,31 +163,45 @@ function Confirmacion({ formData }) {
               {nombresV + " " + apellidosV}
             </MDTypography>
           </Grid>
-          <Grid item xs={6} sm={2}>&nbsp;</Grid>
-          <Grid item xs={6} sm={2}>&nbsp;</Grid>
+          <Grid item xs={6} sm={2}>
+            &nbsp;
+          </Grid>
+          <Grid item xs={6} sm={2}>
+            &nbsp;
+          </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="body1">Edad</MDTypography>
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="subtitle1">{edad} años</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={2}>&nbsp;</Grid>
-          <Grid item xs={6} sm={2}>&nbsp;</Grid>
+          <Grid item xs={6} sm={2}>
+            &nbsp;
+          </Grid>
+          <Grid item xs={6} sm={2}>
+            &nbsp;
+          </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="body1">Categoria</MDTypography>
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="subtitle1">{categoria}.</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={2}>&nbsp;</Grid>
-          <Grid item xs={6} sm={2}>&nbsp;</Grid>
+          <Grid item xs={6} sm={2}>
+            &nbsp;
+          </Grid>
+          <Grid item xs={6} sm={2}>
+            &nbsp;
+          </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="body1">Total a pagar</MDTypography>
           </Grid>
           <Grid item xs={12} sm={4}>
             <MDTypography variant="subtitle1">$ {precioV} USD</MDTypography>
           </Grid>
-          <Grid item xs={6} sm={2}>&nbsp;</Grid>
+          <Grid item xs={6} sm={2}>
+            &nbsp;
+          </Grid>
         </Grid>
       </MDBox>
     </MDBox>
