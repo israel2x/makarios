@@ -1,63 +1,53 @@
-import React from "react";
-import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 // @mui material components
 import Card from "@mui/material/Card";
+import Divider from "@mui/material/Divider";
 import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Divider from "@mui/material/Divider";
 
 import Grid from "@mui/material/Grid";
 
 // @mui select
-import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import NativeSelect from "@mui/material/NativeSelect";
+import Select from "@mui/material/Select";
 
 // form
-import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
-import Autocomplete from "@mui/material/Autocomplete";
 import MDDatePicker from "/components/MDDatePicker";
 
-import { useForm, Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 //@mui components for modal-dialog
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import FormControl from "@mui/material/FormControl";
 
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
-import MDTypography from "/components/MDTypography";
 import MDButton from "/components/MDButton";
 import MDInput from "/components/MDInput";
+import MDTypography from "/components/MDTypography";
 
 // NextJS Material Dashboard 2 PRO examples
+import Footer from "/examples/Footer";
 import DashboardLayout from "/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
-import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 
 // Data
-import dataTableData from "/libs/programacion/dataTableData";
 import CircularProgress from "@mui/material/CircularProgress";
+import dataTableData from "/libs/programacion/dataTableData";
 import { exportToExcel } from "/utils/exportExcel";
 
-import Flatpickr from "react-flatpickr";
-import TimePicker from "react-time-picker";
-import "react-time-picker/dist/TimePicker.css";
 import "react-clock/dist/Clock.css";
+import "react-time-picker/dist/TimePicker.css";
 
 //import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment"; // Importa Moment.js
 import "moment/locale/es"; // Imp
 const { DateTime } = require("luxon");
@@ -395,6 +385,7 @@ function Programacion() {
                     <MDInput
                       variant="standard"
                       sx={{ m: 1, minWidth: 350, display: "flex" }}
+                      placeholder="Lunes a viernes  08:00 - 11:00 AM"
                       type="text"
                       label="Detalle"
                       {...register("detalle", {
@@ -418,7 +409,7 @@ function Programacion() {
                   <MDBox mb={2} px={0}>
                     <InputLabel variant="standard">Estado</InputLabel>
                     <NativeSelect
-                      defaultValue=""
+                      defaultValue="A"
                       sx={{ m: 1, display: "flex" }}
                       {...register("estado", {
                         required: "Estado is required",
