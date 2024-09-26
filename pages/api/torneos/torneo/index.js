@@ -50,13 +50,13 @@ export default async function torneoHandler(req, res) {
     console.log("profileId:", profileId);
 
     const programacionData = {
-      programacionId: req.body.programacionid,
+      programacionId: parseInt(req.body.programacionid),
       // pagado: true,
       promocionId: req.body.promocionid || null,
       detallepromo: req.body.detallepromo || null,
       pagopluxId: parseInt(req.body.pagoplux) || null,
       fecharegistro: String(moment.tz("America/Guayaquil").format()),
-      profileId: profileId,
+      profileId: parseInt(profileId),
     };
 
     const newTorneo = await db.registro.create({
