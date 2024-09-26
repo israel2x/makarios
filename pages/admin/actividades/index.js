@@ -1,52 +1,44 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 // formik components
 
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 
 // @mui material components
 import Card from "@mui/material/Card";
+import Divider from "@mui/material/Divider";
 import Icon from "@mui/material/Icon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import Divider from "@mui/material/Divider";
 
 // @mui select
-import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import NativeSelect from "@mui/material/NativeSelect";
 
 // form
-import FormField from "/pagesComponents/pages/users/new-user/components/FormField";
-import Autocomplete from "@mui/material/Autocomplete";
 
 import { useForm } from "react-hook-form";
 
 //@mui components for modal-dialog
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 // NextJS Material Dashboard 2 PRO components
 import MDBox from "/components/MDBox";
-import MDTypography from "/components/MDTypography";
 import MDButton from "/components/MDButton";
 import MDInput from "/components/MDInput";
+import MDTypography from "/components/MDTypography";
 
 // NextJS Material Dashboard 2 PRO examples
+import Footer from "/examples/Footer";
 import DashboardLayout from "/examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "/examples/Navbars/DashboardNavbar";
-import Footer from "/examples/Footer";
 import DataTable from "/examples/Tables/DataTable";
 
 // Data
-import dataTableData from "/libs/actividad/dataTableData";
 import CircularProgress from "@mui/material/CircularProgress";
+import dataTableData from "/libs/actividad/dataTableData";
 
 function Actividad() {
   const {
@@ -66,6 +58,12 @@ function Actividad() {
   const openMenu = (event) => setMenu(event.currentTarget);
   const closeMenu = () => setMenu(null);
 
+  const [formData, setFormData] = useState({
+    descripcion: '',
+    precio: '',
+    estado: 'A' // Asumiendo 'A' como activo por defecto
+  });
+  
   //load data table
   const [responseActividad, setResponseActividad] = useState();
   const [dataActividad, setDataActividad] = useState();
@@ -76,6 +74,17 @@ function Actividad() {
     buscarActividadesData();
   }, []);
 
+
+  const handleEdit = (actividad) => {
+    setFormData({
+      id: actividad.id, // Asegúrate de que cada actividad tiene un ID único
+      descripcion: actividad.descripcion,
+      precio: actividad.precio,
+      estado: actividad.estado
+    });
+    setOpen(true);
+  };
+  
   const buscarActividadesData = async () => {
     //add  loading
     setloadingTable(true);

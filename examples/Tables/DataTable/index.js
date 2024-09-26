@@ -1,37 +1,36 @@
-import { useMemo, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // prop-types is a library for typechecking of props
 import PropTypes from "prop-types";
-
+import MDBox from "/components/MDBox";
 // react-table components
 import {
-  useTable,
-  usePagination,
-  useGlobalFilter,
   useAsyncDebounce,
+  useGlobalFilter,
+  usePagination,
   useSortBy,
+  useTable,
 } from "react-table";
 
 // regenerator-runtime
 import "regenerator-runtime/runtime.js";
 
 // @mui material components
+import Autocomplete from "@mui/material/Autocomplete";
+import Icon from "@mui/material/Icon";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-import Icon from "@mui/material/Icon";
-import Autocomplete from "@mui/material/Autocomplete";
 
 // NextJS Material Dashboard 2 PRO components
-import MDBox from "/components/MDBox";
-import MDTypography from "/components/MDTypography";
 import MDInput from "/components/MDInput";
 import MDPagination from "/components/MDPagination";
+import MDTypography from "/components/MDTypography";
 
 // NextJS Material Dashboard 2 PRO examples
-import DataTableHeadCell from "/examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "/examples/Tables/DataTable/DataTableBodyCell";
+import DataTableHeadCell from "/examples/Tables/DataTable/DataTableHeadCell";
 
 function DataTable({
   entriesPerPage,
@@ -50,6 +49,8 @@ function DataTable({
     ? entriesPerPage.entries.map((el) => el.toString())
     : ["5", "10", "15", "20", "25"];
   const columns = useMemo(() => table.columns, [table]);
+
+
   const data = useMemo(() => table.rows, [table]);
 
   const tableInstance = useTable(
