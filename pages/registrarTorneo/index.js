@@ -124,7 +124,8 @@ function NewUser() {
       if (response.status === "succeeded") {
         await setPagado(true);
         await setButtonDisabled(false);
-        await setResponsePagoPlux(response);
+        const { email, ...newData } = response;
+        await setResponsePagoPlux(newData);
       }
     },
   };
