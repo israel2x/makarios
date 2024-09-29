@@ -41,6 +41,7 @@ export default class MyDocument extends Document {
           <Script src="https://sandbox-paybox.pagoplux.com/paybox/index_angular.js"/> */}
                           
           <script src="https://paybox.pagoplux.com/paybox/index_angular.js"></script>
+          {/* <script src="https://sandbox-paybox.pagoplux.com/paybox/index_angular.js"></script> */}
           {/* Inject MUI styles first to match with the prepend: true configuration. */}
           {this.props.emotionStyleTags}
         </Head>

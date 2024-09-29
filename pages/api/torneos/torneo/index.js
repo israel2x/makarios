@@ -34,7 +34,7 @@ export default async function torneoHandler(req, res) {
 
     if (!profileFound) {
       userData.userId = userFound.id;
-
+      
       const newProfile = await db.profile.create({
         data: userData,
       });
@@ -52,13 +52,14 @@ export default async function torneoHandler(req, res) {
     const programacionData = {
       programacionId: parseInt(req.body.programacionid),
       // pagado: true,
-      promocionId: req.body.promocionid || null,
+      promocionId: parseInt(req.body.promocionid) || null,
       detallepromo: req.body.detallepromo || null,
       pagopluxId: parseInt(req.body.pagoplux) || null,
       fecharegistro: String(moment.tz("America/Guayaquil").format()),
       profileId: profileId,
     };
-
+    console.log("programacionData");
+    console.log(programacionData);
     const newTorneo = await db.registro.create({
       data: programacionData,
     });
