@@ -109,6 +109,8 @@ function NewUser() {
     PayboxDescription: detalleActividad,
     PayboxProduction: true,
     PayboxEnvironment: "prod",
+    // PayboxProduction: false,
+    // PayboxEnvironment: "sandbox",
     PayboxLanguage: "es",
     PayboxPagoPlux: true,
     PayboxDirection: "Bolivar 2-80 y borrero",

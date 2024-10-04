@@ -1,6 +1,8 @@
 const { NextResponse } = require("next/server");
 import db from "/libs/db";
 import moment from "moment-timezone";
+import { DateTime } from "luxon"; // Reemplaza moment con Luxon para fechas
+import * as Yup from "yup";
 
 export default async function torneoHandler(req, res) {
   try {
@@ -23,22 +25,35 @@ export default async function torneoHandler(req, res) {
       },
     });
 
+    console.log("userFound");
+    console.log(userFound.id);
+
+    // Validar si se encontró el usuario
+    if (!userFound) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const profileFound = await db.profile.findFirst({
       where: {
         AND: [{ userId: userFound.id }, { cedula: userData.cedula }],
       },
     });
 
+    console.log("profileFound");
+    console.log(profileFound);
+
     let profileId;
     let participante;
 
     if (!profileFound) {
       userData.userId = userFound.id;
-      
+
       const newProfile = await db.profile.create({
         data: userData,
       });
 
+      console.log("newProfile");
+      console.log(newProfile);
       profileId = newProfile.id;
       participante = newProfile;
     } else {
@@ -56,20 +71,33 @@ export default async function torneoHandler(req, res) {
       detallepromo: req.body.detallepromo || null,
       pagopluxId: parseInt(req.body.pagoplux) || null,
       fecharegistro: String(moment.tz("America/Guayaquil").format()),
+      // fecharegistro: DateTime.now().setZone('America/Guayaquil').toISO(), // Reemplazado con Luxon
       profileId: profileId,
     };
     console.log("programacionData");
     console.log(programacionData);
     const newTorneo = await db.registro.create({
-      data: programacionData,
+      data: {
+        detallepromo: req.body.detallepromo || null,
+        fecharegistro: String(moment.tz("America/Guayaquil").format()),
+        profile: { connect: { id: profileId } },
+        programacion: { connect: { id: parseInt(req.body.programacionid),} },
+        pagoplux: { connect: { id: parseInt(req.body.pagoplux) || null } },
+        promocionId: parseInt(req.body.promocionid) || null,
+        
+      },
     });
 
-    let montoFactura = null;
-    if (req.body.porcentajepromo) {
-      montoFactura = String(req.body.porcentajepromo);
-    } else {
-      montoFactura = String(req.body.precio);
-    }
+    console.log("newTorneo");
+    console.log(newTorneo);
+    // let montoFactura = null;
+    // if (req.body.porcentajepromo) {
+    //   montoFactura = String(req.body.porcentajepromo);
+    // } else {
+    //   montoFactura = String(req.body.precio);
+    // }
+    // Determinar el monto de la factura
+    const montoFactura = String(req.body.porcentajepromo || req.body.precio);
 
     const facturacionData = {
       monto: montoFactura,
@@ -85,6 +113,8 @@ export default async function torneoHandler(req, res) {
       data: facturacionData,
     });
 
+    console.log("newFactura");
+    console.log(newFactura);
     return res.status(200).json({ message: "success", newTorneo });
   } catch (error) {
     console.error("Backend error:", error);
