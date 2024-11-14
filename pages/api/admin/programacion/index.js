@@ -1,8 +1,9 @@
-const { NextResponse } = require("next/server");
+import { NextResponse } from "next/server";
 import db from "/libs/db";
 
-export default async function programacionHanler(req, res) {
+export default async function programacionHandler(req, res) {
   try {
+    // Consultar las programaciones
     const programacionFound = await db.programacion.findMany({
       select: {
         id: true,
@@ -17,28 +18,28 @@ export default async function programacionHanler(req, res) {
         fechatope: true,
         cupo: true,
         estado: true,
-
         registro: {
           select: {
             id: true,
           },
         },
-        // createdAt:true
       },
-      orderBy: [
-        {
-          id: 'desc',
-        },
-       
-      ],
+      orderBy: {
+        id: 'desc', // Verificar que la base de datos y el ORM soporten este formato
+      },
     });
-    if (!programacionFound) {
-      return res.status(409).send("Programacion not found");
+
+    // Verificar si no hay resultados
+    if (!programacionFound || programacionFound.length === 0) {
+      return res.status(404).json({ message: "Programacion not found" });
     }
+
+    // Retornar resultados si existen
     return res
       .status(200)
-      .json({ message: "sucess programacion", programacionFound });
+      .json({ message: "success programacion", programacionFound });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Error en API:", error); // Agregué un log para errores
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 }
