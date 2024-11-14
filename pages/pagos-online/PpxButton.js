@@ -1,15 +1,15 @@
-import { useEffect } from "react";
-import Head from "next/head";
 import { iniciarDatos } from "../../funciones-pagos/pagos-functions";
+import MDBox from "/components/MDBox";
+import CircularProgress from "@mui/material/CircularProgress";
 
-
-
+import { useEffect, useState } from "react";
 const PpxButton = ({ data }) => {
   const estiloBoton = {
     display: "none",
     backgroundColor: "#FAFAFA",
     right: "80px",
-    backgroundImage: "url(https://sandbox-paybox.pagoplux.com/img/pagar.png?v1)",
+    backgroundImage:
+      "url(https://sandbox-paybox.pagoplux.com/img/pagar.png?v1)",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     height: "96px",
@@ -21,24 +21,39 @@ const PpxButton = ({ data }) => {
     boxShadow: "0px 2px 2px lightgray",
   };
 
+  const [loading, setLoading] = useState(false);
+  const [count, setCount] = useState(0);
+
   useEffect(() => {
+    setLoading(true);
     iniciarDatos(data);
+    setTimeout(async () => {
+      await setLoading(false);
+    }, 250);
   }, [data]);
+
+  const handleMouseEnter = async () => {
+    await setCount(count + 1);
+    if (count < 1) {
+      //  alert(JSON.stringify(count));
+    }
+  };
 
   return (
     <>
-      <Head>
-        {/* Incluir jQuery y el script del botón de pago */}
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js" />
-        <script src="https://sandbox-paybox.pagoplux.com/paybox/index_angular.js"></script>
-      </Head>
-      <div align="center">
+      <div align={"center"}>
+        {loading && (
+          <MDBox textAlign="center">
+            <CircularProgress color="info" />
+          </MDBox>
+        )}
         <div id="modalPaybox"></div>
+
         <button
           style={estiloBoton}
           id="pay"
           type="button"
-          onClick={() => iniciarDatos(data)}
+          onClick={iniciarDatos}
         ></button>
       </div>
     </>
