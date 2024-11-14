@@ -2,12 +2,10 @@ import { useEffect } from "react";
 import Head from "next/head";
 import { iniciarDatos } from "../../funciones-pagos/pagos-functions";
 
-interface PpxButtonProps {
-  data: any; // Cambia 'any' por el tipo real si está disponible
-}
+
 
 const PpxButton = ({ data }) => {
-  const estiloBoton: React.CSSProperties = {
+  const estiloBoton = {
     display: "none",
     backgroundColor: "#FAFAFA",
     right: "80px",
