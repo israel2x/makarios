@@ -1,14 +1,19 @@
-const { NextResponse } = require("next/server");
+import { NextResponse } from "next/server";
 import db from "../../../../libs/db";
 
-export default async function programacionHanler(req, res) {
+export default async function programacionHandler(req, res) {
   try {
-    const actividadId = parseInt(req.query.actividad, 10);
-
-    if (isNaN(actividadId)) {
-      return res.status(400).send("Invalid actividadId");
+    // Validar que el query parameter "actividad" esté presente
+    if (!req.query.actividad) {
+      return res.status(400).json({ message: "actividadId is required" });
     }
 
+    const actividadId = parseInt(req.query.actividad, 10);
+    if (isNaN(actividadId)) {
+      return res.status(400).json({ message: "Invalid actividadId" });
+    }
+
+    // Buscar programaciones activas con el ID de actividad
     const programacionFound = await db.programacion.findMany({
       where: {
         estado: "A",
@@ -16,14 +21,15 @@ export default async function programacionHanler(req, res) {
       },
     });
 
-    if (!programacionFound) {
-      return res.status(409).send("Programacion not found");
+    if (!programacionFound || programacionFound.length === 0) {
+      return res.status(404).json({ message: "Programacion not found" });
     }
+
     return res
       .status(200)
-      .json({ message: "sucess programacion", programacionFound });
+      .json({ message: "success programacion", programacionFound });
   } catch (error) {
-    console.log("error en API:", error);
-    return res.status(500).json({ message: error.message });
+    console.error("Error en API:", error); // Cambié console.log a console.error para errores
+    return res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 }
