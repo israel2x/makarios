@@ -25,11 +25,10 @@ export default async function torneoHandler(req, res) {
       },
     });
 
-    console.log("userFound");
-    console.log(userFound.id);
-
     // Validar si se encontró el usuario
     if (!userFound) {
+      console.log("userFound");
+      console.log(userFound.id);
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -39,13 +38,12 @@ export default async function torneoHandler(req, res) {
       },
     });
 
-    console.log("profileFound");
-    console.log(profileFound);
-
     let profileId;
     let participante;
 
     if (!profileFound) {
+      console.log("profileFound");
+      console.log(profileFound);
       userData.userId = userFound.id;
 
       const newProfile = await db.profile.create({
@@ -62,31 +60,55 @@ export default async function torneoHandler(req, res) {
     }
 
     // Log relevant information for debugging
-    console.log("profileId:", profileId);
+    // Validar que programacionId sea válido
+    const programacionId = req.body.programacionid
+      ? parseInt(req.body.programacionid, 10)
+      : null;
+    if (!programacionId) {
+      return res.status(400).json({ message: "Invalid programacion ID" });
+    }
+    const promocionId = req.body.promocionid
+      ? parseInt(req.body.promocionid, 10)
+      : null;
+    const pagopluxId = req.body.pagoplux
+      ? parseInt(req.body.pagoplux, 10)
+      : null;
+    const detallepromo = req.body.detallepromo ? req.body.detallepromo : null;
 
     const programacionData = {
-      programacionId: parseInt(req.body.programacionid),
+      programacionId: programacionId,
       // pagado: true,
-      promocionId: parseInt(req.body.promocionid) || null,
-      detallepromo: req.body.detallepromo || null,
-      pagopluxId: parseInt(req.body.pagoplux) || null,
+      promocionId: promocionId,
+      detallepromo: detallepromo,
+      pagopluxId: pagopluxId,
       fecharegistro: String(moment.tz("America/Guayaquil").format()),
       // fecharegistro: DateTime.now().setZone('America/Guayaquil').toISO(), // Reemplazado con Luxon
       profileId: profileId,
     };
     console.log("programacionData");
     console.log(programacionData);
-    const newTorneo = await db.registro.create({
-      data: {
-        detallepromo: req.body.detallepromo || null,
-        fecharegistro: String(moment.tz("America/Guayaquil").format()),
-        profile: { connect: { id: profileId } },
-        programacion: { connect: { id: parseInt(req.body.programacionid),} },
-        pagoplux: { connect: { id: parseInt(req.body.pagoplux) || null } },
-        promocionId: parseInt(req.body.promocionid) || null,
-        
-      },
-    });
+    // const newTorneo = await db.registro.create({
+    //   data: {
+    //     detallepromo: req.body.detallepromo || null,
+    //     fecharegistro: String(moment.tz("America/Guayaquil").format()),
+    //     profile: { connect: { id: profileId } },
+    //     programacion: { connect: { id: parseInt(req.body.programacionid) } },
+    //     pagoplux: { connect: { id: parseInt(req.body.pagoplux) || null } },
+    //     promocionId: parseInt(req.body.promocionid) || null,
+    //   },
+    // });
+
+        // Crear el nuevo torneo
+        const newTorneo = await db.registro.create({
+          data: {
+            detallepromo: req.body.detallepromo || null,
+            fecharegistro: DateTime.now().setZone('America/Guayaquil').toISO(),
+            profile: { connect: { id: profileId } },
+            programacion: { connect: { id: programacionId } },
+            pagoplux: req.body.pagoplux ? { connect: { id: parseInt(req.body.pagoplux, 10) } } : undefined,
+            promocionId: req.body.promocionid ? parseInt(req.body.promocionid, 10) : null,
+          },
+        });
 
     console.log("newTorneo");
     console.log(newTorneo);
