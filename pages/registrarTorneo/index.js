@@ -81,6 +81,7 @@ function NewUser() {
 
   const [pagoPlux, setPagoplux] = useState(null);
   const [precio, setPrecio] = useState(null);
+  const [telefono, setTelefono] = useState(null);
   const [detalleActividad, setDetalleActividad] = useState("Pago de TORNEO DEPORTIVO");
   const [pagado, setPagado] = useState(false);
   const [emailUser, setEmailUser] = useState(null);
@@ -114,7 +115,7 @@ function NewUser() {
     PayboxLanguage: "es",
     PayboxPagoPlux: true,
     PayboxDirection: "Bolivar 2-80 y borrero",
-    PayBoxClientPhone: "0996600922",
+    PayBoxClientPhone: telefono,
     PayBoxClientIdentification: "0993385314001",
     // Solo si es recurrente
     PayboxRecurrent: false,
@@ -249,6 +250,7 @@ function NewUser() {
     const session = await getSession(values);
 
     await setPrecio(values.precio);
+    await setTelefono(values.celular);
     await setEmailUser(session.user.email);
     await setDetalleActividad(values.actividad+' - '+values.programacion);
     await setActiveStep(activeStep + 1);
