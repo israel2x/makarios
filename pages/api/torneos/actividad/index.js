@@ -8,6 +8,10 @@ export default async function actividadHanler(req, res) {
       where: {
         estado: "A",
       },
+      orderBy: {
+        // Cambia 'nombre' por el campo que deseas ordenar
+        id: "desc", // 'asc' para ascendente o 'desc' para descendente
+      },
     }
     );
     if (!actividadFound) {

@@ -62,6 +62,7 @@ model Actividad {
   estado       String
   createdAt    DateTime       @default(now())
   defaultAt    DateTime       @default(now())
+  orden        Int?
   programacion Programacion[]
   promocion    Promocion[]
 } 
